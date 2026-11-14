@@ -16,7 +16,9 @@ cd build
              --enable-stack-protector=strong \
              --enable-kernel=5.10
 make
-make DESTDIR="$ZPKG_DESTROOT" install
+# Parallel install races in glibc (two rules juggle libc.so.6.new); the
+# book itself notes -j1 for this package. The build above stays parallel.
+make -j1 DESTDIR="$ZPKG_DESTROOT" install
 sed '/RTLDLIST=/s@/usr@@g' -i "$ZPKG_DESTROOT/usr/bin/ldd"
 
 # /etc bits from LFS 8.5, without the systemd NSS modules.
