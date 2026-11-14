@@ -1,12 +1,13 @@
 #!/bin/sh
-# go — the Go toolchain; needed to build zpkg itself (self-hosting).
-# TODO(M2): Go 1.20+ can be built with only a C compiler; verify the exact
-# bootstrap invocation for the pinned version and set GOROOT_BOOTSTRAP or
-# the C-only bootstrap path accordingly.
+# go — Go toolchain, rebuilt from source using the binary bootstrap
+# toolchain placed at /opt/go-bootstrap by bootstrap.sh (LFS-style staged
+# bootstrap: binary bootstrap -> source build).
 set -e
 
 cd "$ZPKG_SRC/go/src"
-./make.bash
+GOROOT_BOOTSTRAP=/opt/go-bootstrap ./make.bash
 
-mkdir -p "$ZPKG_DESTROOT/usr/local"
+mkdir -p "$ZPKG_DESTROOT/usr/local" "$ZPKG_DESTROOT/usr/bin"
 cp -a "$ZPKG_SRC/go" "$ZPKG_DESTROOT/usr/local/go"
+ln -sv /usr/local/go/bin/go "$ZPKG_DESTROOT/usr/bin/go"
+ln -sv /usr/local/go/bin/gofmt "$ZPKG_DESTROOT/usr/bin/gofmt"

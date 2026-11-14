@@ -1,11 +1,25 @@
 #!/bin/sh
-# binutils — assembler, linker and binary utilities.
-# TODO(M2): LFS builds binutils twice (cross pass1, native pass2) with
-# different configure flags; split into stage-specific recipes then.
+# binutils — assembler, linker, binary utilities (LFS 13.1-systemd 8.22,
+# tests skipped in v0: they need tcl/expect/dejagnu).
 set -e
 
-mkdir -p build
+cd "$ZPKG_SRC/binutils-2.47"
+mkdir -v build
 cd build
-../configure --prefix=/usr
-make -j"$(nproc)"
-make DESTDIR="$ZPKG_DESTROOT" install
+../configure --prefix=/usr       \
+             --sysconfdir=/etc   \
+             --enable-ld=default \
+             --enable-plugins    \
+             --enable-shared     \
+             --disable-werror    \
+             --enable-64-bit-bfd \
+             --enable-new-dtags  \
+             --with-system-zlib  \
+             --with-lib-path=/usr/lib \
+             --enable-default-hash-style=gnu
+make tooldir=/usr
+make tooldir=/usr DESTDIR="$ZPKG_DESTROOT" install
+for lib in bfd ctf ctf-nobfd gprofng opcodes sframe; do
+	rm -fv "$ZPKG_DESTROOT/usr/lib/lib$lib.a"
+done
+rm -rfv "$ZPKG_DESTROOT/usr/share/doc/gprofng"

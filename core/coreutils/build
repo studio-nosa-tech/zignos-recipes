@@ -1,0 +1,15 @@
+#!/bin/sh
+# coreutils — basic file/shell utilities (LFS 13.1-systemd 8.61).
+# v0 notes: the i18n patch and its autoconf/automake chain are skipped,
+# tests are skipped.
+set -e
+
+cd "$ZPKG_SRC/coreutils-9.11"
+FORCE_UNSAFE_CONFIGURE=1 ./configure --prefix=/usr
+make
+make DESTDIR="$ZPKG_DESTROOT" install
+
+mv -v "$ZPKG_DESTROOT/usr/bin/chroot" "$ZPKG_DESTROOT/usr/sbin"
+mkdir -pv "$ZPKG_DESTROOT/usr/share/man/man8"
+mv -v "$ZPKG_DESTROOT/usr/share/man/man1/chroot.1" "$ZPKG_DESTROOT/usr/share/man/man8/chroot.8"
+sed -i 's/"1"/"8"/' "$ZPKG_DESTROOT/usr/share/man/man8/chroot.8"

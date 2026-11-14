@@ -1,11 +1,33 @@
 #!/bin/sh
-# glibc — the GNU C library.
-# TODO(M2): glibc builds against kernel headers; prepare a headers step
-# (or a linux-headers recipe) per LFS 13.1 before any real build.
+# glibc — the GNU C library (LFS 13.1-systemd 8.5, tests skipped in v0).
+# The two LFS patches arrive as recipe sources and land in $ZPKG_SRC.
 set -e
 
-mkdir -p build
+cd "$ZPKG_SRC/glibc-2.44"
+patch -Np1 -i "$ZPKG_SRC/glibc-fhs-1.patch"
+patch -Np1 -i "$ZPKG_SRC/glibc-2.44-upstream_fixes-1.patch"
+
+mkdir -v build
 cd build
-../configure --prefix=/usr
-make -j"$(nproc)"
+../configure --prefix=/usr                   \
+             --disable-werror                \
+             --disable-nscd                  \
+             libc_cv_slibdir=/usr/lib        \
+             --enable-stack-protector=strong \
+             --enable-kernel=5.10
+make
 make DESTDIR="$ZPKG_DESTROOT" install
+sed '/RTLDLIST=/s@/usr@@g' -i "$ZPKG_DESTROOT/usr/bin/ldd"
+
+# /etc bits from LFS 8.5, without the systemd NSS modules.
+touch "$ZPKG_DESTROOT/etc/ld.so.conf"
+cat > "$ZPKG_DESTROOT/etc/ld.so.conf" <<'EOF'
+/usr/local/lib
+/opt/lib
+EOF
+cat > "$ZPKG_DESTROOT/etc/nsswitch.conf" <<'EOF'
+passwd: files
+group: files
+shadow: files
+hosts: files dns
+EOF

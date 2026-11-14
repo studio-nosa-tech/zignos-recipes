@@ -1,0 +1,8 @@
+#!/bin/sh
+# zpkg — self-hosting step: rebuild zpkg from the source snapshot mounted
+# at /sources/zignos-zpkg (see zignos-build/bootstrap.sh).
+set -e
+
+cp -a /sources/zignos-zpkg "$ZPKG_WORKDIR/zpkg-src"
+cd "$ZPKG_WORKDIR/zpkg-src"
+GOTOOLCHAIN=local go build -o "$ZPKG_DESTROOT/usr/bin/zpkg" ./cmd/zpkg

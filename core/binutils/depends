@@ -1,1 +1,5 @@
-# ordering handled by bootstrap stages (M2)
+file
+flex
+pkgconf
+zlib
+zstd

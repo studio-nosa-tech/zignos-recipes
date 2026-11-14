@@ -1,1 +1,4 @@
-# ordering handled by bootstrap stages (M2)
+binutils
+gmp
+mpfr
+mpc

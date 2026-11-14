@@ -1,12 +1,33 @@
 #!/bin/sh
-# gcc — the GNU compiler collection.
-# TODO(M2): fetch gmp/mpfr/mpc (contrib/download_prerequisites) and split
-# pass1/pass2 recipes per LFS 13.1 before any real build.
+# gcc — the GNU compiler collection (LFS 13.1-systemd 8.32, tests skipped
+# in v0: they need the tester user + expect/dejagnu).
 set -e
 
-# contrib/download_prerequisites
-mkdir -p build
+cd "$ZPKG_SRC/gcc-16.2.0"
+case $(uname -m) in
+	x86_64)
+		sed -e '/m64=/s/lib64/lib/' \
+			-i.orig gcc/config/i386/t-linux64
+		;;
+esac
+
+mkdir -v build
 cd build
-../configure --prefix=/usr --enable-languages=c,c++ --disable-multilib
-make -j"$(nproc)"
+../configure --prefix=/usr            \
+             LD=ld                    \
+             --enable-languages=c,c++ \
+             --enable-default-pie     \
+             --enable-default-ssp     \
+             --enable-host-pie        \
+             --enable-targets=all     \
+             --disable-multilib       \
+             --disable-bootstrap      \
+             --disable-fixincludes    \
+             --with-system-zlib
+make
 make DESTDIR="$ZPKG_DESTROOT" install
+
+ln -sv /usr/bin/cpp "$ZPKG_DESTROOT/usr/lib/cpp"
+lto=$(find "$ZPKG_DESTROOT/usr/libexec" -name liblto_plugin.so | head -n1)
+mkdir -p "$ZPKG_DESTROOT/usr/lib/bfd-plugins"
+ln -sfvr "$lto" "$ZPKG_DESTROOT/usr/lib/bfd-plugins/liblto_plugin.so"

@@ -1,2 +1,3 @@
-# TODO(M2): pin to the LFS 13.1 version
-https://ftp.gnu.org/gnu/glibc/glibc-2.39.tar.xz
+https://ftpmirror.gnu.org/glibc/glibc-2.44.tar.xz
+https://www.linuxfromscratch.org/patches/lfs/13.1/glibc-fhs-1.patch
+https://www.linuxfromscratch.org/patches/lfs/13.1/glibc-2.44-upstream_fixes-1.patch

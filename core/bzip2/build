@@ -1,0 +1,22 @@
+#!/bin/sh
+# bzip2 — block-sorting file compressor (LFS 13.1-systemd 8.7, adapted for
+# destroot; the install_docs patch is skipped in v0).
+set -e
+
+cd "$ZPKG_SRC/bzip2-1.0.8"
+# The two seds below are book-verbatim; $(PREFIX) must stay literal.
+# shellcheck disable=SC2016
+sed -i 's@\(ln -s -f \)$(PREFIX)/bin/@\1@' Makefile
+sed -i "s@(PREFIX)/man@(PREFIX)/share/man@g" Makefile
+make -f Makefile-libbz2_so
+make clean
+make
+make PREFIX="$ZPKG_DESTROOT/usr" install
+cp -av libbz2.so.* "$ZPKG_DESTROOT/usr/lib"
+ln -sfv libbz2.so.1.0.8 "$ZPKG_DESTROOT/usr/lib/libbz2.so"
+ln -sfv libbz2.so.1.0.8 "$ZPKG_DESTROOT/usr/lib/libbz2.so.1"
+cp -v bzip2-shared "$ZPKG_DESTROOT/usr/bin/bzip2"
+for i in bzcat bunzip2; do
+	ln -sfv bzip2 "$ZPKG_DESTROOT/usr/bin/$i"
+done
+rm -fv "$ZPKG_DESTROOT/usr/lib/libbz2.a"
