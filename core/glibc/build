@@ -1,0 +1,11 @@
+#!/bin/sh
+# glibc — the GNU C library.
+# TODO(M2): glibc builds against kernel headers; prepare a headers step
+# (or a linux-headers recipe) per LFS 13.1 before any real build.
+set -e
+
+mkdir -p build
+cd build
+../configure --prefix=/usr
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install

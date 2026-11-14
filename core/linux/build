@@ -1,0 +1,10 @@
+#!/bin/sh
+# linux — the kernel.
+# TODO(M3): add a minimal config for the QEMU x86_64 target and place it as
+# .config before building; decide initramfs usage (see design-system.md).
+set -e
+
+make defconfig
+make -j"$(nproc)"
+make INSTALL_PATH="$ZPKG_DESTROOT/boot" install
+make INSTALL_MOD_PATH="$ZPKG_DESTROOT" modules_install

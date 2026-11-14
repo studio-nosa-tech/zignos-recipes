@@ -1,0 +1,11 @@
+#!/bin/sh
+# binutils — assembler, linker and binary utilities.
+# TODO(M2): LFS builds binutils twice (cross pass1, native pass2) with
+# different configure flags; split into stage-specific recipes then.
+set -e
+
+mkdir -p build
+cd build
+../configure --prefix=/usr
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install

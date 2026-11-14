@@ -1,0 +1,12 @@
+#!/bin/sh
+# gcc — the GNU compiler collection.
+# TODO(M2): fetch gmp/mpfr/mpc (contrib/download_prerequisites) and split
+# pass1/pass2 recipes per LFS 13.1 before any real build.
+set -e
+
+# contrib/download_prerequisites
+mkdir -p build
+cd build
+../configure --prefix=/usr --enable-languages=c,c++ --disable-multilib
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install
