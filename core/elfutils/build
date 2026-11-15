@@ -1,0 +1,14 @@
+#!/bin/sh
+# elfutils — libelf for the kernel's objtool (LFS 13.1-systemd 8.50,
+# libelf-only install, tests skipped in v0).
+set -e
+
+cd "$ZPKG_SRC/elfutils-0.195"
+./configure --prefix=/usr        \
+            --disable-debuginfod \
+            --enable-libdebuginfod=dummy
+make -C lib
+make -C libelf
+make -C libelf DESTDIR="$ZPKG_DESTROOT" install
+install -vm644 config/libelf.pc "$ZPKG_DESTROOT/usr/lib/pkgconfig/libelf.pc"
+rm -fv "$ZPKG_DESTROOT/usr/lib/libelf.a"
