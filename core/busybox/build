@@ -1,9 +1,12 @@
 #!/bin/sh
 # busybox — single binary providing many Unix utilities.
-# TODO(M1): verify against the LFS 13.1 version; pin checksums.
 set -e
 
 cd "$ZPKG_SRC/busybox-1.37.0"
 make defconfig
+# Kernel 6.8+ headers removed the CBQ UAPI structs that the tc applet
+# still references (upstream fix landed only after 1.37.0); tc is not
+# needed in the base system.
+sed -i 's/^CONFIG_TC=y$/# CONFIG_TC is not set/' .config
 make -j"$(nproc)"
 make CONFIG_PREFIX="$ZPKG_DESTROOT" install
