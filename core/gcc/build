@@ -4,6 +4,13 @@
 set -e
 
 cd "$ZPKG_SRC/gcc-16.2.0"
+# The temp-system gawk (built without mpfr) trips a gawk 5.4.1 regression
+# that mangles GCC's awk-generated option tables (unconditional #error in
+# options.cc). The bootstrap places mawk in the chroot for this; mawk is
+# also what AC_PROG_AWK would accept on many hosts.
+if [ -x /usr/bin/mawk ]; then
+	export AWK=/usr/bin/mawk
+fi
 case $(uname -m) in
 	x86_64)
 		sed -e '/m64=/s/lib64/lib/' \
