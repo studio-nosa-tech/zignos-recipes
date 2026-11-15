@@ -1,0 +1,8 @@
+#!/bin/sh
+# ZIGNOS: populate /dev with busybox mdev (device manager; eudev is the
+# future upgrade path).
+
+description="populate /dev with mdev"
+
+command=/bin/busybox
+command_args="mdev -s"

@@ -1,0 +1,8 @@
+#!/bin/sh
+# openrc — the init system (OpenRC 0.64.1; the GitHub tag has no release
+# object, so the source is the tag archive tarball).
+set -e
+
+cd "$ZPKG_SRC/openrc-0.64.1"
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install

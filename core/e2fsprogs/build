@@ -1,0 +1,18 @@
+#!/bin/sh
+# e2fsprogs — ext2/3/4 filesystem tools (LFS 13.1-systemd 8.82, tests
+# skipped in v0). Uses util-linux's blkid/uuid (see depends).
+set -e
+
+cd "$ZPKG_SRC/e2fsprogs-1.47.4"
+mkdir -v build
+cd build
+../configure --prefix=/usr       \
+             --sysconfdir=/etc   \
+             --enable-elf-shlibs \
+             --disable-libblkid  \
+             --disable-libuuid   \
+             --disable-uuidd     \
+             --disable-fsck
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install
+rm -fv "$ZPKG_DESTROOT"/usr/lib/{libcom_err,libe2p,libext2fs,libss}.a
