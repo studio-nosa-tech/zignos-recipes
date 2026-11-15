@@ -1,5 +1,5 @@
 #!/sbin/openrc-run
-# ZIGNOS: serial console on ttyS0, auto-logged in as root for now.
+# ZIGNOS: serial console on ttyS0, real login via shadow (root password set at bootstrap).
 # supervise-daemon runs agetty in foreground mode; agetty opens the port
 # itself and dups it onto fd 0/1/2, so the shell talks to the serial line.
 
@@ -7,7 +7,7 @@ description="serial console on ttyS0"
 
 supervisor=supervise-daemon
 command=/usr/sbin/agetty
-command_args_foreground="-n -l /bin/bash ttyS0 115200 vt100"
+command_args_foreground="ttyS0 115200 vt100"
 
 depend() {
 	after localmount
