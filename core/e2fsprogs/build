@@ -11,8 +11,7 @@ cd build
              --enable-elf-shlibs \
              --disable-libblkid  \
              --disable-libuuid   \
-             --disable-uuidd     \
-             --disable-fsck
+             --disable-uuidd
 make -j"$(nproc)"
 make DESTDIR="$ZPKG_DESTROOT" install
 for lib in com_err e2p ext2fs ss; do

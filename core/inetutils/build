@@ -1,0 +1,21 @@
+#!/bin/sh
+# inetutils — basic network programs incl. ifconfig/ping, needed by the
+# OpenRC loopback service (LFS 13.1-systemd 8.44; servers disabled, tests
+# skipped in v0).
+set -e
+
+cd "$ZPKG_SRC/inetutils-2.8"
+sed -i 's/def HAVE_TERMCAP_TGETENT/ 1/' telnet/telnet.c
+./configure --prefix=/usr        \
+            --bindir=/usr/bin    \
+            --localstatedir=/var \
+            --disable-logger     \
+            --disable-whois      \
+            --disable-rcp        \
+            --disable-rexec      \
+            --disable-rlogin     \
+            --disable-rsh        \
+            --disable-servers
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install
+mv -v "$ZPKG_DESTROOT/usr/bin/ifconfig" "$ZPKG_DESTROOT/usr/sbin/"

@@ -1,0 +1,12 @@
+#!/bin/sh
+# procps-ng — system monitoring tools incl. sysctl (LFS 13.1-systemd 8.80,
+# built without systemd, tests skipped in v0).
+set -e
+
+cd "$ZPKG_SRC/procps-ng-4.0.7"
+./configure --prefix=/usr \
+            --docdir=/usr/share/doc/procps-ng-4.0.7 \
+            --disable-static \
+            --disable-kill
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install
