@@ -9,4 +9,8 @@ make defconfig
 # needed in the base system.
 sed -i 's/^CONFIG_TC=y$/# CONFIG_TC is not set/' .config
 make -j"$(nproc)"
-make CONFIG_PREFIX="$ZPKG_DESTROOT" install
+# Install the binary only: coreutils already owns the applet paths
+# (test/[ , cat, ls, ...) and the full symlink tree would collide.
+# Where to expose applets is an init-design decision (M3).
+mkdir -pv "$ZPKG_DESTROOT/bin"
+cp -av busybox "$ZPKG_DESTROOT/bin/busybox"
