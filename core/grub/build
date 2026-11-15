@@ -1,0 +1,17 @@
+#!/bin/sh
+# grub — the bootloader (LFS 13.1-systemd 8.65, BIOS build; tests skipped
+# in v0). UEFI targets come with the installer work.
+set -e
+
+cd "$ZPKG_SRC/grub-2.14"
+unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS
+# grub-2.14 configure passes an option recent binutils reject.
+sed 's/--image-base/--nonexist-linker-option/' -i configure
+mkdir -v build
+cd build
+../configure --prefix=/usr     \
+             --sysconfdir=/etc \
+             --disable-efiemu  \
+             --disable-werror
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install
