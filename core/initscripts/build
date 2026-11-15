@@ -21,4 +21,5 @@ ln -sv /etc/init.d/hostname "$D/etc/runlevels/boot/hostname"
 ln -sv /etc/init.d/console "$D/etc/runlevels/default/console"
 
 # PID 1: OpenRC's own init
+mkdir -pv "$D/sbin"
 ln -sv /sbin/openrc-init "$D/sbin/init"
