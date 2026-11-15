@@ -15,5 +15,5 @@ make DESTDIR="$ZPKG_DESTROOT" install
 mkdir -pv "$ZPKG_DESTROOT/usr/sbin"
 mv -v "$ZPKG_DESTROOT/usr/bin/chroot" "$ZPKG_DESTROOT/usr/sbin/"
 mkdir -pv "$ZPKG_DESTROOT/usr/share/man/man8"
-mv -v "$ZPKG_DESTROOT/usr/share/man/man1/chroot.1" "$ZPKG_DESTROOT/usr/share/man/man8/"
+mv -v "$ZPKG_DESTROOT/usr/share/man/man1/chroot.1" "$ZPKG_DESTROOT/usr/share/man/man8/chroot.8"
 sed -i 's/"1"/"8"/' "$ZPKG_DESTROOT/usr/share/man/man8/chroot.8"
