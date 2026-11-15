@@ -4,8 +4,8 @@
 # cgroups/devfs/dmesg/sysfs, boot: root/hostname/localmount/..., default:
 # local) and the stock agetty service; this package adds:
 #   sysinit: mdev (populate /dev with busybox)
-#   default: console (agetty on ttyS0, auto-login root via -n -l /bin/bash
-#            until a shadow-based login exists)
+#   default: console (agetty on ttyS0, real login via shadow)
+#   runtime config: /etc/profile, /etc/securetty, /etc/motd
 # and /sbin/init -> openrc-init.
 
 set -e
@@ -13,6 +13,9 @@ set -e
 D="$ZPKG_DESTROOT"
 install -vDm755 "$ZPKG_RECIPE_DIR/init.d/mdev" "$D/etc/init.d/mdev"
 install -vDm755 "$ZPKG_RECIPE_DIR/init.d/console" "$D/etc/init.d/console"
+install -vDm644 "$ZPKG_RECIPE_DIR/etc/profile" "$D/etc/profile"
+install -vDm644 "$ZPKG_RECIPE_DIR/etc/securetty" "$D/etc/securetty"
+install -vDm644 "$ZPKG_RECIPE_DIR/etc/motd" "$D/etc/motd"
 printf 'zignos\n' > "$D/etc/hostname"
 
 mkdir -pv "$D/etc/runlevels/sysinit" "$D/etc/runlevels/default"
