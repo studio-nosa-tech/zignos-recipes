@@ -11,9 +11,14 @@ cd build
              --enable-elf-shlibs \
              --disable-libblkid  \
              --disable-libuuid   \
-             --disable-uuidd
+             --disable-uuidd     \
+             --disable-fsck
 make -j"$(nproc)"
 make DESTDIR="$ZPKG_DESTROOT" install
+# The fsck front-end is util-linux's; expose the e2fsck backends to it.
+for t in ext2 ext3 ext4; do
+	ln -sv e2fsck "$ZPKG_DESTROOT/usr/sbin/fsck.$t"
+done
 for lib in com_err e2p ext2fs ss; do
 	rm -fv "$ZPKG_DESTROOT/usr/lib/lib$lib.a"
 done
