@@ -14,7 +14,7 @@ sed -e 's:#ENCRYPT_METHOD SHA512:ENCRYPT_METHOD YESCRYPT:' \
 touch /usr/bin/passwd
 ./configure --sysconfdir=/etc   \
             --disable-static    \
-            --with-{b,yes}crypt \
+            --with-bcrypt --with-yescrypt \
             --without-libbsd    \
             --disable-logind    \
             --with-group-name-max-length=32
