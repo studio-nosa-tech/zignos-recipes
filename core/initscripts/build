@@ -1,7 +1,9 @@
 #!/bin/sh
-# initscripts — ZIGNOS boot services on top of OpenRC:
-#   sysinit: mdev (populate /dev)
-#   boot:    root (remount / rw, stock OpenRC), hostname (stock)
+# initscripts — ZIGNOS-specific boot services on top of OpenRC.
+# OpenRC's own package ships the standard runlevel links (sysinit:
+# cgroups/devfs/dmesg/sysfs, boot: root/hostname/localmount/..., default:
+# local); this package adds:
+#   sysinit: mdev (populate /dev with busybox)
 #   default: console (agetty on ttyS0, auto-login root)
 # and /sbin/init -> openrc-init.
 
@@ -12,12 +14,8 @@ install -vDm755 "$ZPKG_RECIPE_DIR/init.d/mdev" "$D/etc/init.d/mdev"
 install -vDm755 "$ZPKG_RECIPE_DIR/init.d/console" "$D/etc/init.d/console"
 printf 'zignos\n' > "$D/etc/hostname"
 
-mkdir -pv "$D/etc/runlevels/sysinit" "$D/etc/runlevels/boot" "$D/etc/runlevels/default"
+mkdir -pv "$D/etc/runlevels/sysinit" "$D/etc/runlevels/default"
 ln -sv /etc/init.d/mdev "$D/etc/runlevels/sysinit/mdev"
-ln -sv /etc/init.d/procfs "$D/etc/runlevels/sysinit/procfs"
-ln -sv /etc/init.d/sysfs "$D/etc/runlevels/sysinit/sysfs"
-ln -sv /etc/init.d/root "$D/etc/runlevels/boot/root"
-ln -sv /etc/init.d/hostname "$D/etc/runlevels/boot/hostname"
 ln -sv /etc/init.d/console "$D/etc/runlevels/default/console"
 
 # PID 1: OpenRC's own init
