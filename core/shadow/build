@@ -1,0 +1,22 @@
+#!/bin/sh
+# shadow — user account/password management: login, passwd, su, useradd
+# (LFS 13.1-systemd 8.30; tests skipped in v0). Built without PAM and
+# without logind (no systemd).
+set -e
+
+cd "$ZPKG_SRC/shadow-4.20.2"
+find man -name Makefile.in -exec sed -i 's/getspnam\.3 / /' {} \;
+find man -name Makefile.in -exec sed -i 's/passwd\.5 / /' {} \;
+sed -e 's:#ENCRYPT_METHOD SHA512:ENCRYPT_METHOD YESCRYPT:' \
+    -e 's:/var/spool/mail:/var/mail:'                      \
+    -e '/PATH=/{s@/sbin:@@;s@/bin:@@}'                     \
+    -i etc/login.defs
+touch /usr/bin/passwd
+./configure --sysconfdir=/etc   \
+            --disable-static    \
+            --with-{b,yes}crypt \
+            --without-libbsd    \
+            --disable-logind    \
+            --with-group-name-max-length=32
+make -j"$(nproc)"
+make exec_prefix=/usr DESTDIR="$ZPKG_DESTROOT" install
