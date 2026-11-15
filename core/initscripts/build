@@ -2,21 +2,22 @@
 # initscripts — ZIGNOS-specific boot services on top of OpenRC.
 # OpenRC's own package ships the standard runlevel links (sysinit:
 # cgroups/devfs/dmesg/sysfs, boot: root/hostname/localmount/..., default:
-# local); this package adds:
+# local) and the stock agetty service; this package adds:
 #   sysinit: mdev (populate /dev with busybox)
-#   default: console (agetty on ttyS0, auto-login root)
+#   default: agetty.ttyS0 (stock agetty service, auto-login root via
+#            conf.d/agetty until a shadow-based login exists)
 # and /sbin/init -> openrc-init.
 
 set -e
 
 D="$ZPKG_DESTROOT"
 install -vDm755 "$ZPKG_RECIPE_DIR/init.d/mdev" "$D/etc/init.d/mdev"
-install -vDm755 "$ZPKG_RECIPE_DIR/init.d/console" "$D/etc/init.d/console"
+install -vDm644 "$ZPKG_RECIPE_DIR/conf.d/agetty" "$D/etc/conf.d/agetty"
 printf 'zignos\n' > "$D/etc/hostname"
 
 mkdir -pv "$D/etc/runlevels/sysinit" "$D/etc/runlevels/default"
 ln -sv /etc/init.d/mdev "$D/etc/runlevels/sysinit/mdev"
-ln -sv /etc/init.d/console "$D/etc/runlevels/default/console"
+ln -sv /etc/init.d/agetty "$D/etc/runlevels/default/agetty.ttyS0"
 
 # PID 1: OpenRC's own init
 mkdir -pv "$D/sbin"

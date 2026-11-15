@@ -1,0 +1,2 @@
+# Options for the stock OpenRC agetty service (agetty.ttyS0).
+agetty_options="-n -l /bin/bash"
