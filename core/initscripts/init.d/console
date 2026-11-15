@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/sbin/openrc-run
 # ZIGNOS: serial console on ttyS0, auto-logged in as root for now.
 # supervise-daemon runs agetty in foreground mode; agetty opens the port
 # itself and dups it onto fd 0/1/2, so the shell talks to the serial line.

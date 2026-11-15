@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/sbin/openrc-run
 # ZIGNOS: populate /dev with busybox mdev (device manager; eudev is the
 # future upgrade path).
 
