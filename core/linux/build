@@ -1,10 +1,13 @@
 #!/bin/sh
-# linux — the kernel.
-# TODO(M3): add a minimal config for the QEMU x86_64 target and place it as
-# .config before building; decide initramfs usage (see design-system.md).
+# linux — the kernel (LFS 13.1-systemd 10.3 target, minimal QEMU x86_64
+# build for M3). The config fragment in this recipe is merged over
+# allnoconfig: everything is off unless listed there, so the build stays
+# small and objtool/libelf/openssl are not needed (frame-pointer unwinder,
+# no modules, no signing, no BTF).
 set -e
 
-make defconfig
+cd "$ZPKG_SRC/linux-7.1.8"
+make mrproper
+make allnoconfig KCONFIG_ALLCONFIG="$ZPKG_RECIPE_DIR/qemu-x86_64.config"
 make -j"$(nproc)"
 make INSTALL_PATH="$ZPKG_DESTROOT/boot" install
-make INSTALL_MOD_PATH="$ZPKG_DESTROOT" modules_install
