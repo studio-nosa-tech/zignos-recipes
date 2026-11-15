@@ -10,5 +10,5 @@ cd "$ZPKG_SRC/elfutils-0.195"
 make -C lib
 make -C libelf
 make -C libelf DESTDIR="$ZPKG_DESTROOT" install
-install -vm644 config/libelf.pc "$ZPKG_DESTROOT/usr/lib/pkgconfig/libelf.pc"
+install -vDm644 config/libelf.pc "$ZPKG_DESTROOT/usr/lib/pkgconfig/libelf.pc"
 rm -fv "$ZPKG_DESTROOT/usr/lib/libelf.a"
