@@ -15,4 +15,6 @@ cd build
              --disable-fsck
 make -j"$(nproc)"
 make DESTDIR="$ZPKG_DESTROOT" install
-rm -fv "$ZPKG_DESTROOT"/usr/lib/{libcom_err,libe2p,libext2fs,libss}.a
+for lib in com_err e2p ext2fs ss; do
+	rm -fv "$ZPKG_DESTROOT/usr/lib/lib$lib.a"
+done
