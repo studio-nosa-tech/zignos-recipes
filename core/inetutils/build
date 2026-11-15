@@ -18,4 +18,5 @@ sed -i 's/def HAVE_TERMCAP_TGETENT/ 1/' telnet/telnet.c
             --disable-servers
 make -j"$(nproc)"
 make DESTDIR="$ZPKG_DESTROOT" install
+mkdir -pv "$ZPKG_DESTROOT/usr/sbin"
 mv -v "$ZPKG_DESTROOT/usr/bin/ifconfig" "$ZPKG_DESTROOT/usr/sbin/"
