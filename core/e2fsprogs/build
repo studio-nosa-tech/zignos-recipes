@@ -15,10 +15,9 @@ cd build
              --disable-fsck
 make -j"$(nproc)"
 make DESTDIR="$ZPKG_DESTROOT" install
-# The fsck front-end is util-linux's; expose the e2fsck backends to it.
-for t in ext2 ext3 ext4; do
-	ln -sv e2fsck "$ZPKG_DESTROOT/usr/sbin/fsck.$t"
-done
+# Note: --disable-fsck only skips the multi-fs wrapper; the standard
+# install still provides /usr/sbin/fsck.ext2/3/4 -> e2fsck, which the
+# fsck front-end (util-linux) dispatches to.
 for lib in com_err e2p ext2fs ss; do
 	rm -fv "$ZPKG_DESTROOT/usr/lib/lib$lib.a"
 done
