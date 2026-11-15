@@ -5,8 +5,8 @@
 description="serial console on ttyS0"
 
 supervisor=supervise-daemon
-command=/usr/bin/agetty
-command_args="-n -l /bin/bash 115200 ttyS0 vt100"
+command=/usr/sbin/agetty
+command_args="-n -l /bin/bash ttyS0 115200 vt100"
 
 depend() {
 	after localmount
