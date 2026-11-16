@@ -1,0 +1,11 @@
+#!/bin/sh
+# linux-headers — kernel API headers for glibc and userland. Same source
+# tarball as the linux recipe; adopts the headers that stage0 used to
+# install by hand (same version, so the content is identical).
+set -e
+
+cd "$ZPKG_SRC/linux-$ZPKG_VERSION"
+make mrproper
+make headers
+find usr/include -type f ! -name '*.h' -delete
+make INSTALL_HDR_PATH="$ZPKG_DESTROOT/usr" headers_install
