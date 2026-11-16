@@ -1,0 +1,16 @@
+#!/bin/sh
+# perl — required by openssl's Configure and many build systems. Paths use
+# major.minor so they match the existing /usr/lib/perl5/5.44 layout.
+set -e
+
+cd "$ZPKG_SRC/perl-$ZPKG_VERSION"
+majmin=$(printf '%s' "$ZPKG_VERSION" | cut -d. -f1-2)
+sh Configure -des -D prefix=/usr -D vendorprefix=/usr -D useshrplib \
+	-D privlib=/usr/lib/perl5/$majmin/core_perl \
+	-D archlib=/usr/lib/perl5/$majmin/core_perl \
+	-D sitelib=/usr/lib/perl5/$majmin/site_perl \
+	-D sitearch=/usr/lib/perl5/$majmin/site_perl \
+	-D vendorlib=/usr/lib/perl5/$majmin/vendor_perl \
+	-D vendorarch=/usr/lib/perl5/$majmin/vendor_perl
+make
+make DESTDIR="$ZPKG_DESTROOT" install

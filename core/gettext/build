@@ -1,0 +1,10 @@
+#!/bin/sh
+# gettext — msgfmt/xgettext and the runtime libintl. Adopts the tools that
+# stage1 used to install by hand.
+set -e
+
+cd "$ZPKG_SRC/gettext-$ZPKG_VERSION"
+./configure --prefix=/usr --disable-static \
+    --docdir="/usr/share/doc/gettext-$ZPKG_VERSION"
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install

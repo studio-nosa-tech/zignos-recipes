@@ -1,0 +1,8 @@
+#!/bin/sh
+# texinfo — makeinfo/info, needed to read and regenerate package docs.
+set -e
+
+cd "$ZPKG_SRC/texinfo-$ZPKG_VERSION"
+./configure --prefix=/usr
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install

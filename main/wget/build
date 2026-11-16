@@ -1,0 +1,8 @@
+#!/bin/sh
+# wget — the other fetcher (scripts expect it alongside curl).
+set -e
+
+cd "$ZPKG_SRC/wget-$ZPKG_VERSION"
+./configure --prefix=/usr --sysconfdir=/etc --with-ssl=openssl
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install

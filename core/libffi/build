@@ -1,0 +1,8 @@
+#!/bin/sh
+# libffi — foreign function interface; python's _ctypes needs it.
+set -e
+
+cd "$ZPKG_SRC/libffi-$ZPKG_VERSION"
+./configure --prefix=/usr --disable-static --with-gcc-arch=x86-64
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install

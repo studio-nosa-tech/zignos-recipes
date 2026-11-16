@@ -1,0 +1,10 @@
+#!/bin/sh
+# python3 — build system for meson/ninja users and a general scripting
+# runtime. Adopts the stage1 install (same version, same layout).
+set -e
+
+cd "$ZPKG_SRC/Python-$ZPKG_VERSION"
+./configure --prefix=/usr --enable-shared --with-system-expat \
+    --without-ensurepip
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install

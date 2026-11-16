@@ -1,0 +1,8 @@
+#!/bin/sh
+# rsync — efficient transfer and the tool backups/seed sync want.
+set -e
+
+cd "$ZPKG_SRC/rsync-$ZPKG_VERSION"
+./configure --prefix=/usr
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install
