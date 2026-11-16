@@ -1,0 +1,14 @@
+#!/bin/sh
+# openssl — TLS/crypto library and CLI (LFS 13.1-systemd 8.49, tests
+# skipped in v0). Required by openssh.
+set -e
+
+cd "$ZPKG_SRC/openssl-4.0.1"
+./config --prefix=/usr         \
+         --openssldir=/etc/ssl \
+         --libdir=lib          \
+         shared                \
+         zlib-dynamic
+make -j"$(nproc)"
+# INSTALL_LIBS= keeps the static libraries out of the install.
+make DESTDIR="$ZPKG_DESTROOT" INSTALL_LIBS= MANSUFFIX=ssl install

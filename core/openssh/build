@@ -1,0 +1,24 @@
+#!/bin/sh
+# openssh — SSH server and client (portable 10.6p2). Privilege separation
+# uses the sshd user, created here; host keys are generated on first boot
+# by the init script (zignos-ssh-keygen) so the image ships without keys.
+set -e
+
+cd "$ZPKG_SRC/openssh-10.6p2"
+./configure --prefix=/usr                    \
+            --sysconfdir=/etc/ssh           \
+            --with-privsep-path=/var/empty  \
+            --with-defaults                 \
+            --with-ssl-engine=no            \
+            --without-pam
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install
+
+# sshd privilege-separation account
+if ! grep -q '^sshd:' "$ZPKG_DESTROOT/etc/passwd"; then
+	echo 'sshd:x:50:50:sshd privsep:/var/empty:/bin/false' >> "$ZPKG_DESTROOT/etc/passwd"
+	echo 'sshd:x:50:' >> "$ZPKG_DESTROOT/etc/group"
+fi
+mkdir -pv "$ZPKG_DESTROOT/var/empty"
+chmod 0755 "$ZPKG_DESTROOT/var/empty"
+mkdir -pv "$ZPKG_DESTROOT/etc/ssh"

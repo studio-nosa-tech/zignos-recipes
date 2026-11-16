@@ -1,11 +1,12 @@
 #!/bin/sh
 # initscripts — ZIGNOS-specific boot services on top of OpenRC.
 # OpenRC's own package ships the standard runlevel links (sysinit:
-# cgroups/devfs/dmesg/sysfs, boot: root/hostname/localmount/..., default:
-# local) and the stock agetty service; this package adds:
+# cgroups/devfs/dmesg/sysfs, boot: root/hostname/localmount/...) and the
+# stock agetty/network services; this package adds:
 #   sysinit: mdev (populate /dev with busybox)
-#   default: console (agetty on ttyS0, real login via shadow)
-#   runtime config: /etc/profile, /etc/securetty, /etc/motd
+#   boot:    network (stock service, driven by dhcpcd via conf.d/net)
+#   default: console (agetty on ttyS0, real login via shadow), sshd
+#   runtime config: /etc/profile, /etc/securetty, /etc/motd, /etc/conf.d/net
 # and /sbin/init -> openrc-init.
 
 set -e
@@ -13,15 +14,18 @@ set -e
 D="$ZPKG_DESTROOT"
 install -vDm755 "$ZPKG_RECIPE_DIR/init.d/mdev" "$D/etc/init.d/mdev"
 install -vDm755 "$ZPKG_RECIPE_DIR/init.d/console" "$D/etc/init.d/console"
+install -vDm755 "$ZPKG_RECIPE_DIR/init.d/sshd" "$D/etc/init.d/sshd"
 install -vDm644 "$ZPKG_RECIPE_DIR/etc/profile" "$D/etc/profile"
 install -vDm644 "$ZPKG_RECIPE_DIR/etc/securetty" "$D/etc/securetty"
 install -vDm644 "$ZPKG_RECIPE_DIR/etc/motd" "$D/etc/motd"
+install -vDm644 "$ZPKG_RECIPE_DIR/etc/conf.d/net" "$D/etc/conf.d/net"
 printf 'zignos\n' > "$D/etc/hostname"
 
-
-mkdir -pv "$D/etc/runlevels/sysinit" "$D/etc/runlevels/default"
+mkdir -pv "$D/etc/runlevels/sysinit" "$D/etc/runlevels/boot" "$D/etc/runlevels/default"
 ln -sv /etc/init.d/mdev "$D/etc/runlevels/sysinit/mdev"
+ln -sv /etc/init.d/network "$D/etc/runlevels/boot/network"
 ln -sv /etc/init.d/console "$D/etc/runlevels/default/console"
+ln -sv /etc/init.d/sshd "$D/etc/runlevels/default/sshd"
 
 # /sbin: PID 1 and the busybox power-control applets (busybox ships only
 # the binary; nothing else provides poweroff/reboot/halt).
