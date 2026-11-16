@@ -1,0 +1,3 @@
+#!/bin/sh
+# chronyd (running as user chrony) writes its drift file here.
+install -d -m755 -o chrony -g chrony "$ZPKG_ROOT/var/lib/chrony"

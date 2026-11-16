@@ -1,0 +1,15 @@
+#!/bin/sh
+# chrony — NTP client/server. Keeps the system clock (and, via rtcsync, the
+# RTC) in sync. The chrony account comes from initscripts; the drift
+# directory is chowned by the post_install hook.
+set -e
+
+cd "$ZPKG_SRC/chrony-$ZPKG_VERSION"
+./configure --prefix=/usr     \
+            --sysconfdir=/etc \
+            --with-user=chrony \
+            --with-sendmail=/usr/bin/false
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install
+install -d "$ZPKG_DESTROOT/var/lib/chrony"
+install -Dm644 "$ZPKG_RECIPE_DIR/chrony.conf" "$ZPKG_DESTROOT/etc/chrony.conf"
