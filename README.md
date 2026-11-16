@@ -6,10 +6,10 @@ ZIGNOS のレシピツリー(Gentoo の gentoo/gentoo リポジトリ相当)。
 
 | カテゴリ | パッケージ数 | 内容 |
 |---|---|---|
-| `core/` | **66** | ベースシステム + ビルドツール一式(base.list の大半) |
+| `core/` | **67** | ベースシステム + ビルドツール一式(base.list の大半) |
 | `main/` | **14** | CLI 実用パッケージ(好みで追加インストール) |
 | `desktop/` | **0** | GUI(未整備) |
-| **合計** | **80** | うち **79 が `zignos-build/base.list`**(ベースシステムの唯一の定義)に含まれる |
+| **合計** | **81** | うち **80 が `zignos-build/base.list`**(ベースシステムの唯一の定義)に含まれる |
 
 `main/` の `sudo` のみ意図的に base.list 外(特権昇格のデフォルトは doas)。
 
@@ -18,9 +18,10 @@ ZIGNOS のレシピツリー(Gentoo の gentoo/gentoo リポジトリ相当)。
 autoconf bash bc binutils bison busybox bzip2 ca-certificates coreutils dhcpcd
 diffutils doas e2fsprogs elfutils file findutils flex gawk gcc gdbm gettext
 glibc gmp go grep groff grub gzip inetutils initscripts kbd libcap libevent
-libffi libpipeline libxcrypt linux linux-headers m4 make man-db man-pages mpc
-mpdecimal mpfr ncurses ninja openrc openssh openssl patch pcre2 perl pkgconf
-procps python3 readline sed shadow tar texinfo util-linux xz zlib zpkg zstd
+libffi libpipeline libxcrypt linux linux-headers m4 make man-db man-pages
+meson mpc mpdecimal mpfr ncurses ninja openrc openssh openssl patch pcre2
+perl pkgconf procps python3 readline sed shadow tar texinfo util-linux xz
+zlib zpkg zstd
 
 ### main/(14)
 
