@@ -3,6 +3,8 @@
 set -e
 
 cd "$ZPKG_SRC/wget-$ZPKG_VERSION"
+# OpenSSL 4 removed SSLv3_client_method without its NO_*_METHOD macro.
+patch --force -p1 < "$ZPKG_RECIPE_DIR/openssl4.patch"
 ./configure --prefix=/usr --sysconfdir=/etc --with-ssl=openssl
 make -j"$(nproc)"
 make DESTDIR="$ZPKG_DESTROOT" install
