@@ -1,0 +1,8 @@
+#!/bin/sh
+# jq — JSON processor; shell scripts and API debugging lean on it.
+set -e
+
+cd "$ZPKG_SRC/jq-$ZPKG_VERSION"
+./configure --prefix=/usr --without-oniguruma
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install

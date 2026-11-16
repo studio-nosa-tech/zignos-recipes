@@ -1,0 +1,8 @@
+#!/bin/sh
+# strace — syscall tracer; invaluable on a source-based distro.
+set -e
+
+cd "$ZPKG_SRC/strace-$ZPKG_VERSION"
+./configure --prefix=/usr
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install

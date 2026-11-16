@@ -1,0 +1,8 @@
+#!/bin/sh
+# socat — general purpose relay; network plumbing for scripts and tests.
+set -e
+
+cd "$ZPKG_SRC/socat-$ZPKG_VERSION"
+./configure --prefix=/usr
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install
