@@ -4,6 +4,10 @@
 set -e
 
 cd "$ZPKG_SRC/Python-$ZPKG_VERSION"
+# OpenSSL 4 removed the fixed-version TLS methods (and their NO_*_METHOD
+# macros); guard CPython's uses with the version number until upstream
+# merges equivalent support.
+patch --force -p1 < "$ZPKG_RECIPE_DIR/openssl4.patch"
 ./configure --prefix=/usr --enable-shared --with-system-expat \
     --without-ensurepip
 make -j"$(nproc)"
