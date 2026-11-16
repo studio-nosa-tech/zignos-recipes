@@ -14,11 +14,10 @@ cd "$ZPKG_SRC/openssh-10.6p2"
 make -j"$(nproc)"
 make DESTDIR="$ZPKG_DESTROOT" install
 
-# sshd privilege-separation account
-if ! grep -q '^sshd:' "$ZPKG_DESTROOT/etc/passwd"; then
-	echo 'sshd:x:50:50:sshd privsep:/var/empty:/bin/false' >> "$ZPKG_DESTROOT/etc/passwd"
-	echo 'sshd:x:50:' >> "$ZPKG_DESTROOT/etc/group"
-fi
+# NOTE: the sshd account is shipped by the initscripts package (/etc/passwd
+# and /etc/group are runtime configuration, not package files). Touching
+# them from a destroot here once produced a passwd containing only "sshd"
+# and clobbered root at install time.
 mkdir -pv "$ZPKG_DESTROOT/var/empty"
 chmod 0755 "$ZPKG_DESTROOT/var/empty"
 mkdir -pv "$ZPKG_DESTROOT/etc/ssh"

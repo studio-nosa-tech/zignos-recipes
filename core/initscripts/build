@@ -20,6 +20,10 @@ install -vDm755 "$ZPKG_RECIPE_DIR/init.d/dhcpcd" "$D/etc/init.d/dhcpcd"
 install -vDm644 "$ZPKG_RECIPE_DIR/etc/profile" "$D/etc/profile"
 install -vDm644 "$ZPKG_RECIPE_DIR/etc/securetty" "$D/etc/securetty"
 install -vDm644 "$ZPKG_RECIPE_DIR/etc/motd" "$D/etc/motd"
+# Base accounts are runtime configuration owned by this package (passwords
+# stay in /etc/shadow, maintained by shadow's tools).
+install -vDm644 "$ZPKG_RECIPE_DIR/etc/passwd" "$D/etc/passwd"
+install -vDm644 "$ZPKG_RECIPE_DIR/etc/group" "$D/etc/group"
 printf 'zignos\n' > "$D/etc/hostname"
 
 mkdir -pv "$D/etc/runlevels/sysinit" "$D/etc/runlevels/boot" "$D/etc/runlevels/default"
