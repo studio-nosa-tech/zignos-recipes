@@ -5,4 +5,4 @@ set -e
 cd "$ZPKG_SRC/tree-$ZPKG_VERSION"
 make
 install -Dm755 tree "$ZPKG_DESTROOT/usr/bin/tree"
-install -Dm644 tree.1 "$ZPKG_DESTROOT/usr/share/man/man1/tree.1"
+install -Dm644 doc/tree.1 "$ZPKG_DESTROOT/usr/share/man/man1/tree.1"
