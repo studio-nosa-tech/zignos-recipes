@@ -1,15 +1,14 @@
 #!/bin/sh
 # openrc — the init system (OpenRC 0.64.1; the GitHub tag has no release
-# object, so the source is the tag archive tarball). 0.64 builds with
-# meson; the tarball comes from the zpkg source cache like pkgconf does.
+# object, so the source is the tag archive tarball). Builds with the
+# system meson+ninja (r1: previously unpacked the meson tarball from the
+# source cache at build time).
 set -e
 
 cd "$ZPKG_SRC/openrc-0.64.1"
-tar -xf "$ZPKG_CACHE/meson-1.12.0.tar.gz"
 mkdir -v build
 cd build
-python3 ../meson-1.12.0/meson.py setup \
-	--prefix=/usr --buildtype=release \
+meson setup --prefix=/usr --buildtype=release \
 	-Dpam=false \
 	-Duucp_group=root \
 	..
