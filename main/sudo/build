@@ -6,8 +6,13 @@
 set -e
 
 cd "$ZPKG_SRC/sudo-1.9.17p2"
+# No OpenSSL: 1.9.17p2's hostcheck.c still pokes at ASN1_STRING internals,
+# which OpenSSL 4 made opaque. sudo only needs OpenSSL for TLS/logsrvd, so
+# build without the log client/server and use sudo's bundled SHA-2.
 ./configure --prefix=/usr                     \
             --libexecdir=/usr/lib             \
+            --disable-log-client              \
+            --disable-log-server              \
             --with-secure-path                \
             --with-all-insults                \
             --with-env-editor                 \
