@@ -1,0 +1,20 @@
+#!/bin/sh
+# doas — minimal privilege escalation (OpenDoas 6.8.2), the ZIGNOS default.
+# But there is no PAM in this system: authenticate against /etc/shadow
+# (--without-pam). "persist" needs the timestamp-file implementation
+# (--with-timestamp); it keeps state under /run/doas, which is tmpfs.
+set -e
+
+cd "$ZPKG_SRC/opendoas-6.8.2"
+./configure --prefix=/usr     \
+            --sysconfdir=/etc \
+            --without-pam     \
+            --with-timestamp
+make
+# The upstream install chowns root:root and sets mode 4755.
+make DESTDIR="$ZPKG_DESTROOT" install
+
+# Default policy: wheel may use doas after authenticating, with a short
+# grace period. sudo (main/sudo) is the alternative for people who expect
+# it, but is not part of the default image.
+install -Dm644 "$ZPKG_RECIPE_DIR/doas.conf" "$ZPKG_DESTROOT/etc/doas.conf"

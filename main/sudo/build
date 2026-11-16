@@ -1,0 +1,20 @@
+#!/bin/sh
+# sudo — the de-facto standard privilege escalation tool (portable
+# 1.9.17p2). ZIGNOS ships doas in the default image; sudo lives in main/
+# for people who expect sudo. There is no PAM here, so sudo authenticates
+# against /etc/shadow (configure's default without --with-pam).
+set -e
+
+cd "$ZPKG_SRC/sudo-1.9.17p2"
+./configure --prefix=/usr                     \
+            --libexecdir=/usr/lib             \
+            --with-secure-path                \
+            --with-all-insults                \
+            --with-env-editor                 \
+            --docdir=/usr/share/doc/sudo-1.9.17p2 \
+            --with-passprompt="[sudo] password for %p: "
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install
+
+# Replace upstream's default policy with ZIGNOS's: wheel may run anything.
+install -Dm440 "$ZPKG_RECIPE_DIR/sudoers" "$ZPKG_DESTROOT/etc/sudoers"
