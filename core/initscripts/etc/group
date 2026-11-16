@@ -1,4 +1,5 @@
 root:x:0:
+wheel:x:10:
 tty:x:5:
 sshd:x:50:
 utmp:x:15:

@@ -2,13 +2,13 @@
 # shellcheck shell=sh disable=SC2034
 # ZIGNOS: OpenSSH daemon. An ed25519 host key is generated on first start
 # (fast, and the image ships without keys so every install gets its own).
-# Root login with the install password is allowed until proper user
-# accounts exist.
+# Root SSH login is disabled: use the user created by zignos-install.
+# Root still has the serial console for recovery.
 
 description="OpenSSH server"
 
 command=/usr/sbin/sshd
-command_args="-o PermitRootLogin=yes -o HostKey=/etc/ssh/ssh_host_ed25519_key"
+command_args="-o PermitRootLogin=no -o HostKey=/etc/ssh/ssh_host_ed25519_key"
 
 depend() {
 	need localmount
