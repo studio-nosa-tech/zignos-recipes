@@ -11,7 +11,8 @@ make mrproper
 make allnoconfig KCONFIG_ALLCONFIG="$ZPKG_RECIPE_DIR/qemu-x86_64.config"
 # KCONFIG_ALLCONFIG applies fragments line by line and silently drops a
 # symbol whose parent menu is still off, so assert the essentials survived.
-for sym in CONFIG_VIRTIO_BLK=y CONFIG_VIRTIO_NET=y CONFIG_EXT4_FS=y            CONFIG_SECCOMP_FILTER=y; do
+for sym in CONFIG_VIRTIO_BLK=y CONFIG_VIRTIO_NET=y CONFIG_EXT4_FS=y\
+           CONFIG_SECCOMP_FILTER=y; do
 	grep -qx "$sym" .config || {
 		echo "linux: $sym missing from the merged config" >&2
 		exit 1
