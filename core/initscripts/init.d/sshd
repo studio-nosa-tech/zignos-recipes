@@ -1,24 +1,26 @@
 #!/sbin/openrc-run
 # shellcheck shell=sh disable=SC2034
-# ZIGNOS: OpenSSH daemon. Host keys are generated on first start (the
-# image ships without keys so every install gets its own); root login with
-# the install password is allowed until user accounts are set up properly.
+# ZIGNOS: OpenSSH daemon. An ed25519 host key is generated on first start
+# (fast, and the image ships without keys so every install gets its own).
+# Root login with the install password is allowed until proper user
+# accounts exist.
 
 description="OpenSSH server"
 
 command=/usr/sbin/sshd
-command_args="-o PermitRootLogin=yes"
+command_args="-o PermitRootLogin=yes -o HostKey=/etc/ssh/ssh_host_ed25519_key"
 
 depend() {
-	need net
-	use dns logger
+	need localmount
+	use net dns logger
+	after dhcpcd
 }
 
 start_pre() {
 	checkpath -d -m 0755 /run/sshd
 	if [ ! -f /etc/ssh/ssh_host_ed25519_key ]; then
-		ebegin "Generating SSH host keys"
-		ssh-keygen -A
+		ebegin "Generating SSH host key (ed25519)"
+		ssh-keygen -q -t ed25519 -N "" -f /etc/ssh/ssh_host_ed25519_key
 		eend $?
 	fi
 }

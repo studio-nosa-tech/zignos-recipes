@@ -1,8 +1,0 @@
-# /etc/conf.d/net — OpenRC network service configuration
-# ZIGNOS uses dhcpcd for address configuration.
-
-modules="dhcpcd"
-config_eth0="dhcp"
-
-# Wait for the link before starting dhcpcd (virtio/hotplug friendly).
-rc_need="localmount"

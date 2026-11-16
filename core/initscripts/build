@@ -4,7 +4,8 @@
 # cgroups/devfs/dmesg/sysfs, boot: root/hostname/localmount/...) and the
 # stock agetty/network services; this package adds:
 #   sysinit: mdev (populate /dev with busybox)
-#   boot:    network (stock service, driven by dhcpcd via conf.d/net)
+#   boot:    dhcpcd (our service; the stock network net-scripts are not
+#            installed, so modules=dhcpcd cannot work)
 #   default: console (agetty on ttyS0, real login via shadow), sshd
 #   runtime config: /etc/profile, /etc/securetty, /etc/motd, /etc/conf.d/net
 # and /sbin/init -> openrc-init.
@@ -15,15 +16,15 @@ D="$ZPKG_DESTROOT"
 install -vDm755 "$ZPKG_RECIPE_DIR/init.d/mdev" "$D/etc/init.d/mdev"
 install -vDm755 "$ZPKG_RECIPE_DIR/init.d/console" "$D/etc/init.d/console"
 install -vDm755 "$ZPKG_RECIPE_DIR/init.d/sshd" "$D/etc/init.d/sshd"
+install -vDm755 "$ZPKG_RECIPE_DIR/init.d/dhcpcd" "$D/etc/init.d/dhcpcd"
 install -vDm644 "$ZPKG_RECIPE_DIR/etc/profile" "$D/etc/profile"
 install -vDm644 "$ZPKG_RECIPE_DIR/etc/securetty" "$D/etc/securetty"
 install -vDm644 "$ZPKG_RECIPE_DIR/etc/motd" "$D/etc/motd"
-install -vDm644 "$ZPKG_RECIPE_DIR/etc/conf.d/net" "$D/etc/conf.d/net"
 printf 'zignos\n' > "$D/etc/hostname"
 
 mkdir -pv "$D/etc/runlevels/sysinit" "$D/etc/runlevels/boot" "$D/etc/runlevels/default"
 ln -sv /etc/init.d/mdev "$D/etc/runlevels/sysinit/mdev"
-ln -sv /etc/init.d/network "$D/etc/runlevels/boot/network"
+ln -sv /etc/init.d/dhcpcd "$D/etc/runlevels/boot/dhcpcd"
 ln -sv /etc/init.d/console "$D/etc/runlevels/default/console"
 ln -sv /etc/init.d/sshd "$D/etc/runlevels/default/sshd"
 
