@@ -18,16 +18,15 @@ install -vDm644 "$ZPKG_RECIPE_DIR/etc/securetty" "$D/etc/securetty"
 install -vDm644 "$ZPKG_RECIPE_DIR/etc/motd" "$D/etc/motd"
 printf 'zignos\n' > "$D/etc/hostname"
 
-# busybox applets that nothing else provides: power control for the
-# operator (poweroff/reboot/halt) - busybox only ships the binary.
-for a in poweroff reboot halt; do
-	ln -sfv /bin/busybox "$D/sbin/$a"
-done
 
 mkdir -pv "$D/etc/runlevels/sysinit" "$D/etc/runlevels/default"
 ln -sv /etc/init.d/mdev "$D/etc/runlevels/sysinit/mdev"
 ln -sv /etc/init.d/console "$D/etc/runlevels/default/console"
 
-# PID 1: OpenRC's own init
+# /sbin: PID 1 and the busybox power-control applets (busybox ships only
+# the binary; nothing else provides poweroff/reboot/halt).
 mkdir -pv "$D/sbin"
 ln -sv /usr/sbin/openrc-init "$D/sbin/init"
+for a in poweroff reboot halt; do
+	ln -sfv /bin/busybox "$D/sbin/$a"
+done
