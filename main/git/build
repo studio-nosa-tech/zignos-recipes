@@ -4,11 +4,15 @@
 set -e
 
 cd "$ZPKG_SRC/git-2.56.1"
+# Git 2.5x builds a Rust core library with cargo. Rust is not part of
+# ZIGNOS yet, so disable it (the C implementation covers everyday use;
+# add a rust recipe later if the Rust-only features matter).
 make -j"$(nproc)" \
 	prefix=/usr \
 	gitexecdir=/usr/libexec/git-core \
 	NO_TCLTK=1 \
-	NO_GETTEXT=1
+	NO_GETTEXT=1 \
+	NO_RUST=1
 make \
 	prefix=/usr \
 	gitexecdir=/usr/libexec/git-core \
