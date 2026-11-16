@@ -1,0 +1,14 @@
+--- a/src/io_uring.c
++++ b/src/io_uring.c
+@@ -1545,9 +1545,9 @@
+ 	tprint_struct_next();
+ 	PRINT_FIELD_U(zcrx, rq_hdr_alignment);
+ 
+-	if (zcrx.__resv1) {
++	if (zcrx.__resv2) {
+ 		tprint_struct_next();
+-		PRINT_FIELD_X(zcrx, __resv1);
++		PRINT_FIELD_X(zcrx, __resv2);
+ 	}
+ 
+ 	if (zcrx.__resv2) {

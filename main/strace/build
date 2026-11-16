@@ -3,6 +3,9 @@
 set -e
 
 cd "$ZPKG_SRC/strace-$ZPKG_VERSION"
+# kernel 7.1 renamed io_uring_query_zcrx.__resv1 to __resv2; the decoder
+# printed both fields.
+patch --force -p1 < "$ZPKG_RECIPE_DIR/io_uring-zcrx.patch"
 ./configure --prefix=/usr
 make -j"$(nproc)"
 make DESTDIR="$ZPKG_DESTROOT" install
