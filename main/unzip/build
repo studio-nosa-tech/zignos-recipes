@@ -3,6 +3,9 @@
 set -e
 
 cd "$ZPKG_SRC/unzip60"
+# unxcfg.h declares old-style gmtime()/localtime() prototypes that conflict
+# with modern libc headers.
+patch --force -p1 < "$ZPKG_RECIPE_DIR/unxcfg.patch"
 make -f unix/Makefile linux
 for tool in unzip funzip unzipsfx; do
 	install -Dm755 "$tool" "$ZPKG_DESTROOT/usr/bin/$tool"
