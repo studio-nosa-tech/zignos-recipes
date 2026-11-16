@@ -1,5 +1,17 @@
 --- a/src/io_uring.c
 +++ b/src/io_uring.c
+@@ -1255,9 +1255,9 @@
+ 	tprint_struct_next();
+ 	PRINT_FIELD_U(arg, zcrx_id);
+ 
+-	if (arg.__resv2) {
++	if (arg.__resv) {
+ 		tprint_struct_next();
+-		PRINT_FIELD_X(arg, __resv2);
++		PRINT_FIELD_X(arg, __resv);
+ 	}
+ 
+ 	if (!IS_ARRAY_ZERO(arg.__resv)) {
 @@ -1545,9 +1545,9 @@
  	tprint_struct_next();
  	PRINT_FIELD_U(zcrx, rq_hdr_alignment);
