@@ -1,0 +1,8 @@
+#!/bin/sh
+# gdbm — hash database library; man-db keeps its cache in one.
+set -e
+
+cd "$ZPKG_SRC/gdbm-$ZPKG_VERSION"
+./configure --prefix=/usr --disable-static --enable-libgdbm-compat
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install
