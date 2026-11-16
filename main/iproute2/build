@@ -1,0 +1,11 @@
+#!/bin/sh
+# iproute2 — ip/ss/tc/etc. arpd is not part of the default build target
+# (it would need Berkeley DB), so plain make is enough.
+set -e
+
+cd "$ZPKG_SRC/iproute2-6.19.0"
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install
+
+# iproute2 ships no /sbin link farm; keep the binaries in /usr/sbin and
+# /usr/bin as upstream installs them (usr-merged layout).

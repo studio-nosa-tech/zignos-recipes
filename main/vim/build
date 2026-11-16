@@ -1,0 +1,18 @@
+#!/bin/sh
+# vim — the editor most people expect on a Unix system. Console only
+# (no GUI/X), normal feature set, multibyte, no NLS.
+set -e
+
+cd "$ZPKG_SRC/vim-9.2.1355/src"
+./configure --prefix=/usr             \
+            --with-features=normal    \
+            --enable-multibyte        \
+            --disable-gui             \
+            --without-x               \
+            --disable-netbeans        \
+            --disable-nls
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install
+
+# Provide the traditional vi entry point as well.
+ln -sfn vim "$ZPKG_DESTROOT/usr/bin/vi"

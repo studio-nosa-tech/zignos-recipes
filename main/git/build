@@ -1,0 +1,15 @@
+#!/bin/sh
+# git — version control. Built with https support through curl (which
+# pulls in OpenSSL); perl is present for the optional scripts, no Tcl/Tk.
+set -e
+
+cd "$ZPKG_SRC/git-2.56.1"
+make -j"$(nproc)" \
+	prefix=/usr \
+	gitexecdir=/usr/libexec/git-core \
+	NO_TCLTK=1 \
+	NO_GETTEXT=1
+make \
+	prefix=/usr \
+	gitexecdir=/usr/libexec/git-core \
+	DESTDIR="$ZPKG_DESTROOT" install
