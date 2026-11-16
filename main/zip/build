@@ -11,7 +11,7 @@ cat > flags <<'FLAGS'
 CC="cc" CFLAGS="-I. -DUNIX -O3 -DLARGE_FILE_SUPPORT -DUIDGID_NOT_16BIT -DHAVE_DIRENT_H -DHAVE_TERMIOS_H" CPP="/usr/bin/cpp" OBJA="" OCRCU8="crc32_.o " OCRCTB="" BINDIR=/usr/bin MANDIR=man/man1 LFLAGS1="" LFLAGS2="" LN="ln -s" CC_BZ="" CFLAGS_BZ="" IZ_BZIP2="" LIB_BZ=""
 FLAGS
 make -f unix/Makefile generic
-for tool in zip zipcloak funzip zipsplit; do
+for tool in zip zipcloak zipsplit; do
 	install -Dm755 "$tool" "$ZPKG_DESTROOT/usr/bin/$tool"
 done
 install -Dm644 man/zip.1 "$ZPKG_DESTROOT/usr/share/man/man1/zip.1"
