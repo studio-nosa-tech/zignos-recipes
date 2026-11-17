@@ -3,6 +3,10 @@
 # at /sources/zignos-zpkg (see zignos-build/bootstrap.sh).
 set -e
 
+# The workdir survives between builds. Remove the old copy first: cp -a
+# into an existing directory nests the source inside it, and a stale tree
+# would silently rebuild the previous zpkg version.
+rm -rf "$ZPKG_WORKDIR/zpkg-src"
 cp -a /sources/zignos-zpkg "$ZPKG_WORKDIR/zpkg-src"
 cd "$ZPKG_WORKDIR/zpkg-src"
 GOTOOLCHAIN=local go build -o "$ZPKG_DESTROOT/usr/bin/zpkg" ./cmd/zpkg
