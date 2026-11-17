@@ -1,0 +1,17 @@
+#!/sbin/openrc-run
+# shellcheck shell=sh disable=SC2034
+# ZIGNOS: wpa_supplicant — WiFi authentication. The interface defaults to
+# wlan0; override with WPA_IFACE in /etc/conf.d/wpa_supplicant. dhcpcd (boot
+# runlevel) keeps retrying and picks up the lease once associated.
+
+description="wpa_supplicant (WiFi authentication)"
+
+supervisor=supervise-daemon
+command=/usr/sbin/wpa_supplicant
+command_args_foreground="-i ${WPA_IFACE:-wlan0} -c /etc/wpa_supplicant/wpa_supplicant.conf"
+
+depend() {
+	need localmount
+	use logger
+	after mdev dhcpcd
+}

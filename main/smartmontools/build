@@ -1,0 +1,8 @@
+#!/bin/sh
+# smartmontools — SMART disk health (smartctl).
+set -e
+
+cd "$ZPKG_SRC/smartmontools-$ZPKG_VERSION"
+./configure --prefix=/usr --sysconfdir=/etc
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install

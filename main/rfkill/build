@@ -1,0 +1,7 @@
+#!/bin/sh
+# rfkill — enable/disable wireless devices (the hardware kill switch).
+set -e
+
+cd "$ZPKG_SRC/rfkill-$ZPKG_VERSION"
+make SBINDIR=/usr/sbin
+make SBINDIR=/usr/sbin DESTDIR="$ZPKG_DESTROOT" install

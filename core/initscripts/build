@@ -18,6 +18,7 @@ install -vDm755 "$ZPKG_RECIPE_DIR/init.d/console" "$D/etc/init.d/console"
 install -vDm755 "$ZPKG_RECIPE_DIR/init.d/sshd" "$D/etc/init.d/sshd"
 install -vDm755 "$ZPKG_RECIPE_DIR/init.d/dhcpcd" "$D/etc/init.d/dhcpcd"
 install -vDm755 "$ZPKG_RECIPE_DIR/init.d/chronyd" "$D/etc/init.d/chronyd"
+install -vDm755 "$ZPKG_RECIPE_DIR/init.d/wpa_supplicant" "$D/etc/init.d/wpa_supplicant"
 install -vDm644 "$ZPKG_RECIPE_DIR/etc/profile" "$D/etc/profile"
 install -vDm644 "$ZPKG_RECIPE_DIR/etc/securetty" "$D/etc/securetty"
 install -vDm644 "$ZPKG_RECIPE_DIR/etc/motd" "$D/etc/motd"
@@ -33,6 +34,7 @@ ln -sv /etc/init.d/dhcpcd "$D/etc/runlevels/boot/dhcpcd"
 ln -sv /etc/init.d/console "$D/etc/runlevels/default/console"
 ln -sv /etc/init.d/sshd "$D/etc/runlevels/default/sshd"
 ln -sv /etc/init.d/chronyd "$D/etc/runlevels/default/chronyd"
+ln -sv /etc/init.d/wpa_supplicant "$D/etc/runlevels/default/wpa_supplicant"
 
 # /sbin: PID 1 and the busybox power-control applets (busybox ships only
 # the binary; nothing else provides poweroff/reboot/halt).
