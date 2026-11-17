@@ -6,6 +6,9 @@
 
 description="wpa_supplicant (WiFi authentication)"
 
+# OpenRC does not source /etc/conf.d/<service> automatically.
+[ -r "/etc/conf.d/$RC_SVCNAME" ] && . "/etc/conf.d/$RC_SVCNAME"
+
 supervisor=supervise-daemon
 command=/usr/sbin/wpa_supplicant
 command_args_foreground="-i ${WPA_IFACE:-wlan0} -c /etc/wpa_supplicant/wpa_supplicant.conf"

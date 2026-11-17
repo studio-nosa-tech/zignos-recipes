@@ -1,4 +1,6 @@
 # /etc/securetty — ttys root may log in on
 console
 tty0
+tty1
+tty2
 ttyS0
