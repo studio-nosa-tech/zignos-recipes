@@ -36,7 +36,10 @@ ln -sv /etc/init.d/console "$D/etc/runlevels/default/console"
 ln -sv /etc/init.d/sshd "$D/etc/runlevels/default/sshd"
 ln -sv /etc/init.d/chronyd "$D/etc/runlevels/default/chronyd"
 ln -sv /etc/init.d/dbus "$D/etc/runlevels/boot/dbus"
-ln -sv /etc/init.d/wpa_supplicant "$D/etc/runlevels/default/wpa_supplicant"
+# wpa_supplicant is NOT enabled by default: machines without a wlan
+# interface would show a failed service on every boot. On WiFi hardware run
+#   rc-update add wpa_supplicant default
+# (WPA_IFACE selects the interface; the default is wlan0).
 
 # /sbin: PID 1 and the busybox power-control applets (busybox ships only
 # the binary; nothing else provides poweroff/reboot/halt).

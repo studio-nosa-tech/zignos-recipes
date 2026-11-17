@@ -7,7 +7,11 @@ description="D-Bus system message bus"
 
 supervisor=supervise-daemon
 command=/usr/bin/dbus-daemon
-command_args_foreground="--system --nopidfile"
+# dbus-daemon forks into the background by default. --nofork keeps the
+# process in the foreground so supervise-daemon tracks it; without it the
+# supervisor sees the parent exit and respawns a new daemon on every retry
+# (11 copies were running after one boot in the M22 test).
+command_args_foreground="--system --nopidfile --nofork"
 
 depend() {
 	need localmount

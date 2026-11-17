@@ -7,8 +7,12 @@
 
 description="OpenSSH server"
 
+# sshd daemonizes by default, which leaves start-stop-daemon without a
+# pidfile ("crashed" in rc-status). Run it under the supervisor in the
+# foreground instead, so status and restarts work.
+supervisor=supervise-daemon
 command=/usr/sbin/sshd
-command_args="-o PermitRootLogin=no -o HostKey=/etc/ssh/ssh_host_ed25519_key"
+command_args_foreground="-D -o PermitRootLogin=no -o HostKey=/etc/ssh/ssh_host_ed25519_key"
 
 depend() {
 	need localmount
