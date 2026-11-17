@@ -66,7 +66,7 @@ age btop moreutils restic wireguard-tools xxhash zsh
 | `slot` / `provides` / `conflicts` | 任意 | スロット / virtual 提供 / 競合(記録のみ、解決は将来) |
 | `iuse` | 任意 | このレシピが理解する USE フラグ(タイポ検出に使われる) |
 | `post_install` / `post_remove` | 任意 | インストール/削除直後に実行されるフック |
-| 資産ファイル | 任意 | `qemu-x86_64.config`・`doas.conf`・パッチなど(build から `$ZPKG_RECIPE_DIR` で参照) |
+| 資産ファイル | 任意 | `x86_64-generic.config`・`logo.txt`・`config.jsonc`・`sudoers`・パッチなど(build から `$ZPKG_RECIPE_DIR` で参照) |
 
 詳細は zignos リポジトリの [docs/design-pkg.md](https://github.com/studio-nosa-tech/zignos/blob/main/docs/design-pkg.md)。
 
@@ -91,8 +91,10 @@ age btop moreutils restic wireguard-tools xxhash zsh
   (7793 ファイル)で 12G イメージの空き(~3.9 GiB)に対して大きすぎる。実機では
   `zpkg install linux-firmware` で導入する(kernel 側は該当ドライバ + `CONFIG_FW_LOADER`
   が必要。`make dedup` は rdfind 未導入のため未使用)
-- LFS からの意図的な差分: coreutils の i18n パッチと autoconf/automake チェーン省略、
-  tar の acl パッチ省略、bzip2 の docs パッチ省略、systemd 系なし(init は OpenRC)。
-  詳細は zignos-build/bootstrap.sh のヘッダーコメント
+- LFS からの意図的な差分: coreutils の i18n パッチと **bootstrap 時の**
+  autoconf/automake チェーン省略、tar の acl パッチ省略、bzip2 の docs パッチ省略、
+  systemd 系なし(init は OpenRC)。autoconf(core)/ automake・libtool(main)は
+  最終システム用のレシピとして用意してある(M14/M30)。詳細は zignos-build/bootstrap.sh の
+  ヘッダーコメント
 - cross ビルドの一時ツール群(LFS ch5/ch6/ch7)はレシピ化せず zignos-build の
   `stage0.sh` / `stage1.sh` が担当する。zpkg は最終システムにのみ使う
