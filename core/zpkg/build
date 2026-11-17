@@ -9,4 +9,8 @@ set -e
 rm -rf "$ZPKG_WORKDIR/zpkg-src"
 cp -a /sources/zignos-zpkg "$ZPKG_WORKDIR/zpkg-src"
 cd "$ZPKG_WORKDIR/zpkg-src"
+# The bootstrap Go is a trimmed build: /usr/bin/go does not know its GOROOT
+# unless the environment provides it (the bootstrap exports it; a plain
+# chroot does not).
+export GOROOT="${GOROOT:-/usr/local/go}"
 GOTOOLCHAIN=local go build -o "$ZPKG_DESTROOT/usr/bin/zpkg" ./cmd/zpkg
