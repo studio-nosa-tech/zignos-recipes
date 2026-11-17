@@ -6,28 +6,29 @@ ZIGNOS のレシピツリー(Gentoo の gentoo/gentoo リポジトリ相当)。
 
 | カテゴリ | パッケージ数 | 内容 |
 |---|---|---|
-| `core/` | **68** | ベースシステム + ビルドツール一式(base.list の大半) |
-| `main/` | **27** | CLI 実用パッケージ(好みで追加インストール) |
+| `core/` | **69** | ベースシステム + ビルドツール一式(base.list の大半) |
+| `main/` | **33** | CLI 実用パッケージ(好みで追加インストール) |
 | `desktop/` | **0** | GUI(未整備) |
-| **合計** | **95** | うち **81 が `zignos-build/base.list`**(ベースシステムの唯一の定義)に含まれる |
+| **合計** | **102** | うち **85 が `zignos-build/base.list`**(ベースシステムの唯一の定義)に含まれる |
 
-`main/` の `sudo` のみ意図的に base.list 外(特権昇格のデフォルトは doas)。
+`main/` でも base に必要なもの(curl・expat・nano など)は base.list に入っている。
+`sudo` だけは意図的に外してある(特権昇格のデフォルトは doas)。
 
-### core/(66)
+### core/(69)
 
-autoconf bash bc binutils bison busybox bzip2 ca-certificates coreutils dhcpcd
-diffutils doas e2fsprogs elfutils file findutils flex gawk gcc gdbm gettext
+autoconf bash bc binutils bison busybox bzip2 ca-certificates chrony coreutils dbus
+dhcpcd diffutils doas e2fsprogs elfutils file findutils flex gawk gcc gdbm gettext
 glibc gmp go grep groff grub gzip inetutils initscripts kbd libcap libevent
-chrony libevent libffi libpipeline libxcrypt linux linux-headers m4 make
+libffi libpipeline libxcrypt linux linux-headers m4 make
 man-db man-pages meson mpc mpdecimal mpfr ncurses ninja openrc openssh
 openssl patch pcre2 perl pkgconf procps python3 readline sed shadow tar
 texinfo util-linux xz zlib zpkg zstd
 
-### main/(27)
+### main/(33)
 
 curl expat git htop iproute2 less libmnl nano rsync sudo tmux vim wget which
-dosfstools jq libpcap lsof ncdu pciutils socat strace sysstat tcpdump tree
-unzip zip
+dmidecode dosfstools iw jq libnl libpcap lshw lsof ncdu pciutils smartmontools
+socat strace sysstat tcpdump tree unzip wpa_supplicant zip
 
 ### desktop/(0)
 
