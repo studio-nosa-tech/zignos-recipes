@@ -1,18 +1,18 @@
 --- a/src/io_uring.c
 +++ b/src/io_uring.c
-@@ -1255,9 +1255,9 @@
+@@ -1255,10 +1255,7 @@
  	tprint_struct_next();
  	PRINT_FIELD_U(arg, zcrx_id);
  
 -	if (arg.__resv2) {
-+	if (arg.__resv) {
- 		tprint_struct_next();
+-		tprint_struct_next();
 -		PRINT_FIELD_X(arg, __resv2);
-+		PRINT_FIELD_X(arg, __resv);
- 	}
+-	}
++	/* zcrx_ifq_reg.__resv is a pointer; nothing to print */
  
  	if (!IS_ARRAY_ZERO(arg.__resv)) {
-@@ -1545,9 +1545,9 @@
+ 		tprint_struct_next();
+@@ -1545,9 +1542,9 @@
  	tprint_struct_next();
  	PRINT_FIELD_U(zcrx, rq_hdr_alignment);
  
