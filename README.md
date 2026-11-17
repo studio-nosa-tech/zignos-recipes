@@ -72,9 +72,10 @@ smartmontools socat strace sysstat tcpdump tree unzip wpa_supplicant zip
   置く)に翻訳したもの。**テストスイートは一律スキップ**
 - OpenSSL 4.0 互換パッチを `python3` / `wget` がレシピ同梱している(OpenSSL 4 で削除された
   fixed-version TLS method のガード。`makedepends: patch` で自家パッチを当てる)
-- **`main/linux-firmware`(20261019)は base.list 外**: tarball 約 1.0 GiB、展開後 約 3.4 GiB
-  で 12G イメージには入らない。実機では `zpkg install linux-firmware` で導入する
-  (kernel 側は該当ドライバ + `CONFIG_FW_LOADER` が必要。`make dedup` は rdfind 未導入のため未使用)
+- **`main/linux-firmware`(20261019)は base.list 外**: tarball 約 1.0 GiB、導入 約 2.0 GiB
+  (7793 ファイル)で 12G イメージの空き(~3.9 GiB)に対して大きすぎる。実機では
+  `zpkg install linux-firmware` で導入する(kernel 側は該当ドライバ + `CONFIG_FW_LOADER`
+  が必要。`make dedup` は rdfind 未導入のため未使用)
 - LFS からの意図的な差分: coreutils の i18n パッチと autoconf/automake チェーン省略、
   tar の acl パッチ省略、bzip2 の docs パッチ省略、systemd 系なし(init は OpenRC)。
   詳細は zignos-build/bootstrap.sh のヘッダーコメント
