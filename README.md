@@ -7,9 +7,9 @@ ZIGNOS のレシピツリー(Gentoo の gentoo/gentoo リポジトリ相当)。
 | カテゴリ | パッケージ数 | 内容 |
 |---|---|---|
 | `core/` | **68** | ベースシステム + ビルドツール一式(base.list の大半) |
-| `main/` | **14** | CLI 実用パッケージ(好みで追加インストール) |
+| `main/` | **27** | CLI 実用パッケージ(好みで追加インストール) |
 | `desktop/` | **0** | GUI(未整備) |
-| **合計** | **82** | うち **81 が `zignos-build/base.list`**(ベースシステムの唯一の定義)に含まれる |
+| **合計** | **95** | うち **81 が `zignos-build/base.list`**(ベースシステムの唯一の定義)に含まれる |
 
 `main/` の `sudo` のみ意図的に base.list 外(特権昇格のデフォルトは doas)。
 
@@ -23,9 +23,11 @@ man-db man-pages meson mpc mpdecimal mpfr ncurses ninja openrc openssh
 openssl patch pcre2 perl pkgconf procps python3 readline sed shadow tar
 texinfo util-linux xz zlib zpkg zstd
 
-### main/(14)
+### main/(27)
 
 curl expat git htop iproute2 less libmnl nano rsync sudo tmux vim wget which
+dosfstools jq libpcap lsof ncdu pciutils socat strace sysstat tcpdump tree
+unzip zip
 
 ### desktop/(0)
 
