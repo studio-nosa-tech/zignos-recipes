@@ -1,0 +1,20 @@
+#!/sbin/openrc-run
+# shellcheck shell=sh disable=SC2034
+# ZIGNOS: dbus-daemon — system message bus. Packages with D-Bus interfaces
+# (wpa_supplicant) register on this bus.
+
+description="D-Bus system message bus"
+
+supervisor=supervise-daemon
+command=/usr/bin/dbus-daemon
+command_args_foreground="--system --nopidfile"
+
+depend() {
+	need localmount
+	after mdev
+}
+
+start_pre() {
+	/usr/bin/dbus-uuidgen --ensure
+	install -d -m755 /run/dbus
+}
