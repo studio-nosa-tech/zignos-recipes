@@ -4,11 +4,15 @@
 # cgroups/devfs/dmesg/sysfs, boot: root/hostname/localmount/...) and the
 # stock agetty/network services; this package adds:
 #   sysinit: mdev (populate /dev with busybox)
-#   boot:    dhcpcd (our service; the stock network net-scripts are not
-#            installed, so modules=dhcpcd cannot work)
-#   default: console (agetty on ttyS0), console-vga (agetty on tty1), sshd
-#   runtime config: /etc/profile, /etc/securetty, /etc/motd, /etc/conf.d/net
+#   default: console (agetty on ttyS0), console-vga (agetty on tty1)
+#   runtime config: /etc/profile, /etc/securetty, /etc/motd, /etc/os-release
 # and /sbin/init -> openrc-init.
+#
+# The base system is deliberately minimal (see zignos-build/base.list):
+# sshd, dhcpcd, chronyd, dbus and wpa_supplicant are NOT installed and
+# their services are NOT enabled. The init.d scripts ship anyway; after
+# "zpkg install openssh" run "rc-update add sshd default" (same for the
+# others). This is the Gentoo-style "you enable what you install" model.
 
 set -e
 
@@ -33,18 +37,17 @@ printf 'zignos\n' > "$D/etc/hostname"
 
 mkdir -pv "$D/etc/runlevels/sysinit" "$D/etc/runlevels/boot" "$D/etc/runlevels/default"
 ln -sv /etc/init.d/mdev "$D/etc/runlevels/sysinit/mdev"
-ln -sv /etc/init.d/dhcpcd "$D/etc/runlevels/boot/dhcpcd"
 ln -sv /etc/init.d/console "$D/etc/runlevels/default/console"
 # The generic kernel enables VT/VGA/simpledrm, so tty1 exists on real
 # hardware. QEMU boots use ttyS0; the extra getty is harmless there.
 ln -sv /etc/init.d/console-vga "$D/etc/runlevels/default/console-vga"
-ln -sv /etc/init.d/sshd "$D/etc/runlevels/default/sshd"
-ln -sv /etc/init.d/chronyd "$D/etc/runlevels/default/chronyd"
-ln -sv /etc/init.d/dbus "$D/etc/runlevels/boot/dbus"
-# wpa_supplicant is NOT enabled by default: machines without a wlan
-# interface would show a failed service on every boot. On WiFi hardware run
-#   rc-update add wpa_supplicant default
-# (WPA_IFACE selects the interface; the default is wlan0).
+# Everything else is opt-in, matching the minimal base set:
+#   zpkg install openssh       && rc-update add sshd default
+#   zpkg install dhcpcd        && rc-update add dhcpcd boot
+#   zpkg install chrony        && rc-update add chronyd default
+#   zpkg install dbus          && rc-update add dbus boot
+#   zpkg install wpa_supplicant && rc-update add wpa_supplicant default
+# (WPA_IFACE selects the wlan interface; the default is wlan0.)
 
 # /sbin: PID 1, the busybox power-control applets, and mdev (the kernel's
 # hotplug helper path; busybox ships only the binary).

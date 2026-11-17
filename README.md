@@ -7,12 +7,13 @@ ZIGNOS のレシピツリー(Gentoo の gentoo/gentoo リポジトリ相当)。
 | カテゴリ | パッケージ数 | 内容 |
 |---|---|---|
 | `core/` | **72** | ベースシステム + ビルドツール一式(base.list の大半) |
-| `main/` | **35** | CLI 実用パッケージ + firmware(好みで追加インストール) |
+| `main/` | **37** | CLI 実用パッケージ + firmware(好みで追加インストール) |
 | `desktop/` | **0** | GUI(未整備) |
-| **合計** | **107** | うち **89 が `zignos-build/base.list`**(ベースシステムの唯一の定義)に含まれる |
+| **合計** | **109** | うち **32 が `zignos-build/base.list` のトップレベル**(依存込みのベースは 54) |
 
-`main/` でも base に必要なもの(curl・expat・nano など)は base.list に入っている。
-`sudo` だけは意図的に外してある(特権昇格のデフォルトは doas)。
+`base.list` はトップレベルだけを列挙する(Gentoo の `@system` 相当の最小構成)。
+依存と makedepends は zpkg が解決して自動で入れる。sudo / doas / SSH / エディタは
+すべて任意インストール。
 
 ### core/(72)
 
@@ -24,10 +25,10 @@ man-db man-pages meson mpc mpdecimal mpfr ncurses ninja openrc openssh
 openssl patch pcre2 perl pkgconf procps python3 readline sed shadow tar
 texinfo util-linux xz zlib zpkg zstd
 
-### main/(35)
+### main/(37)
 
 curl expat fastfetch git htop iproute2 less libmnl nano rsync sudo tmux vim wget which
-dmidecode dosfstools iw jq libnl libpcap lshw linux-firmware lsof ncdu pciutils
+dmidecode dosfstools efibootmgr efivar iw jq libnl libpcap lshw linux-firmware lsof ncdu pciutils
 smartmontools socat strace sysstat tcpdump tree unzip wpa_supplicant zip
 
 ### desktop/(0)

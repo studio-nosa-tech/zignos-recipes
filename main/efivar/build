@@ -1,0 +1,11 @@
+#!/bin/sh
+# efivar — libraries and tools for UEFI variables (libefivar, libefiboot).
+# efibootmgr (main/efibootmgr) links against both. Docs need pandoc, and
+# efivar 39 trips GCC 16's -Werror on a const qualifier in guid.c, so the
+# docs and -Werror are switched off; LIBDIR keeps the libs in /usr/lib
+# (upstream defaults to lib64, ZIGNOS is usr-merged).
+set -e
+
+cd "$ZPKG_SRC/efivar-$ZPKG_VERSION"
+make ENABLE_DOCS=0 LIBDIR=/usr/lib ERRORS= -j"$(nproc)"
+make ENABLE_DOCS=0 LIBDIR=/usr/lib DESTDIR="$ZPKG_DESTROOT" install
