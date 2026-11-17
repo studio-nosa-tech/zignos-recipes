@@ -1,14 +1,30 @@
 #!/bin/sh
-# grub — the bootloader, BIOS (i386-pc) and UEFI (x86_64-efi).
-# GRUB's configure builds one target/platform pair at a time, so this recipe
-# configures two build trees and installs both module sets into
-# /usr/lib/grub/{i386-pc,x86_64-efi}. Tests are skipped.
+# grub — the bootloader. GRUB's configure builds one target/platform pair at
+# a time, so each selected platform is configured in its own build tree and
+# installed into /usr/lib/grub/{i386-pc,x86_64-efi}.
+#
+# USE flags select the firmware targets:
+#   bios  -> i386-pc    (BIOS/MBR boot, grub-install --target=i386-pc)
+#   uefi  -> x86_64-efi (UEFI boot, grub-mkstandalone BOOTX64.EFI)
+# With neither flag set both platforms are built, which is what the image
+# builders need; set one flag to get a firmware-specific bootloader.
+#
+# uefi also pulls in efibootmgr (main/) through the conditional dependency
+# in the depends file, so the UEFI install path can manage NVRAM entries.
 set -e
 
 cd "$ZPKG_SRC/grub-2.14"
 unset CFLAGS CPPFLAGS CXXFLAGS LDFLAGS
 # grub-2.14 configure passes an option recent binutils reject.
 sed 's/--image-base/--nonexist-linker-option/' -i configure
+
+targets=""
+case " $ZPKG_USE " in *" bios "*) targets="$targets i386-pc" ;; esac
+case " $ZPKG_USE " in *" uefi "*) targets="$targets x86_64-efi" ;; esac
+if [ -z "$targets" ]; then
+	echo "grub: no bios/uefi USE flag set — building both platforms"
+	targets="i386-pc x86_64-efi"
+fi
 
 build_target() {
 	target=$1 platform=$2
@@ -26,5 +42,11 @@ build_target() {
 	)
 }
 
-build_target i386 pc
-build_target x86_64 efi
+# $targets is intentionally unquoted: one platform per word.
+# shellcheck disable=SC2086
+for t in $targets; do
+	case "$t" in
+		i386-pc) build_target i386 pc ;;
+		x86_64-efi) build_target x86_64 efi ;;
+	esac
+done
