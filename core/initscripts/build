@@ -23,6 +23,7 @@ install -vDm755 "$ZPKG_RECIPE_DIR/init.d/wpa_supplicant" "$D/etc/init.d/wpa_supp
 install -vDm755 "$ZPKG_RECIPE_DIR/init.d/dbus" "$D/etc/init.d/dbus"
 install -vDm644 "$ZPKG_RECIPE_DIR/etc/profile" "$D/etc/profile"
 install -vDm644 "$ZPKG_RECIPE_DIR/etc/securetty" "$D/etc/securetty"
+install -vDm644 "$ZPKG_RECIPE_DIR/etc/os-release" "$D/etc/os-release"
 install -vDm644 "$ZPKG_RECIPE_DIR/etc/motd" "$D/etc/motd"
 # Base accounts are runtime configuration owned by this package (passwords
 # stay in /etc/shadow, maintained by shadow's tools).

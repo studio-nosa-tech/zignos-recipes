@@ -2,21 +2,21 @@
 
 ZIGNOS のレシピツリー(Gentoo の gentoo/gentoo リポジトリ相当)。
 
-## パッケージ数(2026-11-17 時点)
+## パッケージ数(2026-11-18 時点)
 
 | カテゴリ | パッケージ数 | 内容 |
 |---|---|---|
-| `core/` | **71** | ベースシステム + ビルドツール一式(base.list の大半) |
-| `main/` | **34** | CLI 実用パッケージ + firmware(好みで追加インストール) |
+| `core/` | **72** | ベースシステム + ビルドツール一式(base.list の大半) |
+| `main/` | **35** | CLI 実用パッケージ + firmware(好みで追加インストール) |
 | `desktop/` | **0** | GUI(未整備) |
-| **合計** | **105** | うち **88 が `zignos-build/base.list`**(ベースシステムの唯一の定義)に含まれる |
+| **合計** | **107** | うち **89 が `zignos-build/base.list`**(ベースシステムの唯一の定義)に含まれる |
 
 `main/` でも base に必要なもの(curl・expat・nano など)は base.list に入っている。
 `sudo` だけは意図的に外してある(特権昇格のデフォルトは doas)。
 
-### core/(71)
+### core/(72)
 
-autoconf bash bc binutils bison busybox bzip2 ca-certificates chrony coreutils dbus
+autoconf bash bc binutils bison busybox bzip2 ca-certificates chrony cmake coreutils dbus
 dhcpcd diffutils doas e2fsprogs elfutils file findutils flex gawk gcc gdbm gettext
 glibc gmp go grep groff grub gzip inetutils initscripts initramfs kbd kmod libcap
 libevent libffi libpipeline libxcrypt linux linux-headers m4 make
@@ -24,9 +24,9 @@ man-db man-pages meson mpc mpdecimal mpfr ncurses ninja openrc openssh
 openssl patch pcre2 perl pkgconf procps python3 readline sed shadow tar
 texinfo util-linux xz zlib zpkg zstd
 
-### main/(34)
+### main/(35)
 
-curl expat git htop iproute2 less libmnl nano rsync sudo tmux vim wget which
+curl expat fastfetch git htop iproute2 less libmnl nano rsync sudo tmux vim wget which
 dmidecode dosfstools iw jq libnl libpcap lshw linux-firmware lsof ncdu pciutils
 smartmontools socat strace sysstat tcpdump tree unzip wpa_supplicant zip
 
