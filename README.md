@@ -7,9 +7,9 @@ ZIGNOS のレシピツリー(Gentoo の gentoo/gentoo リポジトリ相当)。
 | カテゴリ | パッケージ数 | 内容 |
 |---|---|---|
 | `core/` | **72** | ベースシステム + ビルドツール一式(base.list の大半) |
-| `main/` | **37** | CLI 実用パッケージ + firmware(好みで追加インストール) |
+| `main/` | **63** | CLI 実用パッケージ + firmware(好みで追加インストール) |
 | `desktop/` | **0** | GUI(未整備) |
-| **合計** | **109** | うち **32 が `zignos-build/base.list` のトップレベル**(依存込みのベースは 54) |
+| **合計** | **135** | うち **32 が `zignos-build/base.list` のトップレベル**(依存込みのベースは 54) |
 
 `base.list` はトップレベルだけを列挙する(Gentoo の `@system` 相当の最小構成)。
 依存と makedepends は zpkg が解決して自動で入れる。sudo / doas / SSH / エディタは
@@ -25,11 +25,17 @@ man-db man-pages meson mpc mpdecimal mpfr ncurses ninja openrc openssh
 openssl patch pcre2 perl pkgconf procps python3 readline sed shadow tar
 texinfo util-linux xz zlib zpkg zstd
 
-### main/(37)
+### main/(63)
 
 curl expat fastfetch git htop iproute2 less libmnl nano rsync sudo tmux vim wget which
 dmidecode dosfstools efibootmgr efivar iw jq libnl libpcap lshw linux-firmware lsof ncdu pciutils
 smartmontools socat strace sysstat tcpdump tree unzip wpa_supplicant zip
+
+# CLI tools added in M30 (network / build / archive / monitoring)
+ethtool iputils iperf mtr nmap whois
+automake ccache fzf libtool lua sqlite
+7zip brotli entr lz4 nnn pigz pv
+age btop moreutils restic wireguard-tools xxhash zsh
 
 ### desktop/(0)
 

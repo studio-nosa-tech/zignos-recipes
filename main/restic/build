@@ -1,0 +1,14 @@
+#!/bin/sh
+# restic — encrypted, deduplicating backup program (Go). build.go is the
+# upstream build driver; it sets the version and feature tags.
+set -e
+
+cd "$ZPKG_SRC/restic-0.19.1"
+export GOPATH="$ZPKG_WORKDIR/go"
+export GOCACHE="$ZPKG_WORKDIR/gocache"
+go run build.go
+
+install -Dm755 restic "$ZPKG_DESTROOT/usr/bin/restic"
+for m in doc/man/*.1; do
+	install -Dm644 "$m" "$ZPKG_DESTROOT/usr/share/man/man1/${m##*/}"
+done

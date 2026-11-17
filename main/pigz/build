@@ -1,0 +1,10 @@
+#!/bin/sh
+# pigz — parallel gzip. Upstream has no install target; the binary, the
+# unpigz symlink and the man page are installed by hand.
+set -e
+
+cd "$ZPKG_SRC/pigz-2.8"
+make -j"$(nproc)"
+install -Dm755 pigz "$ZPKG_DESTROOT/usr/bin/pigz"
+ln -s pigz "$ZPKG_DESTROOT/usr/bin/unpigz"
+install -Dm644 pigz.1 "$ZPKG_DESTROOT/usr/share/man/man1/pigz.1"

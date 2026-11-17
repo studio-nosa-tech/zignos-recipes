@@ -1,0 +1,9 @@
+#!/bin/sh
+# wireguard-tools — wg (configuration) and wg-quick (bring interfaces up
+# from /etc/wireguard/*.conf). Kernel support is in the linux recipe's
+# module set; this is the userspace side.
+set -e
+
+cd "$ZPKG_SRC/wireguard-tools-1.0.20260223"
+make -C src -j"$(nproc)"
+make -C src install PREFIX=/usr DESTDIR="$ZPKG_DESTROOT" WITH_WGQUICK=yes

@@ -1,0 +1,9 @@
+#!/bin/sh
+# lua — the Lua 5.4 interpreter and library. The "linux" target enables
+# readline in the REPL; INSTALL_TOP redirects the upstream install.
+set -e
+
+cd "$ZPKG_SRC/lua-5.4.9"
+
+make -j"$(nproc)" linux
+make install INSTALL_TOP="$ZPKG_DESTROOT/usr"

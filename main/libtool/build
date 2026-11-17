@@ -1,0 +1,9 @@
+#!/bin/sh
+# libtool — portable shared-library build support (libtoolize, ltmain.sh).
+set -e
+
+cd "$ZPKG_SRC/libtool-2.6.2"
+
+./configure --prefix=/usr
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install

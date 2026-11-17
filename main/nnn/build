@@ -1,0 +1,8 @@
+#!/bin/sh
+# nnn — fast terminal file manager (ncurses). No desktop files/icons are
+# installed: ZIGNOS is a console system.
+set -e
+
+cd "$ZPKG_SRC/nnn-5.3"
+make -j"$(nproc)" PREFIX=/usr
+make install PREFIX=/usr DESTDIR="$ZPKG_DESTROOT"

@@ -1,0 +1,18 @@
+#!/bin/sh
+# ccache — compiler cache. Keeps rebuilds of the recipe tree fast; use it
+# with CC="ccache gcc" or the ccache symlink farm. Remote-storage backends
+# (redis/http) are disabled: they need extra libraries for no gain here.
+set -e
+
+cd "$ZPKG_SRC/ccache-4.14.3"
+
+cmake -S . -B build \
+	-DCMAKE_BUILD_TYPE=Release \
+	-DCMAKE_INSTALL_PREFIX=/usr \
+	-DREDIS_STORAGE_BACKEND=OFF \
+	-DHTTP_STORAGE_BACKEND=OFF \
+	-DENABLE_DOCUMENTATION=OFF \
+	-DENABLE_TESTING=OFF \
+	-DENABLE_BENCHMARKS=OFF
+cmake --build build -j"$(nproc)"
+DESTDIR="$ZPKG_DESTROOT" cmake --install build
