@@ -7,9 +7,9 @@ ZIGNOS のレシピツリー(Gentoo の gentoo/gentoo リポジトリ相当)。
 | カテゴリ | パッケージ数 | 内容 |
 |---|---|---|
 | `core/` | **69** | ベースシステム + ビルドツール一式(base.list の大半) |
-| `main/` | **33** | CLI 実用パッケージ(好みで追加インストール) |
+| `main/` | **34** | CLI 実用パッケージ + firmware(好みで追加インストール) |
 | `desktop/` | **0** | GUI(未整備) |
-| **合計** | **102** | うち **85 が `zignos-build/base.list`**(ベースシステムの唯一の定義)に含まれる |
+| **合計** | **103** | うち **85 が `zignos-build/base.list`**(ベースシステムの唯一の定義)に含まれる |
 
 `main/` でも base に必要なもの(curl・expat・nano など)は base.list に入っている。
 `sudo` だけは意図的に外してある(特権昇格のデフォルトは doas)。
@@ -24,11 +24,11 @@ man-db man-pages meson mpc mpdecimal mpfr ncurses ninja openrc openssh
 openssl patch pcre2 perl pkgconf procps python3 readline sed shadow tar
 texinfo util-linux xz zlib zpkg zstd
 
-### main/(33)
+### main/(34)
 
 curl expat git htop iproute2 less libmnl nano rsync sudo tmux vim wget which
-dmidecode dosfstools iw jq libnl libpcap lshw lsof ncdu pciutils smartmontools
-socat strace sysstat tcpdump tree unzip wpa_supplicant zip
+dmidecode dosfstools iw jq libnl libpcap lshw linux-firmware lsof ncdu pciutils
+smartmontools socat strace sysstat tcpdump tree unzip wpa_supplicant zip
 
 ### desktop/(0)
 
@@ -72,6 +72,9 @@ socat strace sysstat tcpdump tree unzip wpa_supplicant zip
   置く)に翻訳したもの。**テストスイートは一律スキップ**
 - OpenSSL 4.0 互換パッチを `python3` / `wget` がレシピ同梱している(OpenSSL 4 で削除された
   fixed-version TLS method のガード。`makedepends: patch` で自家パッチを当てる)
+- **`main/linux-firmware`(20261019)は base.list 外**: tarball 約 1.0 GiB、展開後 約 3.4 GiB
+  で 12G イメージには入らない。実機では `zpkg install linux-firmware` で導入する
+  (kernel 側は該当ドライバ + `CONFIG_FW_LOADER` が必要。`make dedup` は rdfind 未導入のため未使用)
 - LFS からの意図的な差分: coreutils の i18n パッチと autoconf/automake チェーン省略、
   tar の acl パッチ省略、bzip2 の docs パッチ省略、systemd 系なし(init は OpenRC)。
   詳細は zignos-build/bootstrap.sh のヘッダーコメント
