@@ -1,0 +1,13 @@
+#!/bin/sh
+# linux-firmware — firmware blobs the kernel loads for WiFi, NICs and other
+# devices. This is NOT in base.list: the tarball is ~1.0 GiB and the
+# installed tree is ~3.4 GiB, which does not fit the 12G image. On real
+# hardware install it explicitly:
+#   zpkg install linux-firmware
+# The kernel still needs the matching driver and CONFIG_FW_LOADER.
+set -e
+
+cd "$ZPKG_SRC/linux-firmware-$ZPKG_VERSION"
+make -j"$(nproc)" install DESTDIR="$ZPKG_DESTROOT"
+# "make dedup" would hard-link identical blobs but needs rdfind, which ZIGNOS
+# does not ship yet. Skipping it only costs disk space.
