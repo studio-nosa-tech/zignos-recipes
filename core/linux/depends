@@ -2,3 +2,5 @@ bc
 bison
 flex
 elfutils
+initramfs
+kmod

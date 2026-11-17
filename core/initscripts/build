@@ -34,10 +34,9 @@ mkdir -pv "$D/etc/runlevels/sysinit" "$D/etc/runlevels/boot" "$D/etc/runlevels/d
 ln -sv /etc/init.d/mdev "$D/etc/runlevels/sysinit/mdev"
 ln -sv /etc/init.d/dhcpcd "$D/etc/runlevels/boot/dhcpcd"
 ln -sv /etc/init.d/console "$D/etc/runlevels/default/console"
-# console-vga is installed but NOT enabled: the current kernel has no
-# CONFIG_VT, so /dev/tty1 does not exist. Enable it (rc-update add
-# console-vga default) once the hardware kernel profile adds VT/VGA_CONSOLE.
-# ln -sv /etc/init.d/console-vga "$D/etc/runlevels/default/console-vga"
+# The generic kernel enables VT/VGA/simpledrm, so tty1 exists on real
+# hardware. QEMU boots use ttyS0; the extra getty is harmless there.
+ln -sv /etc/init.d/console-vga "$D/etc/runlevels/default/console-vga"
 ln -sv /etc/init.d/sshd "$D/etc/runlevels/default/sshd"
 ln -sv /etc/init.d/chronyd "$D/etc/runlevels/default/chronyd"
 ln -sv /etc/init.d/dbus "$D/etc/runlevels/boot/dbus"
@@ -46,10 +45,11 @@ ln -sv /etc/init.d/dbus "$D/etc/runlevels/boot/dbus"
 #   rc-update add wpa_supplicant default
 # (WPA_IFACE selects the interface; the default is wlan0).
 
-# /sbin: PID 1 and the busybox power-control applets (busybox ships only
-# the binary; nothing else provides poweroff/reboot/halt).
+# /sbin: PID 1, the busybox power-control applets, and mdev (the kernel's
+# hotplug helper path; busybox ships only the binary).
 mkdir -pv "$D/sbin"
 ln -sv /usr/sbin/openrc-init "$D/sbin/init"
-for a in poweroff reboot halt; do
+for a in poweroff reboot halt mdev; do
 	ln -sfv /bin/busybox "$D/sbin/$a"
 done
+install -vDm644 "$ZPKG_RECIPE_DIR/etc/mdev.conf" "$D/etc/mdev.conf"

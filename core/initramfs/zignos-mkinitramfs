@@ -1,0 +1,56 @@
+#!/bin/sh
+# zignos-mkinitramfs — build a busybox-based initramfs for ZIGNOS.
+#
+#   zignos-mkinitramfs [-m] [-o OUTPUT]
+#
+# The archive contains busybox (all applets) and /init. /init resolves
+# root=UUID=/LABEL=/dev/... and switch_roots into the real root; see
+# /usr/lib/zignos/initramfs/init. -m also copies /lib/modules/$(uname -r)
+# (not needed with the generic kernel, whose boot-critical drivers are
+# built in; useful with a custom profile that modularises storage).
+set -e
+
+OUT=/boot/initramfs.img
+WITH_MODULES=0
+while [ $# -gt 0 ]; do
+	case "$1" in
+		-m) WITH_MODULES=1; shift ;;
+		-o) OUT="$2"; shift 2 ;;
+		*) OUT="$1"; shift ;;
+	esac
+done
+
+BUSYBOX=${BUSYBOX:-/bin/busybox}
+[ -x "$BUSYBOX" ] || { echo "zignos-mkinitramfs: $BUSYBOX not found" >&2; exit 1; }
+[ -x /usr/lib/zignos/initramfs/init ] ||
+	{ echo "zignos-mkinitramfs: initramfs/init not installed" >&2; exit 1; }
+
+TMP=$(mktemp -d /tmp/zignos-initramfs.XXXXXX)
+trap 'rm -rf "$TMP"' EXIT INT TERM
+
+mkdir -p "$TMP"/bin "$TMP"/sbin "$TMP"/etc "$TMP"/proc "$TMP"/sys \
+	"$TMP"/dev "$TMP"/run "$TMP"/root "$TMP"/tmp "$TMP"/var/tmp \
+	"$TMP"/usr/bin "$TMP"/usr/sbin
+cp "$BUSYBOX" "$TMP/bin/busybox"
+# Symlinks for every enabled applet (sh, mount, blkid, cpio, switch_root...).
+# Run busybox from inside the staging tree: --install -s uses argv[0] as the
+# link target, and running it from the outside would point every applet at
+# the build-time temp path (the initramfs then cannot exec its own /init).
+chroot "$TMP" /bin/busybox --install -s /bin 2>/dev/null ||
+	"$TMP/bin/busybox" --install -s "$TMP/bin" 2>/dev/null ||
+	true
+# If chroot was unavailable, retarget absolute temp links to /bin/busybox.
+find "$TMP/bin" -type l -lname "$TMP/bin/busybox" -exec ln -sfn /bin/busybox {} +
+install -m 755 /usr/lib/zignos/initramfs/init "$TMP/init"
+chmod 1777 "$TMP/tmp" "$TMP/var/tmp"
+
+# Kernel modules, only on request (see -m above).
+if [ "$WITH_MODULES" = 1 ] && [ -d "/lib/modules/$(uname -r)" ]; then
+	KVER=$(uname -r)
+	mkdir -p "$TMP/lib/modules"
+	cp -a "/lib/modules/$KVER" "$TMP/lib/modules/"
+fi
+
+mkdir -p "$(dirname "$OUT")"
+( cd "$TMP" && find . -print | "$TMP/bin/busybox" cpio -o -H newc ) | gzip -9 > "$OUT"
+echo "zignos-mkinitramfs: wrote $OUT ($(du -h "$OUT" | cut -f1))"

@@ -6,20 +6,20 @@ ZIGNOS のレシピツリー(Gentoo の gentoo/gentoo リポジトリ相当)。
 
 | カテゴリ | パッケージ数 | 内容 |
 |---|---|---|
-| `core/` | **69** | ベースシステム + ビルドツール一式(base.list の大半) |
+| `core/` | **71** | ベースシステム + ビルドツール一式(base.list の大半) |
 | `main/` | **34** | CLI 実用パッケージ + firmware(好みで追加インストール) |
 | `desktop/` | **0** | GUI(未整備) |
-| **合計** | **103** | うち **85 が `zignos-build/base.list`**(ベースシステムの唯一の定義)に含まれる |
+| **合計** | **105** | うち **88 が `zignos-build/base.list`**(ベースシステムの唯一の定義)に含まれる |
 
 `main/` でも base に必要なもの(curl・expat・nano など)は base.list に入っている。
 `sudo` だけは意図的に外してある(特権昇格のデフォルトは doas)。
 
-### core/(69)
+### core/(71)
 
 autoconf bash bc binutils bison busybox bzip2 ca-certificates chrony coreutils dbus
 dhcpcd diffutils doas e2fsprogs elfutils file findutils flex gawk gcc gdbm gettext
-glibc gmp go grep groff grub gzip inetutils initscripts kbd libcap libevent
-libffi libpipeline libxcrypt linux linux-headers m4 make
+glibc gmp go grep groff grub gzip inetutils initscripts initramfs kbd kmod libcap
+libevent libffi libpipeline libxcrypt linux linux-headers m4 make
 man-db man-pages meson mpc mpdecimal mpfr ncurses ninja openrc openssh
 openssl patch pcre2 perl pkgconf procps python3 readline sed shadow tar
 texinfo util-linux xz zlib zpkg zstd
@@ -72,6 +72,14 @@ smartmontools socat strace sysstat tcpdump tree unzip wpa_supplicant zip
   置く)に翻訳したもの。**テストスイートは一律スキップ**
 - OpenSSL 4.0 互換パッチを `python3` / `wget` がレシピ同梱している(OpenSSL 4 で削除された
   fixed-version TLS method のガード。`makedepends: patch` で自家パッチを当てる)
+- **カーネルは `x86_64_defconfig` + `core/linux/x86_64-generic.config`**。起動系
+  (ACPI/APIC、SATA AHCI、NVMe、USB、VT/VGA/simpledrm、ext4、virtio、主要 NIC)は組み込み、
+  GPU/WiFi/追加 NIC はモジュール。`make modules_install` + `kmod depmod` までレシピが行う
+- **initramfs は busybox ベース**(`core/initramfs`)。`busybox` は initramfs 用に
+  **静的リンク**(`CONFIG_STATIC=y`)、`zignos-mkinitramfs` が `/boot/initramfs.img` を生成し、
+  `/init` が `root=UUID=` を解決して `switch_root` する
+- **`core/kmod 34.3`** が modprobe/depmod を提供。mdev が `/etc/mdev.conf` の
+  `$MODALIAS` ルールで起動時デバイスのモジュールを自動ロードする
 - **`main/linux-firmware`(20261019)は base.list 外**: tarball 約 1.0 GiB、導入 約 2.0 GiB
   (7793 ファイル)で 12G イメージの空き(~3.9 GiB)に対して大きすぎる。実機では
   `zpkg install linux-firmware` で導入する(kernel 側は該当ドライバ + `CONFIG_FW_LOADER`
