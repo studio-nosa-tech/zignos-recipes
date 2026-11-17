@@ -7,7 +7,7 @@ set -e
 
 cd "$ZPKG_SRC/dbus-$ZPKG_VERSION"
 meson setup build --prefix=/usr --sysconfdir=/etc --localstatedir=/var \
-	-Dmodular_tests=false -Dasserts=false \
+	-Dmodular_tests=disabled -Dasserts=false \
 	-Dselinux=disabled -Dapparmor=disabled -Dlibaudit=disabled \
 	-Dsystemd=disabled -Dx11_autolaunch=disabled \
 	-Ddbus_user=messagebus
