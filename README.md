@@ -9,7 +9,7 @@ ZIGNOS のレシピツリー(Gentoo の gentoo/gentoo リポジトリ相当)。
 | `core/` | **75** | ベースシステム + ビルドツール一式(base.list の大半) |
 | `main/` | **82** | CLI・システム管理パッケージ + firmware(好みで追加インストール) |
 | `desktop/` | **0** | GUI(未整備) |
-| **合計** | **157** | うち **34 が `zignos-build/base.list` のトップレベル**(依存込みのベースは 57) |
+| **合計** | **157** | うち **36 が `zignos-build/base.list` のトップレベル**(依存込みのベースは 59) |
 
 `base.list` はトップレベルだけを列挙する(Gentoo の `@system` 相当の最小構成)。
 依存と makedepends は zpkg が解決して自動で入れる。sudo / doas / SSH / エディタは
