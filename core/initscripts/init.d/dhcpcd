@@ -12,6 +12,6 @@ command_args_foreground="-q -B"
 
 depend() {
 	need localmount
-	after mdev
+	after udev
 	provide net
 }

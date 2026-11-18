@@ -24,5 +24,5 @@ stop() {
 
 depend() {
 	need localmount
-	after mdev
+	after udev
 }

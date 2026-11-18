@@ -1,0 +1,33 @@
+#!/sbin/openrc-run
+# shellcheck shell=sh disable=SC2034
+# ZIGNOS: udev — eudev's device manager. Replaces busybox mdev in the
+# sysinit runlevel: udevd listens on the kernel uevent netlink socket,
+# loads modules via libkmod, applies rules and creates/renames device
+# nodes in the devtmpfs mounted by devfs.
+#
+# The trigger/settle pair replays the uevents for devices that already
+# exist at boot (coldplug); udevd handles hotplug events after that.
+
+description="udev device manager"
+
+depend() {
+	need devfs
+	provide udev
+	before modules
+	keyword -docker -podman -prefix -systemd-nspawn -vserver -wsl
+}
+
+start() {
+	ebegin "Starting udev"
+	/usr/sbin/udevd --daemon
+	/usr/bin/udevadm trigger --action=add --type=subsystems
+	/usr/bin/udevadm trigger --action=add --type=devices
+	/usr/bin/udevadm settle
+	eend $?
+}
+
+stop() {
+	ebegin "Stopping udev"
+	/usr/bin/udevadm control --exit
+	eend $?
+}

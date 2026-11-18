@@ -13,5 +13,5 @@ command_args_foreground="-n"
 depend() {
 	need localmount
 	use dns
-	after mdev dhcpcd
+	after udev dhcpcd
 }

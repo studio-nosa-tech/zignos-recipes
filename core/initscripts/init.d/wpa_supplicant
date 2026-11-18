@@ -16,5 +16,5 @@ command_args_foreground="-i ${WPA_IFACE:-wlan0} -c /etc/wpa_supplicant/wpa_suppl
 depend() {
 	need localmount
 	use logger
-	after mdev dhcpcd
+	after udev dhcpcd
 }

@@ -1,0 +1,27 @@
+#!/bin/sh
+# eudev — standalone udev (systemd-udev fork) used instead of busybox
+# mdev. It listens on the kernel uevent netlink socket, loads modules
+# through libkmod, applies the shipped rules and maintains /dev.
+# SELinux/SMACK/TPM2 and man pages are off; predictable network names are
+# disabled so eth0/wlan0 keep their kernel names (matching the docs).
+set -e
+
+cd "$ZPKG_SRC/eudev-$ZPKG_VERSION"
+./configure --prefix=/usr              \
+            --sysconfdir=/etc          \
+            --localstatedir=/var       \
+            --with-rootprefix=         \
+            --with-rootlibdir=/usr/lib \
+            --disable-selinux          \
+            --disable-manpages         \
+            --disable-smack            \
+            --disable-tpm2             \
+            --enable-blkid             \
+            --enable-kmod              \
+            --with-net-ifnames-default=no
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install
+
+# eudev installs hwdb.d sources but not the compiled database; build it now
+# with the just-installed udevadm so udevd does not have to at boot.
+"$ZPKG_DESTROOT/usr/bin/udevadm" hwdb --update --root="$ZPKG_DESTROOT"
