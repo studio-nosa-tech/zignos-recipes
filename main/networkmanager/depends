@@ -1,0 +1,6 @@
+glib
+dbus
+eudev
+libndp
+util-linux
+readline

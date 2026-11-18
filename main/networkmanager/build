@@ -1,0 +1,44 @@
+#!/bin/sh
+# networkmanager — NetworkManager 1.58 with the OpenRC/no-systemd profile.
+#
+# systemd is not used on ZIGNOS: session tracking, journald, systemd units
+# and suspend integration are disabled. D-Bus, udev, glib, libndp and
+# util-linux (libuuid) are the runtime dependencies. The OpenRC service is
+# installed by this recipe; enable it with
+#   rc-update add networkmanager default
+#
+# nmcli is built; nmtui is not (it needs libnewt/slang). Connectivity
+# checking (libcurl) and CLAT/eBPF (libbpf/clang) are disabled too, as are
+# the optional PPP/ModemManager/OpenVSwitch/firewalld integrations.
+set -e
+
+cd "$ZPKG_SRC/NetworkManager-$ZPKG_VERSION"
+meson setup build \
+	--buildtype=release -Dstrip=true \
+	--prefix=/usr --libdir=lib --sysconfdir=/etc --localstatedir=/var \
+	-Dudev_dir=/usr/lib/udev \
+	-Ddbus_conf_dir=/usr/share/dbus-1/system.d \
+	-Dsystem_ca_path=/etc/ssl/certs \
+	-Dkernel_firmware_dir=/lib/firmware \
+	-Dsystemdsystemunitdir=no -Dsystemdsystemgeneratordir=no \
+	-Dsession_tracking=no -Dsession_tracking_consolekit=false \
+	-Dsuspend_resume=consolekit \
+	-Dsystemd_journal=false \
+	-Dpolkit=false -Dselinux=false -Dlibaudit=no \
+	-Dmodem_manager=false -Dppp=false -Dofono=false \
+	-Dovs=false -Dteamdctl=false -Dnm_cloud_setup=false \
+	-Dnbft=false -Dclat=false -Dconcheck=false -Dlibpsl=false \
+	-Dcrypto=null -Dreadline=libreadline -Dnmcli=true -Dnmtui=false \
+	-Dintrospection=false -Dvapi=false -Ddocs=false -Dman=false \
+	-Dtests=no -Dfirewalld_zone=false -Dqt=false -Difupdown=false \
+	-Dhostname_persist=gentoo \
+	-Dconfig_logging_backend_default=syslog \
+	-Dconfig_wifi_backend_default=wpa_supplicant \
+	-Dconfig_dhcp_default=internal \
+	-Dconfig_auth_polkit_default=root-only
+ninja -C build
+DESTDIR="$ZPKG_DESTROOT" ninja -C build install
+
+# The OpenRC service. It is not enabled by default; the admin chooses.
+install -Dm755 "$ZPKG_RECIPE_DIR/networkmanager.initd" \
+	"$ZPKG_DESTROOT/etc/init.d/networkmanager"
