@@ -6,18 +6,18 @@ ZIGNOS のレシピツリー(Gentoo の gentoo/gentoo リポジトリ相当)。
 
 | カテゴリ | パッケージ数 | 内容 |
 |---|---|---|
-| `core/` | **75** | ベースシステム + ビルドツール一式(base.list の大半) |
-| `main/` | **82** | CLI・システム管理パッケージ + firmware(好みで追加インストール) |
+| `core/` | **76** | ベースシステム + ビルドツール一式(base.list の大半) |
+| `main/` | **86** | CLI・システム管理パッケージ + firmware(好みで追加インストール) |
 | `desktop/` | **0** | GUI(未整備) |
-| **合計** | **157** | うち **36 が `zignos-build/base.list` のトップレベル**(依存込みのベースは 59) |
+| **合計** | **162** | うち **37 が `zignos-build/base.list` のトップレベル**(依存込みのベースは 60) |
 
 `base.list` はトップレベルだけを列挙する(Gentoo の `@system` 相当の最小構成)。
 依存と makedepends は zpkg が解決して自動で入れる。sudo / doas / SSH / エディタは
 すべて任意インストール。
 
-### core/(75)
+### core/(76)
 
-autoconf bash bc binutils bison busybox bzip2 ca-certificates chrony cmake coreutils dbus
+autoconf bash bc binutils bison bubblewrap busybox bzip2 ca-certificates chrony cmake coreutils dbus
 dhcpcd diffutils doas e2fsprogs eudev elfutils file findutils flex gawk gcc gdbm gettext gperf
 glibc gmp go grep groff grub gzip inetutils initscripts initramfs kbd kmod libcap
 libevent libffi libpipeline libxcrypt linux linux-headers m4 make
@@ -25,7 +25,7 @@ man-db man-pages meson mpc mpdecimal mpfr ncurses ninja openrc openssh
 openssl patch pcre2 perl pkgconf procps python3 readline sed shadow tar
 texinfo tzdata util-linux xz zlib zpkg zstd
 
-### main/(82)
+### main/(86)
 
 curl expat fastfetch git htop iproute2 less libmnl nano rsync sudo tmux vim wget which
 dmidecode dosfstools efibootmgr efivar iw jq libnl libpcap lshw linux-firmware lsof ncdu pciutils
@@ -67,6 +67,7 @@ logrotate nftables npth pinentry popt screen sshfs
 | `build` | 必須 | ビルドスクリプト(恒久 shell、destroot 契約) |
 | `depends` | 任意 | 実行時依存(**1行1パッケージ**)。`flag?pkg` の条件付き依存可 |
 | `makedepends` | 任意 | ビルド時のみの依存(1行1パッケージ) |
+| `build_network` | 任意 | `1` / `0` でビルド時ネットワークをグローバル設定より優先 |
 | `revision` | 任意 | レシピ改訂番号(`-rN`)。**内容を変えたら上げる**(binpkg キーが変わり upgrade で配信される) |
 | `slot` / `provides` / `conflicts` | 任意 | スロット / virtual 提供 / 競合(依存解決で使用) |
 | `iuse` | 任意 | このレシピが理解する USE フラグ(タイポ検出に使われる) |

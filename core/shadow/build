@@ -11,7 +11,8 @@ sed -e 's:#ENCRYPT_METHOD SHA512:ENCRYPT_METHOD YESCRYPT:' \
     -e 's:/var/spool/mail:/var/mail:'                      \
     -e '/PATH=/{s@/sbin:@@;s@/bin:@@}'                     \
     -i etc/login.defs
-touch /usr/bin/passwd
+mkdir -p "$ZPKG_DESTROOT/usr/bin"
+touch "$ZPKG_DESTROOT/usr/bin/passwd"
 ./configure --sysconfdir=/etc   \
             --disable-static    \
             --with-bcrypt --with-yescrypt \
