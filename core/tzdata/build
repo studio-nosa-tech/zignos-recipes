@@ -1,0 +1,19 @@
+#!/bin/sh
+# tzdata — IANA time zone database. Installs zic/zdump, the compiled
+# zoneinfo tree under /usr/share/zoneinfo and /etc/localtime (Factory,
+# i.e. UTC, by default). Set the system zone with:
+#   ln -sf /usr/share/zoneinfo/Asia/Tokyo /etc/localtime
+# The source archive is flat (no top-level directory). Keep TOPDIR empty
+# so zic/zdump are compiled with the real /usr/share/zoneinfo and
+# /etc/localtime paths; DESTDIR places the install into the destroot.
+set -e
+
+cd "$ZPKG_SRC"
+# The upstream Makefile defaults to c99; ZIGNOS ships gcc.
+make CC=gcc TOPDIR= DESTDIR="$ZPKG_DESTROOT" install
+# glibc already installs tzselect/zdump/zic (and we do not need the static
+# libtz.a); keep those owned by glibc and ship only the zone data here.
+rm -f "$ZPKG_DESTROOT/usr/bin/tzselect" \
+      "$ZPKG_DESTROOT/usr/bin/zdump" \
+      "$ZPKG_DESTROOT/usr/sbin/zic" \
+      "$ZPKG_DESTROOT/usr/lib/libtz.a"

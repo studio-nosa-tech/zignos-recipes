@@ -1,0 +1,9 @@
+#!/bin/sh
+# libassuan — IPC library used between GnuPG components (agent, dirmngr,
+# pinentry).
+set -e
+
+cd "$ZPKG_SRC/libassuan-$ZPKG_VERSION"
+./configure --prefix=/usr --disable-static --disable-doc
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install

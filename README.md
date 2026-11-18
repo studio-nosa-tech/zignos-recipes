@@ -6,16 +6,16 @@ ZIGNOS のレシピツリー(Gentoo の gentoo/gentoo リポジトリ相当)。
 
 | カテゴリ | パッケージ数 | 内容 |
 |---|---|---|
-| `core/` | **72** | ベースシステム + ビルドツール一式(base.list の大半) |
-| `main/` | **63** | CLI 実用パッケージ + firmware(好みで追加インストール) |
+| `core/` | **73** | ベースシステム + ビルドツール一式(base.list の大半) |
+| `main/` | **82** | CLI・システム管理パッケージ + firmware(好みで追加インストール) |
 | `desktop/` | **0** | GUI(未整備) |
-| **合計** | **135** | うち **32 が `zignos-build/base.list` のトップレベル**(依存込みのベースは 54) |
+| **合計** | **155** | うち **33 が `zignos-build/base.list` のトップレベル**(依存込みのベースは 55) |
 
 `base.list` はトップレベルだけを列挙する(Gentoo の `@system` 相当の最小構成)。
 依存と makedepends は zpkg が解決して自動で入れる。sudo / doas / SSH / エディタは
 すべて任意インストール。
 
-### core/(72)
+### core/(73)
 
 autoconf bash bc binutils bison busybox bzip2 ca-certificates chrony cmake coreutils dbus
 dhcpcd diffutils doas e2fsprogs elfutils file findutils flex gawk gcc gdbm gettext
@@ -23,9 +23,9 @@ glibc gmp go grep groff grub gzip inetutils initscripts initramfs kbd kmod libca
 libevent libffi libpipeline libxcrypt linux linux-headers m4 make
 man-db man-pages meson mpc mpdecimal mpfr ncurses ninja openrc openssh
 openssl patch pcre2 perl pkgconf procps python3 readline sed shadow tar
-texinfo util-linux xz zlib zpkg zstd
+texinfo tzdata util-linux xz zlib zpkg zstd
 
-### main/(63)
+### main/(82)
 
 curl expat fastfetch git htop iproute2 less libmnl nano rsync sudo tmux vim wget which
 dmidecode dosfstools efibootmgr efivar iw jq libnl libpcap lshw linux-firmware lsof ncdu pciutils
@@ -36,6 +36,11 @@ ethtool iputils iperf mtr nmap whois
 automake ccache fzf libtool lua sqlite
 7zip brotli entr lz4 nnn pigz pv
 age btop moreutils restic wireguard-tools xxhash zsh
+
+# System tools added in M31 (signing / cron / firewall / debug)
+cronie cpio fuse3 gdb glib gnupg
+libassuan libgcrypt libgpg-error libksba libnftnl lm-sensors
+logrotate nftables npth pinentry popt screen sshfs
 
 ### desktop/(0)
 

@@ -1,0 +1,8 @@
+#!/bin/sh
+# npth — the nPth thread library used by GnuPG's agent and dirmngr.
+set -e
+
+cd "$ZPKG_SRC/npth-$ZPKG_VERSION"
+./configure --prefix=/usr --disable-static --disable-tests
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install

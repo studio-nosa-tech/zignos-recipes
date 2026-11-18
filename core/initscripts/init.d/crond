@@ -1,0 +1,15 @@
+#!/sbin/openrc-run
+# shellcheck shell=sh disable=SC2034
+# ZIGNOS: crond — the cronie daemon. Disabled by default; after installing
+# cronie enable it with: rc-update add crond default
+
+description="cron daemon"
+
+supervisor=supervise-daemon
+command=/usr/sbin/crond
+command_args="-n"
+
+depend() {
+	need localmount
+	after clock
+}

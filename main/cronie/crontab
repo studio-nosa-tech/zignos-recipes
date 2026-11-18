@@ -1,0 +1,4 @@
+# ZIGNOS system crontab. User crontabs live in /var/spool/cron.
+SHELL=/bin/sh
+PATH=/usr/bin:/usr/sbin:/bin:/sbin
+# m h dom mon dow user command

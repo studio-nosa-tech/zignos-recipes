@@ -1,0 +1,26 @@
+#!/bin/sh
+# cronie — the standard Vixie cron implementation: crond, crontab and
+# cronnext. No PAM/SELinux/audit in ZIGNOS, so all three are disabled.
+# anacron is off (plain cron only). crontab is setuid root, as upstream
+# expects the distribution to do; crond runs as root and reads
+# /etc/crontab, /etc/cron.d and /var/spool/cron.
+set -e
+
+cd "$ZPKG_SRC/cronie-$ZPKG_VERSION"
+# GCC 16 defaults to C23; cronie 1.7.2 still uses old-style function
+# declarators that C23 reads as (void). Build it as C17.
+CFLAGS="-O2 -std=gnu17" ./configure --prefix=/usr          \
+            --sysconfdir=/etc      \
+            --localstatedir=/var   \
+            --without-pam          \
+            --without-selinux      \
+            --without-audit        \
+            --disable-anacron      \
+            --enable-syscrontab
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install
+
+install -d -m 755 "$ZPKG_DESTROOT/etc/cron.d"
+install -d -m 1730 "$ZPKG_DESTROOT/var/spool/cron"
+install -Dm644 "$ZPKG_RECIPE_DIR/crontab" "$ZPKG_DESTROOT/etc/crontab"
+chmod 4755 "$ZPKG_DESTROOT/usr/bin/crontab"
