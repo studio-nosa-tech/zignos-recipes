@@ -7,9 +7,10 @@
 # installed by this recipe; enable it with
 #   rc-update add networkmanager default
 #
-# nmcli is built; nmtui is not (it needs libnewt/slang). Connectivity
-# checking (libcurl) and CLAT/eBPF (libbpf/clang) are disabled too, as are
-# the optional PPP/ModemManager/OpenVSwitch/firewalld integrations.
+# nmcli and nmtui are built (nmtui uses libnewt/slang; both are main
+# packages). Connectivity checking (libcurl) and CLAT/eBPF (libbpf/clang)
+# are disabled too, as are the optional PPP/ModemManager/OpenVSwitch/
+# firewalld integrations.
 set -e
 
 cd "$ZPKG_SRC/NetworkManager-$ZPKG_VERSION"
@@ -28,7 +29,7 @@ meson setup build \
 	-Dmodem_manager=false -Dppp=false -Dofono=false \
 	-Dovs=false -Dteamdctl=false -Dnm_cloud_setup=false \
 	-Dnbft=false -Dclat=false -Dconcheck=false -Dlibpsl=false \
-	-Dcrypto=null -Dreadline=libreadline -Dnmcli=true -Dnmtui=false \
+	-Dcrypto=null -Dreadline=libreadline -Dnmcli=true -Dnmtui=true \
 	-Dintrospection=false -Dvapi=false -Ddocs=false -Dman=false \
 	-Dtests=no -Dfirewalld_zone=false -Dqt=false -Difupdown=false \
 	-Dhostname_persist=gentoo \

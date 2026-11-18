@@ -1,0 +1,14 @@
+#!/bin/sh
+# slang — S-Lang library. newt (and therefore nmtui) draws its text UI
+# through S-Lang. X11, PNG/PCRE/oniguruma and other optional modules are
+# not used here; the core library plus slsh are enough.
+set -e
+
+cd "$ZPKG_SRC/slang-$ZPKG_VERSION"
+./configure --prefix=/usr --sysconfdir=/etc --without-x
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install
+
+# The static archive is not useful on a shared-library system and would
+# duplicate libslang.so.
+rm -f "$ZPKG_DESTROOT/usr/lib/libslang.a"
