@@ -68,12 +68,27 @@ logrotate nftables npth pinentry popt screen sshfs
 | `depends` | 任意 | 実行時依存(**1行1パッケージ**)。`flag?pkg` の条件付き依存可 |
 | `makedepends` | 任意 | ビルド時のみの依存(1行1パッケージ) |
 | `revision` | 任意 | レシピ改訂番号(`-rN`)。**内容を変えたら上げる**(binpkg キーが変わり upgrade で配信される) |
-| `slot` / `provides` / `conflicts` | 任意 | スロット / virtual 提供 / 競合(記録のみ、解決は将来) |
+| `slot` / `provides` / `conflicts` | 任意 | スロット / virtual 提供 / 競合(依存解決で使用) |
 | `iuse` | 任意 | このレシピが理解する USE フラグ(タイポ検出に使われる) |
 | `post_install` / `post_remove` | 任意 | インストール/削除直後に実行されるフック |
 | 資産ファイル | 任意 | `x86_64-generic.config`・`logo.txt`・`config.jsonc`・`sudoers`・パッチなど(build から `$ZPKG_RECIPE_DIR` で参照) |
 
 詳細は zignos リポジトリの [docs/design-pkg.md](https://github.com/studio-nosa-tech/zignos/blob/main/docs/design-pkg.md)。
+
+## 署名
+
+配布用のレシピツリーは `zpkg sign-recipes` で署名する。
+
+```sh
+zpkg sign-recipes --key ~/zignos-signing.key \
+  --generation 42 --expires 90d .
+```
+
+`recipes.manifest`(全 regular file の path / sha256 / size / mode)と
+`recipes.manifest.sig` が生成される。この 2 ファイルはリリース時に生成する
+もので、リポジトリにはコミットしない(`.gitignore` 済み)。`zpkg sync` は
+manifest の署名・全ファイル・余計なファイルを検証してからツリーを置換する。
+公式署名鍵の運用開始までは、未署名ツリーに `--allow-unsigned` が必要。
 
 ## 現在の状態
 
