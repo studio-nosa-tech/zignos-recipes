@@ -30,14 +30,21 @@ for sym in CONFIG_BLK_DEV_INITRD=y CONFIG_RD_GZIP=y \
 done
 
 make -j"$(nproc)"
+KVER=$(make -s kernelrelease)
 make INSTALL_PATH="$ZPKG_DESTROOT/boot" install
 
 # Modules: strip debug info, then generate modules.dep with kmod's depmod
 # (the kernel's own modules_install would run depmod against the build root,
 # not the destroot, so it is disabled here).
-KVER=$(make -s kernelrelease)
 make INSTALL_MOD_PATH="$ZPKG_DESTROOT" INSTALL_MOD_STRIP=1 DEPMOD=/bin/true modules_install
 depmod -b "$ZPKG_DESTROOT" "$KVER"
 
 # The initramfs is busybox-only (boot-critical drivers are built in).
 /usr/sbin/zignos-mkinitramfs -o "$ZPKG_DESTROOT/boot/initramfs.img"
+
+# grub-mkconfig's 10_linux only looks for versioned names
+# (/boot/vmlinuz-<ver>, /boot/initramfs-<ver>.img). Keep the plain names
+# for the image builder and hand-written entries, and add versioned
+# symlinks so the stock "grub-mkconfig" finds the kernel automatically.
+ln -sfn vmlinuz "$ZPKG_DESTROOT/boot/vmlinuz-$KVER"
+ln -sfn initramfs.img "$ZPKG_DESTROOT/boot/initramfs-$KVER.img"
