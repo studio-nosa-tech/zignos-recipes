@@ -44,7 +44,9 @@ depmod -b "$ZPKG_DESTROOT" "$KVER"
 
 # grub-mkconfig's 10_linux only looks for versioned names
 # (/boot/vmlinuz-<ver>, /boot/initramfs-<ver>.img). Keep the plain names
-# for the image builder and hand-written entries, and add versioned
-# symlinks so the stock "grub-mkconfig" finds the kernel automatically.
-ln -sfn vmlinuz "$ZPKG_DESTROOT/boot/vmlinuz-$KVER"
-ln -sfn initramfs.img "$ZPKG_DESTROOT/boot/initramfs-$KVER.img"
+# for the image builder and hand-written entries, and install versioned
+# copies so the stock "grub-mkconfig" finds the kernel automatically.
+# Copies rather than symlinks: /boot may be a FAT32 ESP, which has no
+# symlink support.
+cp "$ZPKG_DESTROOT/boot/vmlinuz" "$ZPKG_DESTROOT/boot/vmlinuz-$KVER"
+cp "$ZPKG_DESTROOT/boot/initramfs.img" "$ZPKG_DESTROOT/boot/initramfs-$KVER.img"
