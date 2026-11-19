@@ -21,6 +21,10 @@ zignos-recipes/
 | `unstable/` | **162** | 開発中。破壊的変更を含み得る |
 | **合計** | **486** | 初期状態では3チャンネルとも同一内容 |
 
+`core/` と `main/` はチャンネル間で同じ内容を基本とする。KDE デスクトップを
+導入した後は **`desktop/` だけ系列が分岐**する: stable / testing は KDE Plasma
+LTS、unstable は最新版を追従する。レシピ数もチャンネルで異なり得る。
+
 各チャンネル内の内訳:
 
 | カテゴリ | パッケージ数 | 内容 |
@@ -63,8 +67,17 @@ logrotate nftables npth pinentry popt screen sshfs
 
 ### desktop/(0)
 
-設計中。最初のデスクトップ環境として **KDE Plasma 6 (Wayland)** を目標に、
-Plasma 6.6 LTS / Qt 6.8 LTS / KF6 6.18 / elogind + PAM の構成を検討している。
+設計中。最初のデスクトップ環境として **KDE Plasma 6 (Wayland)** を導入する。
+デスクトップ本体と KDE アプリは **`plasma-meta`** と **`kde-applications`** に
+分ける(`plasma-meta` はアプリを含めず、`kde-applications` は Plasma 本体に
+依存しない)。
+
+チャンネル方針:
+
+- `stable/desktop` — KDE Plasma 6.6 LTS / Qt 6.8 LTS / KF6 6.18 / Gear 25.04.3
+- `testing/desktop` — stable と同じ LTS 系列。LTS ポイントリリースを先に検証
+- `unstable/desktop` — Plasma 6.8 / Qt 6.11 / KF6 6.32 / Gear 26.08 以降の最新版
+
 設計メモは `zignos` リポジトリの `docs/desktop-kde.md`、公開サマリは
 サイトの `/docs/desktop/`。実装は M43 以降。
 
