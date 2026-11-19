@@ -2,7 +2,7 @@
 
 ZIGNOS のレシピツリー(Gentoo の gentoo/gentoo リポジトリ相当)。
 
-## パッケージ数(2026-11-18 時点)
+## パッケージ数(2026-11-19 時点)
 
 | カテゴリ | パッケージ数 | 内容 |
 |---|---|---|
@@ -90,6 +90,27 @@ zpkg sign-recipes --key ~/zignos-signing.key \
 もので、リポジトリにはコミットしない(`.gitignore` 済み)。`zpkg sync` は
 manifest の署名・全ファイル・余計なファイルを検証してからツリーを置換する。
 公式署名鍵の運用開始までは、未署名ツリーに `--allow-unsigned` が必要。
+
+## 再現性
+
+zpkg は build 時に `SOURCE_DATE_EPOCH`(既定 `946684800` = 2000-01-01)と
+`KBUILD_BUILD_TIMESTAMP` / `KBUILD_BUILD_USER` / `KBUILD_BUILD_HOST` /
+`PYTHONHASHSEED=0` を渡し、レシピを `umask 022` で実行する。binpkg の
+tar/gzip の mtime は固定される。
+
+レシピ側でも、時刻やホスト名を埋め込むツールには次のように明示する。
+
+- Go: `go build -trimpath -buildvcs=false`(`core/zpkg`)
+- initramfs: `find | sort`、mtime を `SOURCE_DATE_EPOCH` に統一、`gzip -n`
+  (`core/initramfs/zignos-mkinitramfs`)
+- 生成物に日付を書くスクリプトは `SOURCE_DATE_EPOCH` を使う
+
+```sh
+zpkg build --repro-check <pkg>   # 2 回ビルドして manifest を比較
+```
+
+詳細は zignos リポジトリの
+[docs/reproducibility.md](https://github.com/studio-nosa-tech/zignos/blob/main/docs/reproducibility.md)。
 
 ## 現在の状態
 

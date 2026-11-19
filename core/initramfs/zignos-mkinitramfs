@@ -51,6 +51,10 @@ if [ "$WITH_MODULES" = 1 ] && [ -d "/lib/modules/$(uname -r)" ]; then
 	cp -a "/lib/modules/$KVER" "$TMP/lib/modules/"
 fi
 
+# Reproducible archive: normalize every timestamp to SOURCE_DATE_EPOCH and
+# feed cpio a sorted file list. gzip -n drops the input file name and time.
+EPOCH=${SOURCE_DATE_EPOCH:-946684800}
+find "$TMP" -exec touch -h -d "@$EPOCH" {} +
 mkdir -p "$(dirname "$OUT")"
-( cd "$TMP" && find . -print | "$TMP/bin/busybox" cpio -o -H newc ) | gzip -9 > "$OUT"
+( cd "$TMP" && find . -print | LC_ALL=C sort | "$TMP/bin/busybox" cpio -o -H newc ) | gzip -n -9 > "$OUT"
 echo "zignos-mkinitramfs: wrote $OUT ($(du -h "$OUT" | cut -f1))"

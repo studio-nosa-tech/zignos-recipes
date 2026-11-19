@@ -13,4 +13,4 @@ cd "$ZPKG_WORKDIR/zpkg-src"
 # unless the environment provides it (the bootstrap exports it; a plain
 # chroot does not).
 export GOROOT="${GOROOT:-/usr/local/go}"
-GOTOOLCHAIN=local go build -o "$ZPKG_DESTROOT/usr/bin/zpkg" ./cmd/zpkg
+GOTOOLCHAIN=local go build -trimpath -buildvcs=false -o "$ZPKG_DESTROOT/usr/bin/zpkg" ./cmd/zpkg
