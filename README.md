@@ -27,8 +27,8 @@ zignos-recipes/
 |---|---|---|
 | `core/` | **76** | ベースシステム + ビルドツール一式(base.list の大半) |
 | `main/` | **86** | CLI・システム管理パッケージ + firmware(好みで追加インストール) |
-| `desktop/` | **0** | GUI(未整備) |
-| **合計** | **162** | うち **37 が `zignos-build/base.list` のトップレベル**(依存込みのベースは 60) |
+| `desktop/` | **0** | GUI(設計中: KDE Plasma 6 / Wayland) |
+| **合計** | **162** | うち **37 が `zignos-build/base.list` のトップレベル**(依存込みのベースは 64) |
 
 `base.list` はトップレベルだけを列挙する(Gentoo の `@system` 相当の最小構成)。
 依存と makedepends は zpkg が解決して自動で入れる。sudo / doas / SSH / エディタは
@@ -63,7 +63,10 @@ logrotate nftables npth pinentry popt screen sshfs
 
 ### desktop/(0)
 
-未整備。GUI 要素(X/wayland、フォント、デスクトップ環境)は検討段階。
+設計中。最初のデスクトップ環境として **KDE Plasma 6 (Wayland)** を目標に、
+Plasma 6.6 LTS / Qt 6.8 LTS / KF6 6.18 / elogind + PAM の構成を検討している。
+設計メモは `zignos` リポジトリの `docs/desktop-kde.md`、公開サマリは
+サイトの `/docs/desktop/`。実装は M43 以降。
 
 ## 構成と運用
 
