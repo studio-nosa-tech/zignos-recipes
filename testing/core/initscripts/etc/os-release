@@ -1,8 +1,8 @@
 NAME="ZIGNOS"
-PRETTY_NAME="ZIGNOS 2026.11.17-alpha"
+PRETTY_NAME="ZIGNOS 2026.11.19-alpha"
 ID=zignos
-VERSION_ID="2026.11.17"
-VERSION="2026.11.17-alpha (rolling)"
+VERSION_ID="2026.11.19"
+VERSION="2026.11.19-alpha (rolling)"
 VERSION_CODENAME=alpha
 ANSI_COLOR="38;2;124;92;255"
 HOME_URL="https://github.com/studio-nosa-tech/zignos"
