@@ -1,0 +1,15 @@
+#!/sbin/openrc-run
+# shellcheck shell=sh disable=SC2034
+# ZIGNOS: polkit — authorization framework used by Plasma, NetworkManager
+# and other desktop services. Not enabled by default.
+
+description="PolicyKit authorization manager"
+
+supervisor=supervise-daemon
+command=/usr/lib/polkit-1/polkitd
+command_args_foreground="--no-debug"
+
+depend() {
+	need dbus
+	after elogind
+}

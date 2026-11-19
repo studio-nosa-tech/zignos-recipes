@@ -1,0 +1,20 @@
+#!/sbin/openrc-run
+# shellcheck shell=sh disable=SC2034
+# ZIGNOS: elogind — standalone logind/seat manager. KWin 6 obtains the
+# DRM device and input seat through the logind D-Bus API, so this service
+# is required for a Plasma Wayland session. Not enabled by default.
+
+description="elogind login and seat manager"
+
+supervisor=supervise-daemon
+command=/usr/libexec/elogind
+
+depend() {
+	need dbus
+	after udev
+	provide logind
+}
+
+start_pre() {
+	install -d -m0755 /run/systemd /run/systemd/seats /run/systemd/sessions /run/systemd/users
+}

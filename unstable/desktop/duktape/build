@@ -1,0 +1,8 @@
+#!/bin/sh
+# duktape — small embeddable JavaScript engine. polkit 128 uses it for
+# its rule files instead of mozjs.
+set -e
+
+cd "$ZPKG_SRC/duktape-2.7.0"
+make -f Makefile.sharedlibrary -j"$(nproc)" 	INSTALL_PREFIX=/usr LIBDIR=/lib
+make -f Makefile.sharedlibrary install 	INSTALL_PREFIX=/usr LIBDIR=/lib DESTDIR="$ZPKG_DESTROOT"

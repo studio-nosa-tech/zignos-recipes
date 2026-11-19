@@ -6,4 +6,5 @@ sshd:x:50:
 utmp:x:15:
 messagebus:x:25:
 chrony:x:45:
+polkitd:x:999:
 nogroup:x:65534:

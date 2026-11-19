@@ -1,0 +1,13 @@
+#!/bin/sh
+# elogind — standalone logind/seat manager for OpenRC. KWin 6 uses the
+# logind D-Bus API for DRM/seat access; seatd is not used by KWin.
+set -e
+
+cd "$ZPKG_SRC/elogind-257.16"
+# elogind 257.16 omits user-record-nss.c when nss-elogind is disabled, but
+# userdb.c still references its symbols. Keep the translation unit in the
+# shared library without installing the NSS module.
+sed -i "s/if get_option('nss-elogind') != false/if true/" src/shared/meson.build
+meson setup build 	--prefix=/usr --libdir=lib --sysconfdir=/etc --localstatedir=/var 	--buildtype=release 	-Dpam=enabled -Dacl=disabled -Daudit=disabled -Dselinux=disabled 	-Dpolkit=disabled -Dvarlink=false -Duserdb=false -Dnss-elogind=false 	-Dman=disabled -Dhtml=disabled -Dtests=false -Dtranslations=false 	-Dpamconfdir=/etc/pam.d -Dpamlibdir=/usr/lib/security 	-Dsysvinit-path=/etc/init.d
+ninja -C build
+DESTDIR="$ZPKG_DESTROOT" meson install -C build

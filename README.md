@@ -16,10 +16,10 @@ zignos-recipes/
 
 | チャンネル | パッケージ数 | 内容 |
 |---|---|---|
-| `stable/` | **162** | 安定版。`zpkg` の既定 |
-| `testing/` | **162** | stable 候補。まずここで検証する |
-| `unstable/` | **162** | 開発中。破壊的変更を含み得る |
-| **合計** | **486** | 初期状態では3チャンネルとも同一内容 |
+| `stable/` | **168** | 安定版。`zpkg` の既定 |
+| `testing/` | **168** | stable 候補。まずここで検証する |
+| `unstable/` | **168** | 開発中。破壊的変更を含み得る |
+| **合計** | **504** | 初期状態では3チャンネルとも同一内容 |
 
 `core/` と `main/` はチャンネル間で同じ内容を基本とする。ただし **`core/linux`
 はチャンネルごとに系列が分岐**する: stable は Linux LTS、testing は最新安定版、
@@ -37,8 +37,8 @@ KDE LTS、testing は最新安定版、unstable は RC / beta / git snapshot を
 |---|---|---|
 | `core/` | **76** | ベースシステム + ビルドツール一式(base.list の大半) |
 | `main/` | **86** | CLI・システム管理パッケージ + firmware(好みで追加インストール) |
-| `desktop/` | **0** | GUI(設計中: KDE Plasma 6 / Wayland) |
-| **合計** | **162** | うち **37 が `zignos-build/base.list` のトップレベル**(依存込みのベースは 64) |
+| `desktop/` | **6** | GUI 基盤(M43: PAM / elogind / polkit / duktape / Jinja2) |
+| **合計** | **168** | うち **37 が `zignos-build/base.list` のトップレベル**(依存込みのベースは 64) |
 
 `base.list` はトップレベルだけを列挙する(Gentoo の `@system` 相当の最小構成)。
 依存と makedepends は zpkg が解決して自動で入れる。sudo / doas / SSH / エディタは
@@ -71,9 +71,9 @@ cronie cpio fuse3 gdb glib gnupg
 libassuan libgcrypt libgpg-error libksba libnftnl lm-sensors
 logrotate nftables npth pinentry popt screen sshfs
 
-### desktop/(0)
+### desktop/(6)
 
-設計中。最初のデスクトップ環境として **KDE Plasma 6 (Wayland)** を導入する。
+M43 のセッション基盤から実装中。最初のデスクトップ環境として **KDE Plasma 6 (Wayland)** を導入する。
 デスクトップ本体と KDE アプリは **`plasma-meta`** と **`kde-applications`** に
 分ける(`plasma-meta` はアプリを含めず、`kde-applications` は Plasma 本体に
 依存しない)。
@@ -89,8 +89,19 @@ logrotate nftables npth pinentry popt screen sshfs
 
 昇格順は **Unstable → Testing → Stable**。Stable は LTS へバックポートする。
 
+実装済み(M43 基盤):
+
+- `linux-pam 1.7.3` — PAM 本体と `/etc/pam.d/system-auth`
+- `duktape 2.7.0` — polkit 128 の JavaScript エンジン
+- `python-markupsafe 3.0.3` / `python-jinja2 3.1.6` — elogind の Meson ビルド用
+- `elogind 257.16` — logind/seat マネージャ(KWin の DRM/seat に必須)
+- `polkit 128` — 認可フレームワーク(polkitd アカウント付き)
+
+`initscripts` は r17 で `elogind` / `polkit` の OpenRC サービスを同梱する
+(どちらも opt-in)。カーネルと KDE 本体は M43 の後半で追加する。
+
 設計メモは `zignos` リポジトリの `docs/desktop-kde.md`、公開サマリは
-サイトの `/docs/desktop/`。実装は M43 以降。
+サイトの `/docs/desktop/`。
 
 ## 構成と運用
 

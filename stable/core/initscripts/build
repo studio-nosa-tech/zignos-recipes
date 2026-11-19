@@ -28,6 +28,8 @@ install -vDm755 "$ZPKG_RECIPE_DIR/init.d/wpa_supplicant" "$D/etc/init.d/wpa_supp
 install -vDm755 "$ZPKG_RECIPE_DIR/init.d/dbus" "$D/etc/init.d/dbus"
 install -vDm755 "$ZPKG_RECIPE_DIR/init.d/crond" "$D/etc/init.d/crond"
 install -vDm755 "$ZPKG_RECIPE_DIR/init.d/nftables" "$D/etc/init.d/nftables"
+install -vDm755 "$ZPKG_RECIPE_DIR/init.d/elogind" "$D/etc/init.d/elogind"
+install -vDm755 "$ZPKG_RECIPE_DIR/init.d/polkit" "$D/etc/init.d/polkit"
 install -vDm644 "$ZPKG_RECIPE_DIR/etc/profile" "$D/etc/profile"
 install -vDm644 "$ZPKG_RECIPE_DIR/etc/securetty" "$D/etc/securetty"
 install -vDm644 "$ZPKG_RECIPE_DIR/etc/os-release" "$D/etc/os-release"
@@ -53,6 +55,8 @@ ln -sv /etc/init.d/console-vga "$D/etc/runlevels/default/console-vga"
 #   zpkg install wpa_supplicant && rc-update add wpa_supplicant default
 #   zpkg install cronie        && rc-update add crond default
 #   zpkg install nftables      && rc-update add nftables default
+#   zpkg install elogind       && rc-update add elogind default
+#   zpkg install polkit        && rc-update add polkit default
 # (WPA_IFACE selects the wlan interface; the default is wlan0.)
 
 # /sbin: PID 1, the busybox power-control applets, and mdev (the kernel's

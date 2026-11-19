@@ -1,0 +1,5 @@
+#!/bin/sh
+# polkitd needs a dedicated unprivileged account and state directory.
+getent group polkitd >/dev/null || groupadd -r polkitd
+getent passwd polkitd >/dev/null || useradd -r -g polkitd -d /dev/null -s /usr/bin/false -c "PolicyKit Daemon" polkitd
+install -d -m700 -o polkitd -g polkitd "$ZPKG_ROOT/var/lib/polkit-1"

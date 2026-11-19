@@ -1,0 +1,6 @@
+glib
+expat
+duktape
+linux-pam
+elogind
+dbus
