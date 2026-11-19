@@ -2,9 +2,9 @@
 
 GUI パッケージのカテゴリ。**現在 0 パッケージ(設計中)**。
 
-このチャンネルは **stable と同じ KDE Plasma 6.6 LTS 系列**を使う。
-Qt 6.8 LTS / KF6 6.18 / KDE Gear 25.04.3 のポイントリリースを先に検証し、
-stable へ昇格する。latest 系は入れない(それは unstable の役割)。
+このチャンネルは **Linux / KDE の最新安定版**を採用する。設計時点では
+Linux 7.3、Plasma 6.8、Qt 6.11、KF6 6.32、Gear 26.08。Unstable で検証した
+変更を受け取り、十分に安定したものを Stable の LTS へバックポートする。
 
 - 設計メモ: `zignos` リポジトリの `docs/desktop-kde.md`
 - 公開サマリ: サイトの `/docs/desktop/`
@@ -23,6 +23,12 @@ stable へ昇格する。latest 系は入れない(それは unstable の役割)
 将来は `kde-applications-{utilities,graphics,multimedia,network,office,pim,sdk}`
 のサブメタへ分割できる。メタパッケージは `/usr/share/zignos/meta/<name>` の
 マーカーファイルを持ち、`depends` でコンポーネントを束ねる。
+
+## 昇格順
+
+**Unstable → Testing → Stable** を守る。逆流させない。Stable は LTS
+ブランチなので、Testing の最新版をそのまま入れるのではなく、検証済みの
+修正を LTS へバックポートする形で反映する。
 
 ## 追加するときの前提
 

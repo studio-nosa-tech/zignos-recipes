@@ -21,9 +21,15 @@ zignos-recipes/
 | `unstable/` | **162** | 開発中。破壊的変更を含み得る |
 | **合計** | **486** | 初期状態では3チャンネルとも同一内容 |
 
-`core/` と `main/` はチャンネル間で同じ内容を基本とする。KDE デスクトップを
-導入した後は **`desktop/` だけ系列が分岐**する: stable / testing は KDE Plasma
-LTS、unstable は最新版を追従する。レシピ数もチャンネルで異なり得る。
+`core/` と `main/` はチャンネル間で同じ内容を基本とする。ただし **`core/linux`
+はチャンネルごとに系列が分岐**する: stable は Linux LTS、testing は最新安定版、
+unstable は mainline / RC。KDE 導入後は **`desktop/` も分岐**し、stable は
+KDE LTS、testing は最新安定版、unstable は RC / beta / git snapshot を含む
+挑戦的な構成になる。レシピ数もチャンネルで異なり得る。
+
+変更は必ず **Unstable → Testing → Stable** の順に検証する。Stable は LTS
+ブランチのため、Testing の最新版をそのまま入れるのではなく、検証済みの
+変更を LTS へバックポートする。逆流はさせない。
 
 各チャンネル内の内訳:
 
@@ -74,9 +80,14 @@ logrotate nftables npth pinentry popt screen sshfs
 
 チャンネル方針:
 
-- `stable/desktop` — KDE Plasma 6.6 LTS / Qt 6.8 LTS / KF6 6.18 / Gear 25.04.3
-- `testing/desktop` — stable と同じ LTS 系列。LTS ポイントリリースを先に検証
-- `unstable/desktop` — Plasma 6.8 / Qt 6.11 / KF6 6.32 / Gear 26.08 以降の最新版
+- `stable/desktop` — Linux 6.18 LTS / Plasma 6.6 LTS / Qt 6.8 LTS / KF6 6.18 /
+  Gear 25.04.3
+- `testing/desktop` — Linux 7.3 最新安定 / Plasma 6.8 / Qt 6.11 / KF6 6.32 /
+  Gear 26.08
+- `unstable/desktop` — Linux 7.4-rc / mainline、Plasma 6.9 dev / beta、
+  Qt 6.12 dev / beta、KF6 6.33 / master、Gear 26.12 beta
+
+昇格順は **Unstable → Testing → Stable**。Stable は LTS へバックポートする。
 
 設計メモは `zignos` リポジトリの `docs/desktop-kde.md`、公開サマリは
 サイトの `/docs/desktop/`。実装は M43 以降。
