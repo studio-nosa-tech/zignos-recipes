@@ -1,0 +1,10 @@
+#!/bin/sh
+# rsync — efficient transfer and the tool backups/seed sync want.
+set -e
+
+cd "$ZPKG_SRC/rsync-$ZPKG_VERSION"
+# xxhash/lz4/idn are optional and their headers are not in the base set;
+# disable them explicitly (rsync 3.5+ aborts instead of skipping).
+./configure --prefix=/usr --disable-xxhash --disable-lz4 --disable-idn
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install

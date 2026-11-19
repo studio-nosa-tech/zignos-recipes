@@ -1,0 +1,7 @@
+#!/bin/sh
+# initramfs — busybox-based initramfs generator. The initramfs is produced
+# as part of the linux package build (and therefore on every kernel update).
+set -e
+
+install -Dm755 "$ZPKG_RECIPE_DIR/zignos-mkinitramfs" "$ZPKG_DESTROOT/usr/sbin/zignos-mkinitramfs"
+install -Dm755 "$ZPKG_RECIPE_DIR/init" "$ZPKG_DESTROOT/usr/lib/zignos/initramfs/init"

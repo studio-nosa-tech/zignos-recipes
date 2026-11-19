@@ -1,0 +1,9 @@
+#!/bin/sh
+# man-db — the man command. The bin account (owned by initscripts) holds
+# the /var/cache/man cache; the man pages themselves come from man-pages.
+set -e
+
+cd "$ZPKG_SRC/man-db-$ZPKG_VERSION"
+./configure --prefix=/usr                 --sysconfdir=/etc             --disable-setuid              --enable-cache-owner=bin             --with-groff=/usr/bin/groff
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install

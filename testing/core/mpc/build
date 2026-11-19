@@ -1,0 +1,10 @@
+#!/bin/sh
+# mpc — complex number math (LFS 13.1-systemd 8.25).
+set -e
+
+cd "$ZPKG_SRC/mpc-1.4.1"
+./configure --prefix=/usr    \
+            --disable-static \
+            --docdir=/usr/share/doc/mpc-1.4.1
+make
+make DESTDIR="$ZPKG_DESTROOT" install

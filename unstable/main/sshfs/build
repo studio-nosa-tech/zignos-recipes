@@ -1,0 +1,9 @@
+#!/bin/sh
+# sshfs — mount a remote directory over SFTP using FUSE. Needs fuse3 and
+# GLib (GIO); no X11 or GUI dependencies.
+set -e
+
+cd "$ZPKG_SRC/sshfs-$ZPKG_VERSION"
+meson setup build --prefix=/usr --buildtype=release
+meson compile -C build
+DESTDIR="$ZPKG_DESTROOT" meson install -C build --no-rebuild

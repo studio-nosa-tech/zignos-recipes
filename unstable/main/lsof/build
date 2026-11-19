@@ -1,0 +1,8 @@
+#!/bin/sh
+# lsof — list open files.
+set -e
+
+cd "$ZPKG_SRC/lsof-$ZPKG_VERSION"
+./configure --prefix=/usr
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install

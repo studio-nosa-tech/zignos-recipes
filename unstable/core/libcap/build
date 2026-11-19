@@ -1,0 +1,10 @@
+#!/bin/sh
+# libcap — POSIX capabilities library (LFS 13.1-systemd 8.28, tests
+# skipped in v0). Required by OpenRC 0.64.
+set -e
+
+cd "$ZPKG_SRC/libcap-2.78"
+# The book removes a broken static-archive install rule.
+sed -i '/install -m.*STA/d' libcap/Makefile
+make prefix=/usr lib=lib
+make prefix=/usr lib=lib DESTDIR="$ZPKG_DESTROOT" install

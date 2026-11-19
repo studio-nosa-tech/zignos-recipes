@@ -1,0 +1,7 @@
+#!/bin/sh
+# iw — nl80211 wireless configuration tool (scan, link info, channels).
+set -e
+
+cd "$ZPKG_SRC/iw-$ZPKG_VERSION"
+make SBINDIR=/usr/sbin
+make SBINDIR=/usr/sbin DESTDIR="$ZPKG_DESTROOT" install

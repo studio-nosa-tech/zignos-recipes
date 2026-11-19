@@ -1,0 +1,8 @@
+#!/bin/sh
+# zstd — Zstandard compression (LFS 13.1-systemd 8.10).
+set -e
+
+cd "$ZPKG_SRC/zstd-1.5.7"
+make prefix=/usr
+make prefix=/usr DESTDIR="$ZPKG_DESTROOT" install
+rm -fv "$ZPKG_DESTROOT/usr/lib/libzstd.a"

@@ -1,0 +1,10 @@
+#!/bin/sh
+# strace — syscall tracer; invaluable on a source-based distro.
+set -e
+
+cd "$ZPKG_SRC/strace-$ZPKG_VERSION"
+# The system kernel headers (7.1) renamed io_uring structs that strace's
+# decoders reference; the bundled headers match strace exactly.
+./configure --prefix=/usr --enable-bundled=yes
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install

@@ -1,0 +1,28 @@
+#!/sbin/openrc-run
+# shellcheck shell=sh disable=SC2034
+# ZIGNOS: nftables — load the firewall ruleset from /etc/nftables.conf.
+# Disabled by default: edit the rules, then enable with
+#   rc-update add nftables default
+
+description="nftables firewall"
+
+start() {
+	ebegin "Loading nftables rules"
+	if [ ! -r /etc/nftables.conf ]; then
+		eend 1 "/etc/nftables.conf is missing"
+		return 1
+	fi
+	/usr/sbin/nft -f /etc/nftables.conf
+	eend $?
+}
+
+stop() {
+	ebegin "Flushing nftables rules"
+	/usr/sbin/nft flush ruleset
+	eend $?
+}
+
+depend() {
+	need localmount
+	after udev
+}

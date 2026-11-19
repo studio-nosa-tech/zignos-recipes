@@ -1,0 +1,11 @@
+#!/bin/sh
+# gawk — awk for autoconf and recipe build scripts. Built against the
+# system mpfr (a gawk without mpfr breaks gcc's generated options.cc).
+set -e
+
+cd "$ZPKG_SRC/gawk-$ZPKG_VERSION"
+./configure --prefix=/usr
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install
+ln -sfn gawk "$ZPKG_DESTROOT/usr/bin/awk"
+ln -sfn gawk.1 "$ZPKG_DESTROOT/usr/share/man/man1/awk.1"

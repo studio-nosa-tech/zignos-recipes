@@ -1,0 +1,15 @@
+#!/bin/sh
+# screen — terminal multiplexer. PAM is disabled (ZIGNOS has no PAM);
+# the tty group (gid 5, from initscripts) owns the pty devices.
+set -e
+
+cd "$ZPKG_SRC/screen-$ZPKG_VERSION"
+./configure --prefix=/usr          \
+            --sysconfdir=/etc      \
+            --disable-pam          \
+            --with-system_screenrc=/etc/screenrc
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install
+
+# Upstream leaves the system screenrc for the packager.
+install -Dm644 etc/etcscreenrc "$ZPKG_DESTROOT/etc/screenrc"

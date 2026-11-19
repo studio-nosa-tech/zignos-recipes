@@ -1,0 +1,9 @@
+#!/bin/sh
+# libgcrypt — cryptographic library used by GnuPG (AES, RSA, ECC, hashes).
+# Assembly implementations are enabled on x86_64.
+set -e
+
+cd "$ZPKG_SRC/libgcrypt-$ZPKG_VERSION"
+./configure --prefix=/usr --disable-static
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install

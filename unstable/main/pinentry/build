@@ -1,0 +1,23 @@
+#!/bin/sh
+# pinentry — passphrase dialog used by gpg-agent. ZIGNOS has no X11 or
+# GUI toolkit in the base, so only the curses and tty frontends are built;
+# pinentry (the default) points at the curses one.
+set -e
+
+cd "$ZPKG_SRC/pinentry-$ZPKG_VERSION"
+./configure --prefix=/usr             \
+            --disable-static          \
+            --disable-doc             \
+            --enable-pinentry-curses  \
+            --enable-pinentry-tty     \
+            --disable-pinentry-emacs  \
+            --disable-pinentry-efl    \
+            --disable-pinentry-gtk2   \
+            --disable-pinentry-gnome3 \
+            --disable-pinentry-qt5    \
+            --disable-pinentry-qt     \
+            --disable-pinentry-qt4    \
+            --disable-pinentry-tqt    \
+            --disable-pinentry-fltk
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install

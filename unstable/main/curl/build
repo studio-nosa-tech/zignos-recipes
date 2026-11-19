@@ -1,0 +1,21 @@
+#!/bin/sh
+# curl — HTTP(S) client and the library git uses for https remotes.
+# TLS via OpenSSL; optional protocols we do not ship are turned off so the
+# build has no surprise dependencies.
+set -e
+
+cd "$ZPKG_SRC/curl-8.23.0"
+./configure --prefix=/usr              \
+            --sysconfdir=/etc          \
+            --with-openssl             \
+            --with-zlib                \
+            --without-libpsl           \
+            --without-brotli           \
+            --without-zstd             \
+            --without-nghttp2          \
+            --without-libidn2          \
+            --disable-ldap             \
+            --disable-ldaps            \
+            --disable-manual
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install

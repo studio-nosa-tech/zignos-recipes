@@ -1,0 +1,7 @@
+#!/bin/sh
+# lshw — detailed hardware inventory.
+set -e
+
+cd "$ZPKG_SRC/lshw-$ZPKG_VERSION"
+make -j"$(nproc)" SBINDIR=/usr/sbin
+make SBINDIR=/usr/sbin DESTDIR="$ZPKG_DESTROOT" install

@@ -1,0 +1,15 @@
+#!/bin/sh
+# cmake — build system generator (fastfetch needs CMake >= 3.21). Bootstrap is
+# self-contained: OpenSSL, the curses dialog, bundled system libraries and the
+# test suite are disabled, so the recipe has no extra build dependencies.
+set -e
+
+cd "$ZPKG_SRC/cmake-$ZPKG_VERSION"
+./bootstrap --prefix=/usr --parallel="$(nproc)" -- \
+	-DCMAKE_BUILD_TYPE=Release \
+	-DCMAKE_USE_OPENSSL=OFF \
+	-DBUILD_TESTING=OFF \
+	-DBUILD_CursesDialog=OFF \
+	-DCMAKE_USE_SYSTEM_LIBRARIES=OFF
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install

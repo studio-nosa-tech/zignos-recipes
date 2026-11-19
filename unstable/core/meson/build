@@ -1,0 +1,12 @@
+#!/bin/sh
+# meson — build system (python-based). Installed standalone: the mesonbuild
+# package goes to the interpreter's site-packages and the launcher to
+# /usr/bin, no pip required.
+set -e
+
+cd "$ZPKG_SRC/meson-$ZPKG_VERSION"
+site=$(python3 -c 'import sysconfig; print(sysconfig.get_paths()["purelib"])')
+install -d "$ZPKG_DESTROOT$site"
+cp -a mesonbuild "$ZPKG_DESTROOT$site/"
+install -Dm755 meson.py "$ZPKG_DESTROOT/usr/bin/meson"
+install -Dm644 man/meson.1 "$ZPKG_DESTROOT/usr/share/man/man1/meson.1"

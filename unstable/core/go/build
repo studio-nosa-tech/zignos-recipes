@@ -1,0 +1,15 @@
+#!/bin/sh
+# go — Go toolchain, rebuilt from source using the binary bootstrap
+# toolchain placed at /opt/go-bootstrap by bootstrap.sh (LFS-style staged
+# bootstrap: binary bootstrap -> source build).
+set -e
+
+cd "$ZPKG_SRC/go/src"
+# GOROOT_FINAL bakes the install location into the (trimmed) toolchain
+# binaries; without it `go` cannot find GOROOT after installation.
+GOROOT_BOOTSTRAP=/opt/go-bootstrap GOROOT_FINAL=/usr/local/go ./make.bash
+
+mkdir -p "$ZPKG_DESTROOT/usr/local" "$ZPKG_DESTROOT/usr/bin"
+cp -a "$ZPKG_SRC/go" "$ZPKG_DESTROOT/usr/local/go"
+ln -sv /usr/local/go/bin/go "$ZPKG_DESTROOT/usr/bin/go"
+ln -sv /usr/local/go/bin/gofmt "$ZPKG_DESTROOT/usr/bin/gofmt"

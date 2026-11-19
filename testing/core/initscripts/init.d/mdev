@@ -1,0 +1,23 @@
+#!/sbin/openrc-run
+# ZIGNOS: populate /dev with busybox mdev and apply /etc/mdev.conf.
+#
+# devtmpfs creates device nodes itself. mdev's job here is the MODALIAS rule
+# in /etc/mdev.conf: `mdev -s` walks the devices present at boot and asks
+# kmod to load their drivers (WiFi, GPU, extra NICs). Modern kernels removed
+# the uevent helper (/proc/sys/kernel/hotplug), so devices plugged in AFTER
+# boot are not auto-loaded; use modprobe (a netlink udev is future work).
+#
+# A custom start() is used instead of a supervised command: mdev -s is a
+# short-lived scan, so supervise-daemon would mark the service "crashed".
+
+description="populate /dev with mdev"
+
+start() {
+	ebegin "Starting mdev"
+	# Older kernels only; harmless when the interface is absent.
+	if [ -w /proc/sys/kernel/hotplug ]; then
+		echo /sbin/mdev > /proc/sys/kernel/hotplug 2>/dev/null
+	fi
+	/sbin/mdev -s
+	eend $?
+}

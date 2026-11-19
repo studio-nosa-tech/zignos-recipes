@@ -1,0 +1,8 @@
+#!/bin/sh
+# libmnl — minimal netlink library, needed by iproute2 for the "ip" tool.
+set -e
+
+cd "$ZPKG_SRC/libmnl-1.0.5"
+./configure --prefix=/usr --disable-static
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install

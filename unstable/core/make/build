@@ -1,0 +1,8 @@
+#!/bin/sh
+# make — build tool (LFS 13.1-systemd 8.70).
+set -e
+
+cd "$ZPKG_SRC/make-4.4.1"
+./configure --prefix=/usr
+make
+make DESTDIR="$ZPKG_DESTROOT" install

@@ -1,0 +1,27 @@
+#!/bin/sh
+# gnupg — GnuPG 2.5: gpg, gpg-agent, gpgsm, gpgconf, keyboxd and gpgtar.
+# USB smartcards and TPM are disabled (they need extra libraries and the
+# base has no PAM/USB stack). There is no NTBTLS/GnuTLS in the tree, so
+# dirmngr (keyserver fetching over HTTPS) is not built; gpg can still
+# sign, verify, encrypt and import/export keys. SQLite enables TOFU and
+# keyboxd. The CA bundle is used by gpgsm.
+set -e
+
+cd "$ZPKG_SRC/gnupg-$ZPKG_VERSION"
+./configure --prefix=/usr              \
+            --sysconfdir=/etc          \
+            --localstatedir=/var       \
+            --disable-werror           \
+            --disable-doc              \
+            --disable-tests            \
+            --disable-card-support     \
+            --disable-tpm2d            \
+            --disable-ntbtls           \
+            --disable-gnutls           \
+            --with-default-trust-store-file=/etc/ssl/certs/ca-certificates.crt
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install
+
+# The agent socket lives under /run; create the directory at install time
+# so the first gpg invocation does not race with its own mkdir.
+install -d -m 755 "$ZPKG_DESTROOT/run/gnupg"

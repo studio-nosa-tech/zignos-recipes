@@ -1,0 +1,8 @@
+#!/bin/sh
+# tcpdump — dump traffic on a network.
+set -e
+
+cd "$ZPKG_SRC/tcpdump-$ZPKG_VERSION"
+./configure --prefix=/usr
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install

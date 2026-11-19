@@ -1,0 +1,9 @@
+#!/bin/sh
+# dhcpcd — DHCP client daemon (10.5.2), ZIGNOS's network configuration
+# front-end. The stock OpenRC network service drives it via /etc/conf.d/net.
+set -e
+
+cd "$ZPKG_SRC/dhcpcd-10.5.2"
+./configure --prefix=/usr --sysconfdir=/etc --runstatedir=/run --dbdir=/var/lib/dhcpcd
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install

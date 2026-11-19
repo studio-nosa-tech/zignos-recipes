@@ -1,0 +1,8 @@
+#!/bin/sh
+# lz4 — extremely fast compressor. Installs the CLI, liblz4 and the pkg-config
+# file (other recipes can link against it).
+set -e
+
+cd "$ZPKG_SRC/lz4-1.11.1"
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" PREFIX=/usr install

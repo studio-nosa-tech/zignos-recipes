@@ -1,0 +1,23 @@
+#!/sbin/openrc-run
+# shellcheck shell=sh disable=SC2034
+# ZIGNOS: NetworkManager. The daemon talks to dbus and udev; enable it with
+#   rc-update add networkmanager default
+# nmcli/nm-online are in /usr/bin; nmtui is not built (no libnewt).
+
+description="NetworkManager"
+
+supervisor=supervise-daemon
+command=/usr/sbin/NetworkManager
+# NetworkManager daemonizes unless --no-daemon is given; keep it in the
+# foreground so supervise-daemon can track and restart it.
+command_args_foreground="--no-daemon"
+
+depend() {
+	need localmount dbus
+	after udev
+	use logger
+}
+
+start_pre() {
+	checkpath -d -m 0755 /run/NetworkManager
+}

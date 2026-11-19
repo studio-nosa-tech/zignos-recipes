@@ -1,0 +1,10 @@
+#!/bin/sh
+# mtr — ping + traceroute in one ncurses UI (and a batch mode). The GTK
+# frontend is disabled; the terminal client is the point of the package.
+set -e
+
+cd "$ZPKG_SRC/mtr-0.96"
+
+./configure --prefix=/usr --without-gtk
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install

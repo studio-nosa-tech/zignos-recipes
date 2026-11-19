@@ -1,0 +1,8 @@
+#!/bin/sh
+# brotli — brotli compression CLI and libraries (CMake build).
+set -e
+
+cd "$ZPKG_SRC/brotli-1.2.1"
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release 	-DCMAKE_INSTALL_PREFIX=/usr -DBROTLI_DISABLE_TESTS=ON
+cmake --build build -j"$(nproc)"
+DESTDIR="$ZPKG_DESTROOT" cmake --install build

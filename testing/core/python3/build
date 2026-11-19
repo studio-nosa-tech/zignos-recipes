@@ -1,0 +1,14 @@
+#!/bin/sh
+# python3 — build system for meson/ninja users and a general scripting
+# runtime. Adopts the stage1 install (same version, same layout).
+set -e
+
+cd "$ZPKG_SRC/Python-$ZPKG_VERSION"
+# OpenSSL 4 removed the fixed-version TLS methods (and their NO_*_METHOD
+# macros); guard CPython's uses with the version number until upstream
+# merges equivalent support.
+patch --force -p1 < "$ZPKG_RECIPE_DIR/openssl4.patch"
+./configure --prefix=/usr --enable-shared --with-system-expat \
+    --without-ensurepip
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install

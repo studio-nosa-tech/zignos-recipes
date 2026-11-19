@@ -1,0 +1,12 @@
+#!/bin/sh
+# whois — query domain and IP registration data. Upstream ships a plain
+# Makefile (no configure).
+set -e
+
+cd "$ZPKG_SRC/whois-5.6.6"
+
+# po/ needs xgettext (gettext); ZIGNOS builds the programs and installs
+# the translated strings that ship in the tarball instead of regenerating
+# them. The binaries, man pages and bash completion are installed.
+make -j"$(nproc)" whois mkpasswd
+make install-whois install-mkpasswd install-bashcomp 	prefix=/usr BASEDIR="$ZPKG_DESTROOT"

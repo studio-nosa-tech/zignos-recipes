@@ -1,0 +1,9 @@
+#!/bin/sh
+# ethtool — inspect and tune NIC settings (link, speed, offloads, rings).
+set -e
+
+cd "$ZPKG_SRC/ethtool-7.2"
+
+./configure --prefix=/usr
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install

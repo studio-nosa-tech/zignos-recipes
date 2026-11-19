@@ -1,0 +1,8 @@
+#!/bin/sh
+# entr — run a command when files change (stdin lists the files).
+set -e
+
+cd "$ZPKG_SRC/entr-5.9"
+./configure --prefix=/usr
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" PREFIX=/usr install

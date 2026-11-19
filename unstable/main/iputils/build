@@ -1,0 +1,13 @@
+#!/bin/sh
+# iputils — ping, arping, tracepath and friends. IDN/gettext and the
+# docbook man pages are disabled (no libidn2/xsltproc in the tree); ping
+# gets the setuid bit after install so it works for normal users, which
+# is what NO_SETCAP_OR_SUID skips doing at install time.
+set -e
+
+cd "$ZPKG_SRC/iputils-20250605"
+
+meson setup build -Dprefix=/usr 	-DUSE_IDN=false -DUSE_GETTEXT=false 	-DBUILD_MANS=false -DNO_SETCAP_OR_SUID=true
+ninja -C build
+DESTDIR="$ZPKG_DESTROOT" ninja -C build install
+chmod 4755 "$ZPKG_DESTROOT/usr/bin/ping"

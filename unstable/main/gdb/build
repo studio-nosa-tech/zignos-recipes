@@ -1,0 +1,26 @@
+#!/bin/sh
+# gdb — the GNU debugger. Python scripting and source-highlight are off
+# to keep the dependency set small; system readline/expat/gmp/mpfr are
+# used. gdbserver is built as well.
+set -e
+
+cd "$ZPKG_SRC/gdb-$ZPKG_VERSION"
+./configure --prefix=/usr              \
+            --sysconfdir=/etc          \
+            --with-system-readline     \
+            --with-expat=/usr          \
+            --with-gmp=/usr            \
+            --with-mpfr=/usr           \
+            --without-python           \
+            --disable-werror           \
+            --disable-source-highlight \
+            --disable-install-libbfd   \
+            --disable-install-libiberty \
+            --disable-sim
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install
+
+# binutils already owns bfd/ctf/sframe info pages; keep one owner.
+rm -f "$ZPKG_DESTROOT/usr/share/info/bfd.info"       "$ZPKG_DESTROOT/usr/share/info/ctf-spec.info"       "$ZPKG_DESTROOT/usr/share/info/sframe-spec.info"
+# The bundled bfd/opcodes copies also install binutils-owned translations.
+rm -rf "$ZPKG_DESTROOT/usr/share/locale"

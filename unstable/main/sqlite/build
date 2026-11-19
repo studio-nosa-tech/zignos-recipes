@@ -1,0 +1,10 @@
+#!/bin/sh
+# sqlite — the SQLite library and the sqlite3 shell. FTS5 and readline
+# (history/editing in the shell) are enabled; no other dependencies.
+set -e
+
+cd "$ZPKG_SRC/sqlite-autoconf-3540100"
+
+./configure --prefix=/usr --disable-static --enable-fts5 --enable-readline
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install

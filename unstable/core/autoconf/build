@@ -1,0 +1,9 @@
+#!/bin/sh
+# autoconf — macro processor based configure generator (LFS 13.1-systemd
+# 8.47, tests skipped in v0).
+set -e
+
+cd "$ZPKG_SRC/autoconf-2.73"
+./configure --prefix=/usr
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install

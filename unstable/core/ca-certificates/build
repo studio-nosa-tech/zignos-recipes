@@ -1,0 +1,8 @@
+#!/bin/sh
+# ca-certificates — Mozilla CA bundle for TLS verification. The source is
+# a plain PEM file (not an archive); the build installs it from the zpkg
+# cache into the locations Go and OpenSSL programs expect.
+set -e
+
+install -vDm644 "$ZPKG_CACHE/cacert.pem" "$ZPKG_DESTROOT/etc/ssl/certs/ca-certificates.crt"
+ln -sv ca-certificates.crt "$ZPKG_DESTROOT/etc/ssl/cert.pem"

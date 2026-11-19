@@ -1,0 +1,11 @@
+#!/bin/sh
+# efibootmgr — read and write the UEFI boot manager (NVRAM boot entries).
+# Only the efibootmgr binary is built: efibootdump/eficonman need popt,
+# which efibootmgr itself does not use. Upstream's install target builds
+# every binary, so the two files are installed directly instead.
+set -e
+
+cd "$ZPKG_SRC/efibootmgr-$ZPKG_VERSION"
+make -C src efibootmgr efibootmgr.8 -j"$(nproc)"
+install -vDm755 src/efibootmgr "$ZPKG_DESTROOT/usr/sbin/efibootmgr"
+install -vDm644 src/efibootmgr.8 "$ZPKG_DESTROOT/usr/share/man/man8/efibootmgr.8"

@@ -1,0 +1,12 @@
+#!/bin/sh
+# pciutils — lspci/setpci. The pci.ids snapshot is the ID database; on a
+# running machine "update-pciids" refreshes it.
+set -e
+
+cd "$ZPKG_SRC/pciutils-$ZPKG_VERSION"
+make PREFIX=/usr SHAREDIR=/usr/share/hwdata MANDIR=/usr/share/man \
+	PCI_COMPRESSED_IDS=0 PCI_IDS=pci.ids
+make PREFIX=/usr SHAREDIR=/usr/share/hwdata MANDIR=/usr/share/man \
+	PCI_COMPRESSED_IDS=0 PCI_IDS=pci.ids \
+	DESTDIR="$ZPKG_DESTROOT" install install-lib
+install -Dm644 "$ZPKG_RECIPE_DIR/pci.ids" "$ZPKG_DESTROOT/usr/share/hwdata/pci.ids"

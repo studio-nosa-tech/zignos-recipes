@@ -1,0 +1,12 @@
+#!/bin/sh
+# newt — the text-mode widget library used by nmtui. Python/Tcl bindings
+# and GPM support are disabled; whiptail is built as part of the package
+# and needs popt (a dependency).
+set -e
+
+cd "$ZPKG_SRC/newt-$ZPKG_VERSION"
+./configure --prefix=/usr --sysconfdir=/etc \
+	--disable-nls --without-python --without-tcl --without-gpm-support
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install
+rm -f "$ZPKG_DESTROOT/usr/lib/libnewt.a"

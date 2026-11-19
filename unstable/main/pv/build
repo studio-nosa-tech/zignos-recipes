@@ -1,0 +1,8 @@
+#!/bin/sh
+# pv — pipe viewer: progress, rate and ETA for data through a pipe.
+set -e
+
+cd "$ZPKG_SRC/pv-1.12.7"
+./configure --prefix=/usr
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install

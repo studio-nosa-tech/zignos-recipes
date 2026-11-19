@@ -1,0 +1,13 @@
+#!/bin/sh
+# gmp — arbitrary precision math (LFS 13.1-systemd 8.23).
+set -e
+
+cd "$ZPKG_SRC/gmp-6.3.0"
+# gcc-15+ compatibility fix from the book.
+sed -i '/long long t1;/,+1s/()/(...)/' configure
+./configure --prefix=/usr    \
+            --enable-cxx     \
+            --disable-static \
+            --docdir=/usr/share/doc/gmp-6.3.0
+make
+make DESTDIR="$ZPKG_DESTROOT" install

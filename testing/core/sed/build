@@ -1,0 +1,8 @@
+#!/bin/sh
+# sed — stream editor (LFS 13.1-systemd 8.34).
+set -e
+
+cd "$ZPKG_SRC/sed-4.10"
+./configure --prefix=/usr
+make
+make DESTDIR="$ZPKG_DESTROOT" install

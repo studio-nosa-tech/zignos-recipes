@@ -1,0 +1,30 @@
+#!/sbin/openrc-run
+# shellcheck shell=sh disable=SC2034
+# ZIGNOS: OpenSSH daemon. An ed25519 host key is generated on first start
+# (fast, and the image ships without keys so every install gets its own).
+# Root SSH login is disabled: use the user created by zignos-install.
+# Root still has the serial console for recovery.
+
+description="OpenSSH server"
+
+# sshd daemonizes by default, which leaves start-stop-daemon without a
+# pidfile ("crashed" in rc-status). Run it under the supervisor in the
+# foreground instead, so status and restarts work.
+supervisor=supervise-daemon
+command=/usr/sbin/sshd
+command_args_foreground="-D -o PermitRootLogin=no -o HostKey=/etc/ssh/ssh_host_ed25519_key"
+
+depend() {
+	need localmount
+	use net dns logger
+	after dhcpcd
+}
+
+start_pre() {
+	checkpath -d -m 0755 /run/sshd
+	if [ ! -f /etc/ssh/ssh_host_ed25519_key ]; then
+		ebegin "Generating SSH host key (ed25519)"
+		ssh-keygen -q -t ed25519 -N "" -f /etc/ssh/ssh_host_ed25519_key
+		eend $?
+	fi
+}

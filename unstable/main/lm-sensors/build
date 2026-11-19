@@ -1,0 +1,9 @@
+#!/bin/sh
+# lm-sensors — sensors(1), sensord helpers and libsensors. The upstream
+# Makefile defaults to /usr/local and /usr/man; ZIGNOS is usr-merged and
+# keeps man pages in /usr/share/man.
+set -e
+
+cd "$ZPKG_SRC/lm-sensors-3-6-2"
+make PREFIX=/usr CFLAGS="-O2 -std=gnu17" -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" PREFIX=/usr MANDIR=/usr/share/man install

@@ -1,0 +1,16 @@
+#!/bin/sh
+# openrc — the init system (OpenRC 0.64.1; the GitHub tag has no release
+# object, so the source is the tag archive tarball). Builds with the
+# system meson+ninja (r1: previously unpacked the meson tarball from the
+# source cache at build time).
+set -e
+
+cd "$ZPKG_SRC/openrc-0.64.1"
+mkdir -v build
+cd build
+meson setup --prefix=/usr --buildtype=release \
+	-Dpam=false \
+	-Duucp_group=root \
+	..
+ninja
+DESTDIR="$ZPKG_DESTROOT" ninja install

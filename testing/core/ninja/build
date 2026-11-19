@@ -1,0 +1,7 @@
+#!/bin/sh
+# ninja — meson's backend (openrc builds with meson+ninja).
+set -e
+
+cd "$ZPKG_SRC/ninja-$ZPKG_VERSION"
+python3 configure.py --bootstrap
+install -Dm755 ninja "$ZPKG_DESTROOT/usr/bin/ninja"

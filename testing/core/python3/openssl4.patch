@@ -1,0 +1,82 @@
+--- a/Modules/_ssl.c
++++ b/Modules/_ssl.c
+@@ -136,7 +136,10 @@
+ #error Unsupported OpenSSL version
+ #endif
+ 
+-/* OpenSSL API 1.1.0+ does not include version methods */
++/* OpenSSL API 1.1.0+ does not include version methods. OpenSSL 4 removed
++ * the fixed-version methods (and their NO_*_METHOD macros) entirely, so
++ * the version number is the only reliable guard. */
++#if OPENSSL_VERSION_NUMBER < 0x40000000L
+ #ifndef OPENSSL_NO_SSL3_METHOD
+ extern const SSL_METHOD *SSLv3_method(void);
+ #endif
+@@ -149,6 +152,7 @@
+ #ifndef OPENSSL_NO_TLS1_2_METHOD
+ extern const SSL_METHOD *TLSv1_2_method(void);
+ #endif
++#endif /* OPENSSL_VERSION_NUMBER < 0x40000000L */
+ 
+ #ifndef INVALID_SOCKET /* MS defines this */
+ #define INVALID_SOCKET (-1)
+@@ -252,7 +256,8 @@
+  * available version, and the other way around. We have to figure out the
+  * minimum and maximum available version on our own and hope for the best.
+  */
+-#if defined(SSL3_VERSION) && !defined(OPENSSL_NO_SSL3)
++#if defined(SSL3_VERSION) && !defined(OPENSSL_NO_SSL3) && \
++        OPENSSL_VERSION_NUMBER < 0x40000000L
+     PY_PROTO_MINIMUM_AVAILABLE = PY_PROTO_SSLv3,
+ #elif defined(TLS1_VERSION) && !defined(OPENSSL_NO_TLS1)
+     PY_PROTO_MINIMUM_AVAILABLE = PY_PROTO_TLSv1,
+@@ -3197,7 +3202,8 @@
+     }
+ 
+     switch(proto_version) {
+-#if defined(SSL3_VERSION) && !defined(OPENSSL_NO_SSL3)
++#if defined(SSL3_VERSION) && !defined(OPENSSL_NO_SSL3) && \
++        OPENSSL_VERSION_NUMBER < 0x40000000L
+     case PY_SSL_VERSION_SSL3:
+         PY_SSL_DEPRECATED("ssl.PROTOCOL_SSLv3 is deprecated", 2, NULL);
+         method = SSLv3_method();
+@@ -3205,7 +3211,8 @@
+ #endif
+ #if (defined(TLS1_VERSION) && \
+         !defined(OPENSSL_NO_TLS1) && \
+-        !defined(OPENSSL_NO_TLS1_METHOD))
++        !defined(OPENSSL_NO_TLS1_METHOD)  \
++        && OPENSSL_VERSION_NUMBER < 0x40000000L)
+     case PY_SSL_VERSION_TLS1:
+         PY_SSL_DEPRECATED("ssl.PROTOCOL_TLSv1 is deprecated", 2, NULL);
+         method = TLSv1_method();
+@@ -3213,7 +3220,8 @@
+ #endif
+ #if (defined(TLS1_1_VERSION) && \
+         !defined(OPENSSL_NO_TLS1_1) && \
+-        !defined(OPENSSL_NO_TLS1_1_METHOD))
++        !defined(OPENSSL_NO_TLS1_1_METHOD)  \
++        && OPENSSL_VERSION_NUMBER < 0x40000000L)
+     case PY_SSL_VERSION_TLS1_1:
+         PY_SSL_DEPRECATED("ssl.PROTOCOL_TLSv1_1 is deprecated", 2, NULL);
+         method = TLSv1_1_method();
+@@ -3221,7 +3229,8 @@
+ #endif
+ #if (defined(TLS1_2_VERSION) && \
+         !defined(OPENSSL_NO_TLS1_2) && \
+-        !defined(OPENSSL_NO_TLS1_2_METHOD))
++        !defined(OPENSSL_NO_TLS1_2_METHOD)  \
++        && OPENSSL_VERSION_NUMBER < 0x40000000L)
+     case PY_SSL_VERSION_TLS1_2:
+         PY_SSL_DEPRECATED("ssl.PROTOCOL_TLSv1_2 is deprecated", 2, NULL);
+         method = TLSv1_2_method();
+@@ -6702,7 +6711,8 @@
+ 
+     addbool(m, "HAS_SSLv2", 0);
+ 
+-#if defined(SSL3_VERSION) && !defined(OPENSSL_NO_SSL3)
++#if defined(SSL3_VERSION) && !defined(OPENSSL_NO_SSL3) && \
++        OPENSSL_VERSION_NUMBER < 0x40000000L
+     addbool(m, "HAS_SSLv3", 1);
+ #else
+     addbool(m, "HAS_SSLv3", 0);

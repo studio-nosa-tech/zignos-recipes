@@ -1,0 +1,8 @@
+#!/bin/sh
+# tmux — terminal multiplexer; daily-driver essential on a server.
+set -e
+
+cd "$ZPKG_SRC/tmux-$ZPKG_VERSION"
+./configure --prefix=/usr
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install

@@ -1,0 +1,68 @@
+#!/bin/sh
+# ZIGNOS initramfs /init — find the root filesystem, mount it and switch to
+# the real init. Supports root=UUID=<fs-uuid>, root=LABEL=<label> and
+# root=/dev/<device>. PARTUUID is not supported here (busybox blkid does not
+# expose partition UUIDs); ZIGNOS writes root=UUID= into the bootloader.
+export PATH=/bin:/sbin:/usr/bin:/usr/sbin
+
+mount -t proc proc /proc 2>/dev/null || true
+mount -t sysfs sysfs /sys 2>/dev/null || true
+mount -t devtmpfs devtmpfs /dev 2>/dev/null || true
+mdev -s 2>/dev/null || true
+
+root=
+for arg in $(cat /proc/cmdline); do
+	case "$arg" in
+		root=*) root=${arg#root=} ;;
+	esac
+done
+
+find_uuid() {
+	busybox blkid 2>/dev/null | while IFS= read -r line; do
+		case "$line" in
+			*UUID=\"$1\"*) echo "${line%%:*}"; break ;;
+		esac
+	done
+}
+
+find_label() {
+	busybox blkid 2>/dev/null | while IFS= read -r line; do
+		case "$line" in
+			*LABEL=\"$1\"*) echo "${line%%:*}"; break ;;
+		esac
+	done
+}
+
+resolve() {
+	case "$root" in
+		UUID=*) find_uuid "${root#UUID=}" ;;
+		LABEL=*) find_label "${root#LABEL=}" ;;
+		/dev/*) echo "$root" ;;
+	esac
+}
+
+dev=$(resolve)
+# USB and NVMe devices need a moment to appear.
+i=0
+while [ -z "$dev" ] && [ "$i" -lt 10 ]; do
+	sleep 1
+	dev=$(resolve)
+	i=$((i + 1))
+done
+
+if [ -z "$dev" ] || [ ! -b "$dev" ]; then
+	echo "ZIGNOS initramfs: cannot find root ('$root')." >&2
+	echo "Available filesystems:" >&2
+	busybox blkid 2>/dev/null >&2
+	echo "Dropping to a rescue shell. Type 'exit' to panic." >&2
+	exec /bin/sh
+fi
+
+mkdir -p /root
+if ! mount -o ro "$dev" /root; then
+	echo "ZIGNOS initramfs: mounting $dev failed." >&2
+	exec /bin/sh
+fi
+
+echo "ZIGNOS initramfs: root=$dev, switching to /sbin/init"
+exec switch_root /root /sbin/init

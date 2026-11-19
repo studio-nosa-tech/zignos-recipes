@@ -1,0 +1,17 @@
+#!/bin/sh
+# fuse3 — libfuse 3, fusermount3 and mount.fuse3. useroot=false keeps the
+# helper from creating a /dev/fuse node (zpkg cannot record device files);
+# fusermount3 is made setuid here and devtmpfs provides /dev/fuse. No udev
+# or SysV init script is shipped (mdev/OpenRC here).
+set -e
+
+cd "$ZPKG_SRC/fuse-$ZPKG_VERSION"
+meson setup build --prefix=/usr --libdir=lib --buildtype=release \
+	-Dutils=true -Dexamples=false -Dtests=false -Duseroot=false \
+	-Dudevrulesdir=/usr/lib/udev/rules.d -Dinitscriptdir=
+meson compile -C build
+DESTDIR="$ZPKG_DESTROOT" meson install -C build --no-rebuild
+
+# install_helper.sh skips this with useroot=false; zpkg cannot record /dev
+# nodes, so set the setuid bit here and let devtmpfs provide /dev/fuse.
+chmod 4755 "$ZPKG_DESTROOT/usr/bin/fusermount3"

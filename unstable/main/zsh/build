@@ -1,0 +1,8 @@
+#!/bin/sh
+# zsh — the Z shell. The default zshrc files live in /etc (etcdir).
+set -e
+
+cd "$ZPKG_SRC/zsh-5.9.2"
+./configure --prefix=/usr --enable-etcdir=/etc
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install

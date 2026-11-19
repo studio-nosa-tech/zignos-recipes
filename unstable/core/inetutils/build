@@ -1,0 +1,28 @@
+#!/bin/sh
+# inetutils — basic network programs. ZIGNOS needs hostname (OpenRC
+# hostname service) and ifconfig (loopback service); ping is left to
+# main/iputils, so the inetutils copy is not built. FTP/telnet/tftp and
+# the r-commands are disabled too.
+set -e
+
+cd "$ZPKG_SRC/inetutils-2.8"
+./configure --prefix=/usr        \
+            --bindir=/usr/bin    \
+            --localstatedir=/var \
+            --disable-logger     \
+            --disable-whois      \
+            --disable-rcp        \
+            --disable-rexec      \
+            --disable-rlogin     \
+            --disable-rsh        \
+            --disable-ftp        \
+            --disable-telnet     \
+            --disable-tftp       \
+            --disable-ping       \
+            --disable-ping6      \
+            --disable-traceroute \
+            --disable-servers
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install
+mkdir -pv "$ZPKG_DESTROOT/usr/sbin"
+mv -v "$ZPKG_DESTROOT/usr/bin/ifconfig" "$ZPKG_DESTROOT/usr/sbin/"

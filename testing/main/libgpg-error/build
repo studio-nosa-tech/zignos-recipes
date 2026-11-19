@@ -1,0 +1,9 @@
+#!/bin/sh
+# libgpg-error — error strings and common helpers shared by GnuPG and its
+# libraries. gpg-error-config is installed for source builds.
+set -e
+
+cd "$ZPKG_SRC/libgpg-error-$ZPKG_VERSION"
+./configure --prefix=/usr --disable-static --disable-doc --disable-tests
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install

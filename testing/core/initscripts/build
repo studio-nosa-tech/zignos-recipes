@@ -1,0 +1,65 @@
+#!/bin/sh
+# initscripts — ZIGNOS-specific boot services on top of OpenRC.
+# OpenRC's own package ships the standard runlevel links (sysinit:
+# cgroups/devfs/dmesg/sysfs, boot: root/hostname/localmount/...) and the
+# stock agetty/network services; this package adds:
+#   sysinit: udev (eudev; mdev remains installed as a fallback but is off)
+#   default: console (agetty on ttyS0), console-vga (agetty on tty1)
+#   runtime config: /etc/profile, /etc/securetty, /etc/motd, /etc/os-release
+# and /sbin/init -> openrc-init.
+#
+# The base system is deliberately minimal (see zignos-build/base.list):
+# sshd, dhcpcd, chronyd, dbus and wpa_supplicant are NOT installed and
+# their services are NOT enabled. The init.d scripts ship anyway; after
+# "zpkg install openssh" run "rc-update add sshd default" (same for the
+# others). This is the Gentoo-style "you enable what you install" model.
+
+set -e
+
+D="$ZPKG_DESTROOT"
+install -vDm755 "$ZPKG_RECIPE_DIR/init.d/udev" "$D/etc/init.d/udev"
+install -vDm755 "$ZPKG_RECIPE_DIR/init.d/mdev" "$D/etc/init.d/mdev"
+install -vDm755 "$ZPKG_RECIPE_DIR/init.d/console" "$D/etc/init.d/console"
+install -vDm755 "$ZPKG_RECIPE_DIR/init.d/console-vga" "$D/etc/init.d/console-vga"
+install -vDm755 "$ZPKG_RECIPE_DIR/init.d/sshd" "$D/etc/init.d/sshd"
+install -vDm755 "$ZPKG_RECIPE_DIR/init.d/dhcpcd" "$D/etc/init.d/dhcpcd"
+install -vDm755 "$ZPKG_RECIPE_DIR/init.d/chronyd" "$D/etc/init.d/chronyd"
+install -vDm755 "$ZPKG_RECIPE_DIR/init.d/wpa_supplicant" "$D/etc/init.d/wpa_supplicant"
+install -vDm755 "$ZPKG_RECIPE_DIR/init.d/dbus" "$D/etc/init.d/dbus"
+install -vDm755 "$ZPKG_RECIPE_DIR/init.d/crond" "$D/etc/init.d/crond"
+install -vDm755 "$ZPKG_RECIPE_DIR/init.d/nftables" "$D/etc/init.d/nftables"
+install -vDm644 "$ZPKG_RECIPE_DIR/etc/profile" "$D/etc/profile"
+install -vDm644 "$ZPKG_RECIPE_DIR/etc/securetty" "$D/etc/securetty"
+install -vDm644 "$ZPKG_RECIPE_DIR/etc/os-release" "$D/etc/os-release"
+install -vDm644 "$ZPKG_RECIPE_DIR/etc/motd" "$D/etc/motd"
+# Base accounts are runtime configuration owned by this package (passwords
+# stay in /etc/shadow, maintained by shadow's tools).
+install -vDm644 "$ZPKG_RECIPE_DIR/etc/passwd" "$D/etc/passwd"
+install -vDm644 "$ZPKG_RECIPE_DIR/etc/group" "$D/etc/group"
+printf 'zignos\n' > "$D/etc/hostname"
+
+mkdir -pv "$D/etc/runlevels/sysinit" "$D/etc/runlevels/boot" "$D/etc/runlevels/default"
+ln -sv /etc/init.d/udev "$D/etc/runlevels/sysinit/udev"
+# mdev is kept as an emergency fallback but is no longer enabled.
+ln -sv /etc/init.d/console "$D/etc/runlevels/default/console"
+# The generic kernel enables VT/VGA/simpledrm, so tty1 exists on real
+# hardware. QEMU boots use ttyS0; the extra getty is harmless there.
+ln -sv /etc/init.d/console-vga "$D/etc/runlevels/default/console-vga"
+# Everything else is opt-in, matching the minimal base set:
+#   zpkg install openssh       && rc-update add sshd default
+#   zpkg install dhcpcd        && rc-update add dhcpcd boot
+#   zpkg install chrony        && rc-update add chronyd default
+#   zpkg install dbus          && rc-update add dbus boot
+#   zpkg install wpa_supplicant && rc-update add wpa_supplicant default
+#   zpkg install cronie        && rc-update add crond default
+#   zpkg install nftables      && rc-update add nftables default
+# (WPA_IFACE selects the wlan interface; the default is wlan0.)
+
+# /sbin: PID 1, the busybox power-control applets, and mdev (the kernel's
+# hotplug helper path; busybox ships only the binary).
+mkdir -pv "$D/sbin"
+ln -sv /usr/sbin/openrc-init "$D/sbin/init"
+for a in poweroff reboot halt mdev; do
+	ln -sfv /bin/busybox "$D/sbin/$a"
+done
+install -vDm644 "$ZPKG_RECIPE_DIR/etc/mdev.conf" "$D/etc/mdev.conf"

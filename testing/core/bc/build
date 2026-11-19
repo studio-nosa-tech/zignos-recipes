@@ -1,0 +1,9 @@
+#!/bin/sh
+# bc — arbitrary precision calculator (LFS 13.1-systemd 8.15).
+# Needed by the kernel build. Links readline (-r) for interactive use.
+set -e
+
+cd "$ZPKG_SRC/bc-7.0.3"
+CC="gcc -std=c99" ./configure --prefix=/usr -G -O3 -r
+make
+make DESTDIR="$ZPKG_DESTROOT" install

@@ -1,0 +1,18 @@
+#!/bin/sh
+# logrotate — log rotation. No SELinux/ACL here; the state file stays at
+# upstream's /var/lib/logrotate.status. A minimal weekly config is shipped
+# so the tool is usable after "zpkg install logrotate".
+set -e
+
+cd "$ZPKG_SRC/logrotate-$ZPKG_VERSION"
+./configure --prefix=/usr              \
+            --sysconfdir=/etc          \
+            --localstatedir=/var       \
+            --without-selinux          \
+            --without-acl              \
+            --disable-werror
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install
+
+install -d "$ZPKG_DESTROOT/etc/logrotate.d" "$ZPKG_DESTROOT/var/lib"
+install -Dm644 "$ZPKG_RECIPE_DIR/logrotate.conf" "$ZPKG_DESTROOT/etc/logrotate.conf"

@@ -1,0 +1,10 @@
+#!/bin/sh
+# automake — generates Makefile.in from Makefile.am. Together with autoconf
+# this is what most configure.ac projects need before ./configure exists.
+set -e
+
+cd "$ZPKG_SRC/automake-1.20"
+
+./configure --prefix=/usr
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install

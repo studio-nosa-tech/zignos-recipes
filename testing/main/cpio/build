@@ -1,0 +1,12 @@
+#!/bin/sh
+# cpio — GNU cpio, including the mt tape helper. Useful for initramfs
+# archives and backups.
+set -e
+
+cd "$ZPKG_SRC/cpio-$ZPKG_VERSION"
+CFLAGS="-O2 -std=gnu17" ./configure --prefix=/usr
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install
+
+# GNU tar already ships rmt; keep one owner for the shared helper and man page.
+rm -f "$ZPKG_DESTROOT/usr/libexec/rmt" "$ZPKG_DESTROOT/usr/share/man/man8/rmt.8"

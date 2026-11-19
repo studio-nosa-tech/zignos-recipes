@@ -1,0 +1,30 @@
+#!/bin/sh
+# fastfetch — system information tool. ZIGNOS ships it with the project's
+# neon-orbit logo (pre-rendered ANSI art) and a distro config in /etc, so a
+# bare `fastfetch` is branded out of the box.
+#
+# Image logos (sixel/kitty/chafa) are disabled: the ANSI text logo needs no
+# ImageMagick/chafa at build time, and the console-only base has no use for
+# them. ENABLE_DBUS/zlib are picked up from the base system via pkg-config.
+set -e
+
+cd "$ZPKG_SRC/fastfetch-$ZPKG_VERSION"
+cmake -S . -B build \
+	-DCMAKE_BUILD_TYPE=Release \
+	-DCMAKE_INSTALL_PREFIX=/usr \
+	-DBUILD_FLASHFETCH=OFF \
+	-DBUILD_TESTS=OFF \
+	-DENABLE_IMAGE_LOGO=OFF \
+	-DENABLE_LUA=OFF \
+	-DENABLE_LIBZFS=OFF \
+	-DENABLE_EMBEDDED_PCIIDS=OFF \
+	-DENABLE_EMBEDDED_AMDGPUIDS=OFF \
+	-DSET_TWEAK=OFF
+cmake --build build -j"$(nproc)"
+DESTDIR="$ZPKG_DESTROOT" cmake --install build
+
+# Branding assets: the rendered logo (text + PNG original) and the config
+# that points at it. Per-user configs in ~/.config/fastfetch take precedence.
+install -Dm644 "$ZPKG_RECIPE_DIR/logo.txt" "$ZPKG_DESTROOT/usr/share/zignos/fastfetch/logo.txt"
+install -Dm644 "$ZPKG_RECIPE_DIR/logo.png" "$ZPKG_DESTROOT/usr/share/zignos/fastfetch/logo.png"
+install -Dm644 "$ZPKG_RECIPE_DIR/config.jsonc" "$ZPKG_DESTROOT/etc/fastfetch/config.jsonc"

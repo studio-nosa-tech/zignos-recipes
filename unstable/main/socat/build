@@ -1,0 +1,10 @@
+#!/bin/sh
+# socat — general purpose relay; network plumbing for scripts and tests.
+set -e
+
+cd "$ZPKG_SRC/socat-$ZPKG_VERSION"
+# socat's OpenSSL glue pokes at ASN1_OCTET_STRING internals, which OpenSSL 4
+# made opaque; relay functionality does not need it.
+./configure --prefix=/usr --disable-openssl
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install

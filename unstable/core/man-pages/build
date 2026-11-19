@@ -1,0 +1,8 @@
+#!/bin/sh
+# man-pages — sections 2/3 etc. for the kernel and C library APIs.
+set -e
+
+cd "$ZPKG_SRC/man-pages-$ZPKG_VERSION"
+# libxcrypt ships the crypt(3) family; installing ours would conflict.
+rm -v man3/crypt*
+make -R GIT=false prefix=/usr DESTDIR="$ZPKG_DESTROOT" install

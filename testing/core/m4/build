@@ -1,0 +1,8 @@
+#!/bin/sh
+# m4 — macro processor (autoconf depends on it).
+set -e
+
+cd "$ZPKG_SRC/m4-$ZPKG_VERSION"
+./configure --prefix=/usr
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install

@@ -1,0 +1,11 @@
+#!/bin/sh
+# nmap — port scanner and network mapper. Nmap bundles libpcap, pcre and
+# zlib; using the bundled copies keeps the build self-contained. Zenmap
+# (GTK), ndiff (python) and nping (openssl) are not built.
+set -e
+
+cd "$ZPKG_SRC/nmap-7.993"
+
+./configure --prefix=/usr 	--without-zenmap --without-ndiff --without-nping 	--without-libssh2 	--with-libpcap=included --with-libpcre=included --with-libz=included
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install

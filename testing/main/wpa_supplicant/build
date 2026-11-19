@@ -1,0 +1,34 @@
+#!/bin/sh
+# wpa_supplicant — WPA/WPA2/WPA3 authentication for WiFi. Built against
+# the system OpenSSL and libnl (nl80211 driver). The initscripts package
+# ships the OpenRC service; dhcpcd picks up the lease once associated.
+set -e
+
+cd "$ZPKG_SRC/wpa_supplicant-$ZPKG_VERSION/wpa_supplicant"
+cp defconfig .config
+cat >> .config <<'CONFIG'
+# ZIGNOS: nl80211 via libnl, the control interface for wpa_cli, and the
+# common EAP methods for home and campus networks.
+CONFIG_DRIVER_NL80211=y
+CONFIG_LIBNL32=y
+CONFIG_CTRL_IFACE=y
+CONFIG_IEEE8021X_EAPOL=y
+CONFIG_EAP_PEAP=y
+CONFIG_EAP_MSCHAPV2=y
+CONFIG_EAP_TLS=y
+CONFIG_EAP_TTLS=y
+CONFIG_EAP_GTC=y
+CONFIG_EAP_OTP=y
+CONFIG_PKCS12=y
+CONFIG_SMARTCARD=n
+CONFIG_PEERKEY=n
+CONFIG_SAE=y
+CONFIG_READPASSphrase=n
+CFLAGS += -I/usr/include/libnl3
+LIBS += -lnl-3 -lnl-genl-3
+CONFIG
+make -j"$(nproc)" BINDIR=/usr/sbin LIBDIR=/usr/lib
+make BINDIR=/usr/sbin LIBDIR=/usr/lib DESTDIR="$ZPKG_DESTROOT" install
+install -d "$ZPKG_DESTROOT/etc/wpa_supplicant"
+install -m600 "$ZPKG_RECIPE_DIR/wpa_supplicant.conf" \
+	"$ZPKG_DESTROOT/etc/wpa_supplicant/wpa_supplicant.conf"

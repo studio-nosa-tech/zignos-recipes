@@ -1,0 +1,8 @@
+#!/bin/sh
+# nano — small, familiar editor for people who do not want vim.
+set -e
+
+cd "$ZPKG_SRC/nano-9.3"
+./configure --prefix=/usr --sysconfdir=/etc --enable-utf8
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install

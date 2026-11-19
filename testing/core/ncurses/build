@@ -1,0 +1,22 @@
+#!/bin/sh
+# ncurses — terminal control library (LFS 13.1-systemd 8.33).
+set -e
+
+cd "$ZPKG_SRC/ncurses-6.6"
+./configure --prefix=/usr           \
+            --mandir=/usr/share/man \
+            --with-shared           \
+            --without-debug         \
+            --without-normal        \
+            --with-cxx-shared       \
+            --enable-pc-files       \
+            --with-pkg-config-libdir=/usr/lib/pkgconfig
+make
+make DESTDIR="$ZPKG_DESTROOT" install
+sed -e 's/^#if.*XOPEN.*$/#if 1/' -i "$ZPKG_DESTROOT/usr/include/curses.h"
+
+for lib in ncurses form panel menu; do
+	ln -sfv lib${lib}w.so "$ZPKG_DESTROOT/usr/lib/lib${lib}.so"
+	ln -sfv lib${lib}w.so.6 "$ZPKG_DESTROOT/usr/lib/lib${lib}.so.6"
+done
+ln -sfv libncursesw.so "$ZPKG_DESTROOT/usr/lib/libcurses.so"

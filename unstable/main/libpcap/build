@@ -1,0 +1,8 @@
+#!/bin/sh
+# libpcap — packet capture library (tcpdump and friends).
+set -e
+
+cd "$ZPKG_SRC/libpcap-$ZPKG_VERSION"
+./configure --prefix=/usr --disable-dbus --disable-rdma
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install

@@ -1,0 +1,54 @@
+#!/bin/sh
+# linux — the ZIGNOS kernel. The base is the kernel's x86_64_defconfig
+# (broad desktop/server coverage), with x86_64-generic.config merged over it:
+# boot-critical storage/USB/console drivers are built in so the busybox
+# initramfs does not need modules; extra GPUs, NICs and WiFi are modules
+# loaded after the root filesystem is up.
+# Users are expected to tweak x86_64-generic.config for their own machines.
+set -e
+
+cd "$ZPKG_SRC/linux-7.1.8"
+make mrproper
+make x86_64_defconfig
+scripts/kconfig/merge_config.sh -m .config "$ZPKG_RECIPE_DIR/x86_64-generic.config"
+make olddefconfig
+
+# Assert the options the boot path depends on (initramfs, built-in storage,
+# USB keyboard and the console). merge_config can drop a symbol whose parent
+# is disabled, so check the merged result rather than trusting the fragment.
+for sym in CONFIG_BLK_DEV_INITRD=y CONFIG_RD_GZIP=y \
+           CONFIG_BLK_DEV_NVME=y CONFIG_SATA_AHCI=y CONFIG_USB_XHCI_HCD=y \
+           CONFIG_USB_STORAGE=y CONFIG_USB_HID=y CONFIG_VT=y \
+           CONFIG_VT_CONSOLE=y CONFIG_VGA_CONSOLE=y \
+           CONFIG_DRM_SIMPLEDRM=y CONFIG_FRAMEBUFFER_CONSOLE=y \
+           CONFIG_EXT4_FS=y CONFIG_VIRTIO_BLK=y CONFIG_VIRTIO_NET=y \
+           CONFIG_SECCOMP_FILTER=y CONFIG_MODULES=y \
+           CONFIG_NAMESPACES=y CONFIG_UTS_NS=y CONFIG_IPC_NS=y \
+           CONFIG_PID_NS=y CONFIG_NET_NS=y CONFIG_USER_NS=y; do
+	grep -qx "$sym" .config || {
+		echo "linux: $sym missing from the merged config" >&2
+		exit 1
+	}
+done
+
+make -j"$(nproc)"
+KVER=$(make -s kernelrelease)
+make INSTALL_PATH="$ZPKG_DESTROOT/boot" install
+
+# Modules: strip debug info, then generate modules.dep with kmod's depmod
+# (the kernel's own modules_install would run depmod against the build root,
+# not the destroot, so it is disabled here).
+make INSTALL_MOD_PATH="$ZPKG_DESTROOT" INSTALL_MOD_STRIP=1 DEPMOD=/bin/true modules_install
+depmod -b "$ZPKG_DESTROOT" "$KVER"
+
+# The initramfs is busybox-only (boot-critical drivers are built in).
+/usr/sbin/zignos-mkinitramfs -o "$ZPKG_DESTROOT/boot/initramfs.img"
+
+# grub-mkconfig's 10_linux only looks for versioned names
+# (/boot/vmlinuz-<ver>, /boot/initramfs-<ver>.img). Keep the plain names
+# for the image builder and hand-written entries, and install versioned
+# copies so the stock "grub-mkconfig" finds the kernel automatically.
+# Copies rather than symlinks: /boot may be a FAT32 ESP, which has no
+# symlink support.
+cp "$ZPKG_DESTROOT/boot/vmlinuz" "$ZPKG_DESTROOT/boot/vmlinuz-$KVER"
+cp "$ZPKG_DESTROOT/boot/initramfs.img" "$ZPKG_DESTROOT/boot/initramfs-$KVER.img"

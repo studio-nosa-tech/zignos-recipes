@@ -1,0 +1,9 @@
+#!/bin/sh
+# grep — pattern search (LFS 13.1-systemd 8.38).
+set -e
+
+cd "$ZPKG_SRC/grep-3.12"
+sed -i "s/echo/#echo/" src/egrep.sh
+./configure --prefix=/usr
+make
+make DESTDIR="$ZPKG_DESTROOT" install

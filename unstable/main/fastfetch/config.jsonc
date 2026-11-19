@@ -1,0 +1,44 @@
+{
+    "$schema": "https://github.com/fastfetch-cli/fastfetch/raw/dev/doc/json_schema.json",
+    "logo": {
+        "type": "file-raw",
+        "source": "/usr/share/zignos/fastfetch/logo.txt",
+        "width": 47,
+        "height": 15,
+        "padding": {
+            "top": 0,
+            "left": 2,
+            "right": 3
+        }
+    },
+    "display": {
+        "separator": "  ",
+        "color": {
+            "keys": "magenta",
+            "title": "bright_white"
+        }
+    },
+    "modules": [
+        "title",
+        "separator",
+        "os",
+        "host",
+        "kernel",
+        "uptime",
+        "initsystem",
+        {
+            "type": "command",
+            "key": "Packages",
+            "text": "zpkg list 2>/dev/null | wc -l | tr -d ' '"
+        },
+        "shell",
+        "terminal",
+        "cpu",
+        "gpu",
+        "memory",
+        "disk",
+        "localip",
+        "break",
+        "colors"
+    ]
+}

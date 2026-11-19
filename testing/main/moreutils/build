@@ -1,0 +1,13 @@
+#!/bin/sh
+# moreutils — small utilities (sponge, ts, vipe, vidir, chronic, ...).
+# The man pages need xsltproc + docbook-xsl, which ZIGNOS does not carry, so
+# only the binaries and perl scripts are built and installed.
+set -e
+
+cd "$ZPKG_SRC/moreutils-0.70"
+bins="isutf8 ifdata ifne pee sponge mispipe lckdo parallel errno"
+scripts="vidir vipe ts combine zrun chronic"
+make -j"$(nproc)" $bins $scripts
+for b in $bins $scripts; do
+	install -Dm755 "$b" "$ZPKG_DESTROOT/usr/bin/$b"
+done

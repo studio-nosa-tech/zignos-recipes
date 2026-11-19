@@ -2,7 +2,26 @@
 
 ZIGNOS のレシピツリー(Gentoo の gentoo/gentoo リポジトリ相当)。
 
-## パッケージ数(2026-11-19 時点)
+## チャンネル構成
+
+レシピツリーは3つのリリースチャンネルを持つ。各チャンネルは同じ
+`core/` / `main/` / `desktop/` 構造を持つ。
+
+```
+zignos-recipes/
+├── stable/{core,main,desktop}     # 安定版。既定。stage3/イメージに同梱
+├── testing/{core,main,desktop}    # 次期 stable の検証
+└── unstable/{core,main,desktop}   # 開発中の最新版
+```
+
+| チャンネル | パッケージ数 | 内容 |
+|---|---|---|
+| `stable/` | **162** | 安定版。`zpkg` の既定 |
+| `testing/` | **162** | stable 候補。まずここで検証する |
+| `unstable/` | **162** | 開発中。破壊的変更を含み得る |
+| **合計** | **486** | 初期状態では3チャンネルとも同一内容 |
+
+各チャンネル内の内訳:
 
 | カテゴリ | パッケージ数 | 内容 |
 |---|---|---|
@@ -46,14 +65,22 @@ logrotate nftables npth pinentry popt screen sshfs
 
 未整備。GUI 要素(X/wayland、フォント、デスクトップ環境)は検討段階。
 
-## 構成
+## 構成と運用
 
-- `core/` — ベースシステム + ビルドツール一式(bootstrap の最終システムに加え、
-  python3/perl/man 等の実用ツールも含む)。**base.list が「ベースシステムとは何か」の
-  唯一の定義**(`zignos-build/base.list` 参照)
-- `main/` — CLI 実用パッケージ。インストールは `zpkg install <pkg>`(レシピツリーは
-  システムに `/usr/share/zignos/recipes` として同梱済み)
-- `desktop/` — GUI(未整備)
+- `stable/` — 既定。stage3 / イメージにはこのサブツリーだけが同梱される
+- `testing/` — stable 候補。まずここでビルド・起動を確認する
+- `unstable/` — 開発中。破壊的変更を含み得る
+- 選択は zpkg 側の `/etc/zpkg/make.conf` の `CHANNEL=`(既定 `stable`)。
+  `zpkg channel testing` で切り替え、`zpkg upgrade -p` で差分を確認する
+- 変更は **unstable → testing → stable** の順に昇格させる。各チャンネルで
+  version / revision は独立して上げる。**同じ version+revision のまま内容を
+  変えると binpkg キャッシュが衝突する**ため、内容を変えたら必ず revision を
+  上げる
+- `base.list` が「ベースシステムとは何か」の唯一の定義
+  (`zignos-build/base.list` 参照)。チャンネルには依存しない
+- インストール済みシステムでは `/usr/share/zignos/recipes/<channel>/` として
+  使う。`zpkg` は `ZPKG_REPOS` 未設定時に選択チャンネルの `core` / `main` /
+  `desktop` を自動的に探す
 
 ## レシピ形式
 
@@ -68,6 +95,7 @@ logrotate nftables npth pinentry popt screen sshfs
 | `depends` | 任意 | 実行時依存(**1行1パッケージ**)。`flag?pkg` の条件付き依存可 |
 | `makedepends` | 任意 | ビルド時のみの依存(1行1パッケージ) |
 | `build_network` | 任意 | `1` / `0` でビルド時ネットワークをグローバル設定より優先 |
+| `upgrade_warning` | 任意 | `zpkg upgrade` が実行前に表示する注意メッセージ(複数行可) |
 | `revision` | 任意 | レシピ改訂番号(`-rN`)。**内容を変えたら上げる**(binpkg キーが変わり upgrade で配信される) |
 | `slot` / `provides` / `conflicts` | 任意 | スロット / virtual 提供 / 競合(依存解決で使用) |
 | `iuse` | 任意 | このレシピが理解する USE フラグ(タイポ検出に使われる) |
@@ -100,9 +128,9 @@ tar/gzip の mtime は固定される。
 
 レシピ側でも、時刻やホスト名を埋め込むツールには次のように明示する。
 
-- Go: `go build -trimpath -buildvcs=false`(`core/zpkg`)
+- Go: `go build -trimpath -buildvcs=false`(`stable/core/zpkg`。各チャンネル共通)
 - initramfs: `find | sort`、mtime を `SOURCE_DATE_EPOCH` に統一、`gzip -n`
-  (`core/initramfs/zignos-mkinitramfs`)
+  (`stable/core/initramfs/zignos-mkinitramfs`。各チャンネル共通)
 - 生成物に日付を書くスクリプトは `SOURCE_DATE_EPOCH` を使う
 
 ```sh
@@ -121,15 +149,15 @@ zpkg build --repro-check <pkg>   # 2 回ビルドして manifest を比較
   置く)に翻訳したもの。**テストスイートは一律スキップ**
 - OpenSSL 4.0 互換パッチを `python3` / `wget` がレシピ同梱している(OpenSSL 4 で削除された
   fixed-version TLS method のガード。`makedepends: patch` で自家パッチを当てる)
-- **カーネルは `x86_64_defconfig` + `core/linux/x86_64-generic.config`**。起動系
+- **カーネルは `x86_64_defconfig` + `stable/core/linux/x86_64-generic.config`**。起動系
   (ACPI/APIC、SATA AHCI、NVMe、USB、VT/VGA/simpledrm、ext4、virtio、主要 NIC)は組み込み、
   GPU/WiFi/追加 NIC はモジュール。`make modules_install` + `kmod depmod` までレシピが行う
-- **initramfs は busybox ベース**(`core/initramfs`)。`busybox` は initramfs 用に
+- **initramfs は busybox ベース**(`stable/core/initramfs`)。`busybox` は initramfs 用に
   **静的リンク**(`CONFIG_STATIC=y`)、`zignos-mkinitramfs` が `/boot/initramfs.img` を生成し、
   `/init` が `root=UUID=` を解決して `switch_root` する
-- **`core/kmod 34.3`** が modprobe/depmod を提供。eudev が uevent を受けて
+- **`stable/core/kmod 34.3`** が modprobe/depmod を提供。eudev が uevent を受けて
   libkmod 経由で起動時・ホットプラグ時のモジュールを自動ロードする
-- **`main/linux-firmware`(20261019)は base.list 外**: tarball 約 1.0 GiB、導入 約 2.0 GiB
+- **`stable/main/linux-firmware`(20261019)は base.list 外**: tarball 約 1.0 GiB、導入 約 2.0 GiB
   (7793 ファイル)で 12G イメージの空き(~3.9 GiB)に対して大きすぎる。実機では
   `zpkg install linux-firmware` で導入する(kernel 側は該当ドライバ + `CONFIG_FW_LOADER`
   が必要。`make dedup` は rdfind 未導入のため未使用)

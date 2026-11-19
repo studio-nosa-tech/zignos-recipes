@@ -1,0 +1,13 @@
+#!/bin/sh
+# glib — GLib/GObject/GIO, needed by sshfs. Tests, docs, introspection,
+# SELinux and NLS are disabled; libmount (util-linux) gives GIO its
+# filesystem monitor support.
+set -e
+
+cd "$ZPKG_SRC/glib-$ZPKG_VERSION"
+meson setup build --prefix=/usr --libdir=lib --buildtype=release \
+	-Dtests=false -Ddocumentation=false -Dman-pages=disabled \
+	-Dselinux=disabled -Dlibmount=enabled -Dintrospection=disabled \
+	-Dnls=disabled
+meson compile -C build
+DESTDIR="$ZPKG_DESTROOT" meson install -C build --no-rebuild

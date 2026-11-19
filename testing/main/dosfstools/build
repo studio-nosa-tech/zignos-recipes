@@ -1,0 +1,8 @@
+#!/bin/sh
+# dosfstools — mkfs.fat / fsck.fat (FAT32 is what EFI partitions want too).
+set -e
+
+cd "$ZPKG_SRC/dosfstools-$ZPKG_VERSION"
+./configure --prefix=/usr --enable-compat-symlinks
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install

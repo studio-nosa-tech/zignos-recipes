@@ -1,0 +1,10 @@
+#!/bin/sh
+# xz — LZMA compression (LFS 13.1-systemd 8.8).
+set -e
+
+cd "$ZPKG_SRC/xz-5.8.3"
+./configure --prefix=/usr    \
+            --disable-static \
+            --docdir=/usr/share/doc/xz-5.8.3
+make
+make DESTDIR="$ZPKG_DESTROOT" install

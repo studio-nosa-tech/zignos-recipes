@@ -1,0 +1,15 @@
+#!/sbin/openrc-run
+# shellcheck shell=sh disable=SC2034
+# ZIGNOS: local (VGA) console on tty1. The "console" service covers ttyS0;
+# this one gives laptops and desktops a login prompt without a serial cable.
+# Both run at once: the machine uses whichever output it has.
+
+description="local console on tty1"
+
+supervisor=supervise-daemon
+command=/usr/sbin/agetty
+command_args_foreground="--noclear tty1 linux"
+
+depend() {
+	after localmount
+}

@@ -1,0 +1,8 @@
+#!/bin/sh
+# less — pager. ncurses for termcap; PCRE2 is not required.
+set -e
+
+cd "$ZPKG_SRC/less-710"
+./configure --prefix=/usr --sysconfdir=/etc
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install

@@ -1,0 +1,9 @@
+#!/bin/sh
+# file — file type identification (LFS 13.1-systemd 8.11).
+# Needs zlib/bzip2/xz/zstd installed first (see depends).
+set -e
+
+cd "$ZPKG_SRC/file-5.48"
+./configure --prefix=/usr
+make
+make DESTDIR="$ZPKG_DESTROOT" install

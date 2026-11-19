@@ -1,0 +1,12 @@
+#!/bin/sh
+# kmod — modprobe/depmod/insmod/lsmod and libkmod. ZIGNOS loads modular
+# drivers (GPU, WiFi, extra NICs) with these tools. Compression and signature
+# support are disabled (modules are installed uncompressed and unsigned).
+set -e
+
+cd "$ZPKG_SRC/kmod-$ZPKG_VERSION"
+meson setup build --prefix=/usr --sysconfdir=/etc --localstatedir=/var \
+	-Dmanpages=false -Dbuild-tests=false -Ddocs=false \
+	-Dzstd=disabled -Dxz=disabled -Dzlib=disabled -Dopenssl=disabled
+ninja -C build
+DESTDIR="$ZPKG_DESTROOT" ninja -C build install

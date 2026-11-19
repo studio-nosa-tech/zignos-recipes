@@ -1,0 +1,9 @@
+#!/bin/sh
+# gperf — perfect-hash generator. eudev uses it to build its keyword and
+# hardware-database lookup tables.
+set -e
+
+cd "$ZPKG_SRC/gperf-$ZPKG_VERSION"
+./configure --prefix=/usr
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install

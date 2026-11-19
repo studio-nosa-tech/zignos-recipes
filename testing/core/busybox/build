@@ -1,0 +1,22 @@
+#!/bin/sh
+# busybox — single binary providing many Unix utilities. Built statically so
+# the initramfs can carry just this one file (no libc/loader).
+set -e
+
+cd "$ZPKG_SRC/busybox-1.37.0"
+make defconfig
+# Kernel 6.8+ headers removed the CBQ UAPI structs that the tc applet
+# still references (upstream fix landed only after 1.37.0); tc is not
+# needed in the base system.
+sed -i 's/^CONFIG_TC=y$/# CONFIG_TC is not set/' .config
+sed -i 's/^# CONFIG_STATIC is not set$/CONFIG_STATIC=y/' .config
+grep -qx 'CONFIG_STATIC=y' .config || {
+	echo "busybox: CONFIG_STATIC did not stick" >&2
+	exit 1
+}
+make -j"$(nproc)"
+# Install the binary only: coreutils already owns the applet paths
+# (test/[ , cat, ls, ...) and the full symlink tree would collide.
+# Where to expose applets is an init-design decision (M3).
+mkdir -pv "$ZPKG_DESTROOT/bin"
+cp -av busybox "$ZPKG_DESTROOT/bin/busybox"

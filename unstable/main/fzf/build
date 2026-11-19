@@ -1,0 +1,20 @@
+#!/bin/sh
+# fzf — command-line fuzzy finder (Go). Built from source instead of the
+# release binaries so it links against the system Go/glibc. The shell
+# integration scripts land in /usr/share/fzf.
+set -e
+
+cd "$ZPKG_SRC/fzf-0.75.0"
+
+export GOPATH="$ZPKG_WORKDIR/go"
+export GOCACHE="$ZPKG_WORKDIR/gocache"
+go build -trimpath -ldflags "-s -w -X main.version=0.75.0 -X main.revision=" -o fzf .
+
+install -Dm755 fzf "$ZPKG_DESTROOT/usr/bin/fzf"
+install -Dm755 bin/fzf-tmux "$ZPKG_DESTROOT/usr/bin/fzf-tmux"
+install -Dm755 bin/fzf-preview.sh "$ZPKG_DESTROOT/usr/bin/fzf-preview.sh"
+install -Dm644 man/man1/fzf.1 "$ZPKG_DESTROOT/usr/share/man/man1/fzf.1"
+install -Dm644 man/man1/fzf-tmux.1 "$ZPKG_DESTROOT/usr/share/man/man1/fzf-tmux.1"
+for f in completion.bash key-bindings.bash completion.zsh key-bindings.zsh completion.fish; do
+	[ -f "shell/$f" ] && install -Dm644 "shell/$f" "$ZPKG_DESTROOT/usr/share/fzf/$f"
+done

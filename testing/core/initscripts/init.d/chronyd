@@ -1,0 +1,17 @@
+#!/sbin/openrc-run
+# shellcheck shell=sh disable=SC2034
+# ZIGNOS: chronyd — NTP daemon keeping the system clock (and RTC, via
+# rtcsync) in sync against public pools. Starts after networking so pool
+# names resolve.
+
+description="chrony NTP daemon"
+
+supervisor=supervise-daemon
+command=/usr/sbin/chronyd
+command_args_foreground="-n"
+
+depend() {
+	need localmount
+	use dns
+	after udev dhcpcd
+}

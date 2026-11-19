@@ -1,0 +1,13 @@
+#!/bin/sh
+# bash — the GNU Bourne-Again shell (LFS 13.1-systemd 8.39, tests skipped
+# in v0: they need expect).
+set -e
+
+cd "$ZPKG_SRC/bash-5.3"
+./configure --prefix=/usr             \
+            --without-bash-malloc     \
+            --with-installed-readline \
+            --docdir=/usr/share/doc/bash-5.3
+make
+make DESTDIR="$ZPKG_DESTROOT" install
+ln -sv bash "$ZPKG_DESTROOT/usr/bin/sh"

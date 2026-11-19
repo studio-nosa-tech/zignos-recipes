@@ -1,0 +1,20 @@
+#!/bin/sh
+# nftables — the nft firewall CLI. Man pages need asciidoc and the JSON
+# output needs jansson; both are off. libmnl/libnftnl provide netlink,
+# readline provides the interactive prompt. The shipped nftables.conf is
+# an empty ruleset so the OpenRC service (initscripts) starts cleanly.
+set -e
+
+cd "$ZPKG_SRC/nftables-$ZPKG_VERSION"
+./configure --prefix=/usr          \
+            --sysconfdir=/etc      \
+            --localstatedir=/var   \
+            --disable-man-doc      \
+            --without-xtables      \
+            --without-json         \
+            --with-cli=readline
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install
+
+install -d "$ZPKG_DESTROOT/etc"
+install -Dm644 "$ZPKG_RECIPE_DIR/nftables.conf" "$ZPKG_DESTROOT/etc/nftables.conf"

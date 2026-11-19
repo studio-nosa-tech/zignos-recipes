@@ -1,0 +1,9 @@
+#!/bin/sh
+# libnl — netlink library; the nl80211 WiFi driver in wpa_supplicant and iw
+# talk to the kernel through it.
+set -e
+
+cd "$ZPKG_SRC/libnl-$ZPKG_VERSION"
+./configure --prefix=/usr --sysconfdir=/etc --disable-static
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install

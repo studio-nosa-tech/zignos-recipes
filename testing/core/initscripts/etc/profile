@@ -1,0 +1,10 @@
+# /etc/profile — system-wide environment for login shells
+
+export PATH=/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin
+export PS1='\u@\h:\w\$ '
+export EDITOR=vi
+
+umask 022
+
+# locale / terminal
+export LANG=C.UTF-8

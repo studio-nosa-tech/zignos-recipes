@@ -1,0 +1,13 @@
+#!/bin/sh
+# unzip — extract PKZIP archives.
+set -e
+
+cd "$ZPKG_SRC/unzip60"
+# unxcfg.h declares old-style gmtime()/localtime() prototypes that conflict
+# with modern libc headers.
+patch --force -p1 < "$ZPKG_RECIPE_DIR/unxcfg.patch"
+make -f unix/Makefile linux_noasm
+for tool in unzip funzip unzipsfx; do
+	install -Dm755 "$tool" "$ZPKG_DESTROOT/usr/bin/$tool"
+done
+install -Dm644 man/unzip.1 "$ZPKG_DESTROOT/usr/share/man/man1/unzip.1"

@@ -1,0 +1,8 @@
+#!/bin/sh
+# findutils — find/xargs (busybox provides no applet links in ZIGNOS).
+set -e
+
+cd "$ZPKG_SRC/findutils-$ZPKG_VERSION"
+./configure --prefix=/usr --localstatedir=/var/lib/locate
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install

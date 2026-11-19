@@ -1,0 +1,13 @@
+#!/bin/sh
+# 7zip — the official 7-Zip (7zz) console archiver. The source tarball has
+# no top-level directory; the Linux build lives in Bundles/Alone2 and its
+# gcc makefile writes _o/7zz. "7z" is installed as a convenience symlink.
+set -e
+
+cd "$ZPKG_SRC/CPP/7zip/Bundles/Alone2"
+# GCC 16 adds an array-bounds warning that upstream compiles with -Werror;
+# drop -Werror rather than carry a patch against the build makefiles.
+sed -i 's/ -Werror//g' ../../7zip_gcc.mak makefile.gcc
+make -f makefile.gcc -j"$(nproc)"
+install -Dm755 _o/7zz "$ZPKG_DESTROOT/usr/bin/7zz"
+ln -s 7zz "$ZPKG_DESTROOT/usr/bin/7z"

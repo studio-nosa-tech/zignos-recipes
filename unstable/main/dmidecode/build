@@ -1,0 +1,7 @@
+#!/bin/sh
+# dmidecode — reads the firmware DMI/SMBIOS tables (board, BIOS, RAM slots).
+set -e
+
+cd "$ZPKG_SRC/dmidecode-$ZPKG_VERSION"
+make -j"$(nproc)" prefix=/usr
+make prefix=/usr DESTDIR="$ZPKG_DESTROOT" install

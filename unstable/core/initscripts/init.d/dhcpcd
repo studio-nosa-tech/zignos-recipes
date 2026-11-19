@@ -1,0 +1,17 @@
+#!/sbin/openrc-run
+# shellcheck shell=sh disable=SC2034
+# ZIGNOS: DHCP client for all interfaces. This replaces OpenRC's network
+# service: the stock net-scripts (modules=dhcpcd) are not installed in this
+# system, so dhcpcd is run directly and provides the "net" virtual.
+
+description="DHCP client (dhcpcd)"
+
+supervisor=supervise-daemon
+command=/usr/sbin/dhcpcd
+command_args_foreground="-q -B"
+
+depend() {
+	need localmount
+	after udev
+	provide net
+}

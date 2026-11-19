@@ -1,0 +1,8 @@
+#!/bin/sh
+# sysstat — iostat/mpstat/sar performance collectors.
+set -e
+
+cd "$ZPKG_SRC/sysstat-$ZPKG_VERSION"
+./configure --prefix=/usr --disable-man-group --disable-sysconfig
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install

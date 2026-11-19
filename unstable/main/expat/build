@@ -1,0 +1,8 @@
+#!/bin/sh
+# expat — XML parser (git's http-push and many other packages need it).
+set -e
+
+cd "$ZPKG_SRC/expat-2.10.0"
+./configure --prefix=/usr --disable-static --without-docbook
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install

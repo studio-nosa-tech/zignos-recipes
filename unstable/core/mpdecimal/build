@@ -1,0 +1,9 @@
+#!/bin/sh
+# mpdecimal — arbitrary-precision decimal library (adopted from stage1).
+set -e
+
+cd "$ZPKG_SRC/mpdecimal-$ZPKG_VERSION"
+./configure --prefix=/usr --disable-static \
+    --docdir="/usr/share/doc/mpdecimal-$ZPKG_VERSION"
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install

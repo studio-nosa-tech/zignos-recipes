@@ -1,0 +1,8 @@
+#!/bin/sh
+# xxhash — the xxHash family of hash algorithms (libxxhash, xxhsum).
+# ccache uses libxxhash; other tools can link it through pkg-config.
+set -e
+
+cd "$ZPKG_SRC/xxHash-0.8.3"
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" PREFIX=/usr install
