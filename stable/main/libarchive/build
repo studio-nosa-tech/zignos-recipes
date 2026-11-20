@@ -1,0 +1,17 @@
+#!/bin/sh
+# libarchive — archive/compression library used by Ark (tar, zip, 7z,
+# xz, zstd, ...). Formats are enabled through the libraries already in
+# the tree; ACL support and tests are disabled.
+set -e
+
+cd "$ZPKG_SRC/libarchive-$ZPKG_VERSION"
+cmake -S . -B build -G Ninja \
+	-DCMAKE_INSTALL_PREFIX=/usr \
+	-DCMAKE_INSTALL_LIBDIR=lib \
+	-DCMAKE_BUILD_TYPE=Release \
+	-DBUILD_SHARED_LIBS=ON \
+	-DENABLE_TEST=OFF \
+	-DENABLE_ACL=OFF \
+	-DENABLE_NETTLE=OFF
+cmake --build build
+DESTDIR="$ZPKG_DESTROOT" cmake --install build

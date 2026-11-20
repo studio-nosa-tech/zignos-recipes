@@ -1,0 +1,10 @@
+qtbase
+kcoreaddons
+kconfig
+kguiaddons
+ki18n
+kwindowsystem
+xorgproto
+libxcb
+libX11
+xcb-util

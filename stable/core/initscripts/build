@@ -6,6 +6,7 @@
 #   sysinit: udev (eudev; mdev remains installed as a fallback but is off)
 #   default: console (agetty on ttyS0), console-vga (agetty on tty1)
 #   runtime config: /etc/profile, /etc/securetty, /etc/motd, /etc/os-release
+#   tools: /usr/sbin/zignos-fstab (generate fstab from the live mount table)
 # and /sbin/init -> openrc-init.
 #
 # The base system is deliberately minimal (see zignos-build/base.list):
@@ -30,6 +31,8 @@ install -vDm755 "$ZPKG_RECIPE_DIR/init.d/crond" "$D/etc/init.d/crond"
 install -vDm755 "$ZPKG_RECIPE_DIR/init.d/nftables" "$D/etc/init.d/nftables"
 install -vDm755 "$ZPKG_RECIPE_DIR/init.d/elogind" "$D/etc/init.d/elogind"
 install -vDm755 "$ZPKG_RECIPE_DIR/init.d/polkit" "$D/etc/init.d/polkit"
+install -vDm755 "$ZPKG_RECIPE_DIR/init.d/root-rw" "$D/etc/init.d/root-rw"
+install -vDm755 "$ZPKG_RECIPE_DIR/sbin/zignos-fstab" "$D/usr/sbin/zignos-fstab"
 install -vDm644 "$ZPKG_RECIPE_DIR/etc/profile" "$D/etc/profile"
 install -vDm644 "$ZPKG_RECIPE_DIR/etc/securetty" "$D/etc/securetty"
 install -vDm644 "$ZPKG_RECIPE_DIR/etc/os-release" "$D/etc/os-release"
@@ -42,6 +45,7 @@ printf 'zignos\n' > "$D/etc/hostname"
 
 mkdir -pv "$D/etc/runlevels/sysinit" "$D/etc/runlevels/boot" "$D/etc/runlevels/default"
 ln -sv /etc/init.d/udev "$D/etc/runlevels/sysinit/udev"
+ln -sv /etc/init.d/root-rw "$D/etc/runlevels/boot/root-rw"
 # mdev is kept as an emergency fallback but is no longer enabled.
 ln -sv /etc/init.d/console "$D/etc/runlevels/default/console"
 # The generic kernel enables VT/VGA/simpledrm, so tty1 exists on real

@@ -1,0 +1,25 @@
+#!/bin/sh
+# Start PipeWire, its PulseAudio-compatible server, and WirePlumber for a
+# Plasma Wayland session. On OpenRC there are no systemd user units, so
+# Plasma's XDG autostart launches this.
+set -e
+
+started_pw=0
+if ! pgrep -u "$(id -u)" -x pipewire >/dev/null 2>&1; then
+	pipewire &
+	pw_pid=$!
+	started_pw=1
+fi
+
+# plasma-pa and libcanberra talk PulseAudio; pipewire-pulse is the server.
+pipewire-pulse &
+pulse_pid=$!
+
+wireplumber
+rc=$?
+
+kill "$pulse_pid" 2>/dev/null || true
+if [ "$started_pw" = 1 ]; then
+	kill "$pw_pid" 2>/dev/null || true
+fi
+exit "$rc"

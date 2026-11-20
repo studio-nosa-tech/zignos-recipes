@@ -1,0 +1,4 @@
+libxcb
+xcb-util-image
+xcb-util-renderutil
+xorgproto

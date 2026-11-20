@@ -1,0 +1,19 @@
+#!/bin/sh
+# libssh — SSH client library used by Konsole to resolve ~/.ssh/config.
+# Server-side code, GSSAPI and static libraries are not needed here.
+set -e
+
+cd "$ZPKG_SRC/libssh-$ZPKG_VERSION"
+cmake -S . -B build -G Ninja \
+	-DCMAKE_INSTALL_PREFIX=/usr \
+	-DCMAKE_INSTALL_LIBDIR=lib \
+	-DCMAKE_BUILD_TYPE=Release \
+	-DBUILD_STATIC_LIB=OFF \
+	-DBUILD_TESTING=OFF \
+	-DWITH_GSSAPI=OFF \
+	-DWITH_SERVER=OFF \
+	-DWITH_SFTP=ON \
+	-DWITH_ZLIB=ON \
+	-DWITH_EXAMPLES=OFF
+cmake --build build
+DESTDIR="$ZPKG_DESTROOT" cmake --install build

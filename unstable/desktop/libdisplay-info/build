@@ -1,0 +1,8 @@
+#!/bin/sh
+# libdisplay-info - EDID/DisplayID parser used by KWin.
+set -e
+
+cd "$ZPKG_SRC/libdisplay-info-0.4.0"
+meson setup build --prefix=/usr --libdir=lib --buildtype=release
+ninja -C build
+DESTDIR="$ZPKG_DESTROOT" meson install -C build

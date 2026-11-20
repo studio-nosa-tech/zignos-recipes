@@ -1,0 +1,10 @@
+#!/bin/sh
+# libbytesize — byte-size parsing/formatting library. libblockdev's mdraid
+# plugin uses it for array sizes.
+set -e
+
+cd "$ZPKG_SRC/libbytesize-$ZPKG_VERSION"
+./configure --prefix=/usr --libdir=/usr/lib --disable-static \
+	--with-python3=no --with-tools=no --with-gtk-doc=no
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install

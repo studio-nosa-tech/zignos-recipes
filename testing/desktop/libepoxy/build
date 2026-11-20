@@ -1,0 +1,8 @@
+#!/bin/sh
+# libepoxy - OpenGL/EGL function loader. Wayland-only build (no GLX/X11).
+set -e
+
+cd "$ZPKG_SRC/libepoxy-1.5.10"
+meson setup build --prefix=/usr --libdir=lib --buildtype=release 	-Dx11=false 	-Dglx=no 	-Degl=yes 	-Dtests=false 	-Ddocs=false
+ninja -C build
+DESTDIR="$ZPKG_DESTROOT" meson install -C build

@@ -1,0 +1,9 @@
+#!/bin/sh
+# alsa-lib — ALSA userspace library. PipeWire's ALSA plugin and native
+# ALSA applications (including QEMU's HDA/virtio-snd) link against it.
+set -e
+
+cd "$ZPKG_SRC/alsa-lib-$ZPKG_VERSION"
+./configure --prefix=/usr --libdir=/usr/lib --disable-static --disable-python
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install

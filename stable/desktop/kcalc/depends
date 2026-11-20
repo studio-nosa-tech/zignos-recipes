@@ -1,0 +1,10 @@
+qtbase
+kcoreaddons
+kcrash
+kcolorscheme
+kconfig
+kconfigwidgets
+kguiaddons
+ki18n
+knotifications
+kxmlgui

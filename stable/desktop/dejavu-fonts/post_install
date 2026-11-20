@@ -1,0 +1,10 @@
+#!/bin/sh
+# Refresh fontconfig's cache so the newly installed fonts are visible to
+# Qt/Plasma without a logout.
+if [ -x "$ZPKG_ROOT/usr/bin/fc-cache" ]; then
+	if [ "$ZPKG_ROOT" = "/" ]; then
+		/usr/bin/fc-cache -f >/dev/null 2>&1 || true
+	else
+		chroot "$ZPKG_ROOT" /usr/bin/fc-cache -f >/dev/null 2>&1 || true
+	fi
+fi

@@ -1,0 +1,9 @@
+#!/bin/sh
+# Vulkan-Loader — libvulkan, required by KWin 6.8. Only the Wayland WSI is
+# enabled; X11/XCB/Display are not used by the Wayland session.
+set -e
+
+cd "$ZPKG_SRC/Vulkan-Loader-$ZPKG_VERSION"
+cmake -S . -B build -G Ninja 	-DCMAKE_INSTALL_PREFIX=/usr 	-DCMAKE_INSTALL_LIBDIR=lib 	-DCMAKE_BUILD_TYPE=Release 	-DBUILD_TESTS=OFF 	-DBUILD_LAYERS=OFF 	-DBUILD_WSI_XCB_SUPPORT=OFF 	-DBUILD_WSI_XLIB_SUPPORT=OFF 	-DBUILD_WSI_DISPLAY_SUPPORT=OFF 	-DBUILD_WSI_WAYLAND_SUPPORT=ON
+cmake --build build
+DESTDIR="$ZPKG_DESTROOT" cmake --install build

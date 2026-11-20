@@ -1,0 +1,13 @@
+#!/bin/sh
+# pulseaudio-qt — Qt bindings for the PulseAudio API (KF6PulseAudioQt).
+# plasma-pa uses this against PipeWire's PulseAudio-compatible server.
+set -e
+
+cd "$ZPKG_SRC/pulseaudio-qt-$ZPKG_VERSION"
+cmake -S . -B build -G Ninja \
+	-DCMAKE_INSTALL_PREFIX=/usr \
+	-DCMAKE_INSTALL_LIBDIR=lib \
+	-DCMAKE_BUILD_TYPE=Release \
+	-DBUILD_TESTING=OFF
+cmake --build build
+DESTDIR="$ZPKG_DESTROOT" cmake --install build

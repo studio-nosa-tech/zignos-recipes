@@ -1,0 +1,10 @@
+#!/bin/sh
+# Boost - header-only install. KDE Activities and Plasma use Boost headers.
+set -e
+
+cd "$ZPKG_SRC/boost_1_87_0"
+./bootstrap.sh --prefix=/usr
+./b2 headers
+install -d "$ZPKG_DESTROOT/usr/include"
+cp -aL boost "$ZPKG_DESTROOT/usr/include/"
+install -Dm644 LICENSE_1_0.txt "$ZPKG_DESTROOT/usr/share/licenses/boost/LICENSE_1_0.txt"

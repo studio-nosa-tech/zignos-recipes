@@ -1,0 +1,15 @@
+#!/bin/sh
+# kImageAnnotator-Qt6 — image annotation library required by Gwenview.
+# Upstream tags default to Qt5; build the Qt6-capable master snapshot.
+set -e
+
+cd "$ZPKG_SRC"/kImageAnnotator-*/
+cmake -S . -B build -G Ninja \
+	-DCMAKE_INSTALL_PREFIX=/usr \
+	-DCMAKE_INSTALL_LIBDIR=lib \
+	-DCMAKE_BUILD_TYPE=Release \
+	-DBUILD_SHARED_LIBS=ON \
+	-DBUILD_WITH_QT6=ON \
+	-DBUILD_TESTING=OFF
+cmake --build build
+DESTDIR="$ZPKG_DESTROOT" cmake --install build

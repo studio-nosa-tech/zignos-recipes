@@ -1,0 +1,6 @@
+#!/bin/sh
+set -e
+cd "$ZPKG_SRC/xkeyboard-config-2.45"
+meson setup build --prefix=/usr --buildtype=release -Dcompat-rules=true
+ninja -C build
+DESTDIR="$ZPKG_DESTROOT" meson install -C build

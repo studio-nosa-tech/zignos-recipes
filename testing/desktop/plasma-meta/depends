@@ -1,0 +1,22 @@
+# Plasma session only — no KDE applications.
+# M45: full Plasma 6.4.5 on Qt 6.8/KF6 6.18. plasma-login-manager is omitted:
+# it first ships with Plasma 6.6 (Qt 6.10/KF6 6.22), so M45 uses the console
+# PAM login + startplasma-wayland; the login manager is revisited with 6.6.
+kwin
+plasma-workspace
+plasma-desktop
+plasma-integration
+systemsettings
+kscreen
+breeze
+kactivitymanagerd
+kirigami-addons
+plasma-nm
+plasma-pa
+powerdevil
+plasma-workspace-wallpapers
+polkit-kde-agent-1
+udisks2
+dejavu-fonts
+ipaex-fonts
+knighttime

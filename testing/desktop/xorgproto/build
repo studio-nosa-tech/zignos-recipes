@@ -1,0 +1,8 @@
+#!/bin/sh
+# xorgproto - X11 protocol headers (XCB and libkscreen need them).
+set -e
+
+cd "$ZPKG_SRC/xorgproto-2024.1"
+meson setup build --prefix=/usr --buildtype=release
+ninja -C build
+DESTDIR="$ZPKG_DESTROOT" meson install -C build

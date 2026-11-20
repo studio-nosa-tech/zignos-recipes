@@ -1,0 +1,3 @@
+#!/bin/sh
+# udisksd keeps its state here even when started by D-Bus activation.
+install -d -m700 "$ZPKG_ROOT/var/lib/udisks2"

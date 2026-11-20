@@ -1,0 +1,22 @@
+#!/bin/sh
+# exiv2 — image metadata library used by Gwenview. Web-ready/curl,
+# Brotli JPEG XL boxes, video, NLS, samples and tests are disabled.
+set -e
+
+cd "$ZPKG_SRC/exiv2-$ZPKG_VERSION"
+cmake -S . -B build -G Ninja \
+	-DCMAKE_INSTALL_PREFIX=/usr \
+	-DCMAKE_INSTALL_LIBDIR=lib \
+	-DCMAKE_BUILD_TYPE=Release \
+	-DBUILD_SHARED_LIBS=ON \
+	-DEXIV2_ENABLE_CURL=OFF \
+	-DEXIV2_ENABLE_BROTLI=OFF \
+	-DEXIV2_ENABLE_INIH=OFF \
+	-DEXIV2_ENABLE_VIDEO=OFF \
+	-DEXIV2_ENABLE_NLS=OFF \
+	-DEXIV2_BUILD_SAMPLES=OFF \
+	-DEXIV2_BUILD_UNIT_TESTS=OFF \
+	-DEXIV2_BUILD_FUZZ_TESTS=OFF \
+	-DEXIV2_BUILD_DOC=OFF
+cmake --build build
+DESTDIR="$ZPKG_DESTROOT" cmake --install build

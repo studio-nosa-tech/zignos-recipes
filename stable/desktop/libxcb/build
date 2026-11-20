@@ -1,0 +1,8 @@
+#!/bin/sh
+# libxcb - X protocol C binding (XCB::XCB for libkscreen/KWin).
+set -e
+
+cd "$ZPKG_SRC/libxcb-1.17.0"
+./configure --prefix=/usr --libdir=/usr/lib --disable-static --disable-devel-docs
+make
+make DESTDIR="$ZPKG_DESTROOT" install

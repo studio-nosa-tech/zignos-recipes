@@ -4,6 +4,7 @@ set -e
 
 cd "$ZPKG_SRC/libtool-2.6.2"
 
-./configure --prefix=/usr
+# Install libltdl: libcanberra loads its PulseAudio backend through it.
+./configure --prefix=/usr --enable-ltdl-install
 make -j"$(nproc)"
 make DESTDIR="$ZPKG_DESTROOT" install

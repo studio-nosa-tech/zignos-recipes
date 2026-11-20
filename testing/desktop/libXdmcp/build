@@ -1,0 +1,8 @@
+#!/bin/sh
+# libXdmcp - X display manager control protocol (libxcb dependency).
+set -e
+
+cd "$ZPKG_SRC/libXdmcp-1.1.5"
+./configure --prefix=/usr --libdir=/usr/lib --disable-static
+make
+make DESTDIR="$ZPKG_DESTROOT" install

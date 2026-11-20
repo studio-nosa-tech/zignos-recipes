@@ -1,7 +1,9 @@
 #!/bin/sh
 # shadow — user account/password management: login, passwd, su, useradd
-# (LFS 13.1-systemd 8.30; tests skipped in v0). Built without PAM and
-# without logind (no systemd).
+# (LFS 13.1-systemd 8.30; tests skipped in v0). Built with Linux-PAM:
+# elogind's pam_elogind session hook registers logins as logind sessions,
+# which KWin needs for DRM/seat access. systemd-logind support stays off
+# (this is an OpenRC system).
 set -e
 
 cd "$ZPKG_SRC/shadow-4.20.2"
@@ -16,8 +18,15 @@ touch "$ZPKG_DESTROOT/usr/bin/passwd"
 ./configure --sysconfdir=/etc   \
             --disable-static    \
             --with-bcrypt --with-yescrypt \
+            --with-libpam       \
             --without-libbsd    \
             --disable-logind    \
             --with-group-name-max-length=32
 make -j"$(nproc)"
 make exec_prefix=/usr DESTDIR="$ZPKG_DESTROOT" install
+
+# Replace the upstream PAM templates (they expect pam_selinux, pam_console
+# and pam_wheel). Keep the service names, use the base system-auth stack.
+for f in "$ZPKG_RECIPE_DIR"/pam.d/*; do
+	install -Dm644 "$f" "$ZPKG_DESTROOT/etc/pam.d/$(basename "$f")"
+done

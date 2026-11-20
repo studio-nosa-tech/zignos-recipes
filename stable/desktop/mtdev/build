@@ -1,0 +1,6 @@
+#!/bin/sh
+set -e
+cd "$ZPKG_SRC/mtdev-1.1.7"
+./configure --prefix=/usr --disable-static
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install

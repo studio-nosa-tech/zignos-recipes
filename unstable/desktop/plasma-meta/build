@@ -1,0 +1,5 @@
+#!/bin/sh
+# Meta package: no payload except the marker under /usr/share/zignos/meta.
+set -e
+install -d "$ZPKG_DESTROOT/usr/share/zignos/meta"
+: > "$ZPKG_DESTROOT/usr/share/zignos/meta/plasma-meta"

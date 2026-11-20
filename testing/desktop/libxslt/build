@@ -1,0 +1,9 @@
+#!/bin/sh
+# libxslt — XSLT processor. ModemManager uses xsltproc at build time to
+# generate its interface-name headers, even with man pages disabled.
+set -e
+
+cd "$ZPKG_SRC/libxslt-$ZPKG_VERSION"
+./configure --prefix=/usr --disable-static --without-python
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install

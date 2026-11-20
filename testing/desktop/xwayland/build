@@ -1,0 +1,22 @@
+#!/bin/sh
+# Xwayland - rootless X server for the Wayland session. Plasma 6.4's
+# ksmserver forces the xcb QPA plugin even on Wayland, so this is required
+# (not just for legacy X11 apps). Xvfb and systemd notification are off;
+# GLX is enabled now that Mesa builds desktop GL (libGL) through glvnd.
+# glamor still uses EGL/GBM, which is what Plasma needs.
+set -e
+
+cd "$ZPKG_SRC/xwayland-24.1.9"
+rm -rf build
+meson setup build --prefix=/usr --libdir=lib --buildtype=release \
+	-Dxvfb=false \
+	-Dglx=true \
+	-Dxwayland_ei=false \
+	-Dsystemd_notify=false \
+	-Dxdmcp=false \
+	-Dsecure-rpc=false \
+	-Dxselinux=false \
+	-Ddtrace=false \
+	-Dsha1=libcrypto
+ninja -C build
+DESTDIR="$ZPKG_DESTROOT" meson install -C build

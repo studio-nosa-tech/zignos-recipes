@@ -1,0 +1,13 @@
+#!/sbin/openrc-run
+# UPower runs as root so it can read battery/ACPI devices. D-Bus activation
+# cannot start it because the system bus runs as messagebus without the
+# ability to setuid to root.
+description="UPower power management daemon"
+command="/usr/libexec/upowerd"
+command_background=true
+pidfile="/run/upowerd.pid"
+
+depend() {
+	need dbus
+	use logger
+}

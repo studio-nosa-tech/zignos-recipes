@@ -1,6 +1,6 @@
 # desktop (testing)
 
-GUI パッケージのカテゴリ。**現在 0 パッケージ(設計中)**。
+GUI パッケージのカテゴリ。**現在は stable と同じ 203 パッケージ**(チャンネル別の版数分岐は今後)。
 
 このチャンネルは **Linux / KDE の最新安定版**を採用する。設計時点では
 Linux 7.3、Plasma 6.8、Qt 6.11、KF6 6.32、Gear 26.08。Unstable で検証した
@@ -14,10 +14,10 @@ Linux 7.3、Plasma 6.8、Qt 6.11、KF6 6.32、Gear 26.08。Unstable で検証し
 デスクトップ本体と KDE アプリは別のメタパッケージに分ける。
 
 - `plasma-meta` — Plasma セッション(kwin / plasma-workspace / plasma-desktop /
-  systemsettings / plasma-nm / plasma-pa / powerdevil / PLM など)。
+  systemsettings / plasma-nm / plasma-pa / powerdevil / UDisks2 など)。
   KDE アプリは含めない
-- `kde-applications` — KDE Gear のアプリ(Dolphin / Konsole / Kate / Ark /
-  Gwenview / Okular / Spectacle / KCalc / Filelight / KWalletManager など)。
+- `kde-applications` — KDE Gear のアプリ(Konsole / Dolphin / KCalc / Filelight /
+  Kate / Ark / Gwenview / Okular / KWalletManager の 9 アプリ)。
   Plasma 本体には依存しない
 
 将来は `kde-applications-{utilities,graphics,multimedia,network,office,pim,sdk}`

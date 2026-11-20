@@ -7,11 +7,15 @@ set -e
 cd "$ZPKG_SRC/wpa_supplicant-$ZPKG_VERSION/wpa_supplicant"
 cp defconfig .config
 cat >> .config <<'CONFIG'
-# ZIGNOS: nl80211 via libnl, the control interface for wpa_cli, and the
-# common EAP methods for home and campus networks.
+# ZIGNOS: nl80211 via libnl, the UNIX and D-Bus control interfaces.
+# NetworkManager drives wpa_supplicant through the new D-Bus interface
+# (fi.w1.wpa_supplicant1); without CONFIG_CTRL_IFACE_DBUS_NEW the WiFi
+# device shows up but no networks can be scanned or joined.
 CONFIG_DRIVER_NL80211=y
 CONFIG_LIBNL32=y
 CONFIG_CTRL_IFACE=y
+CONFIG_CTRL_IFACE_DBUS_NEW=y
+CONFIG_CTRL_IFACE_DBUS_INTRO=y
 CONFIG_IEEE8021X_EAPOL=y
 CONFIG_EAP_PEAP=y
 CONFIG_EAP_MSCHAPV2=y
@@ -32,3 +36,14 @@ make BINDIR=/usr/sbin LIBDIR=/usr/lib DESTDIR="$ZPKG_DESTROOT" install
 install -d "$ZPKG_DESTROOT/etc/wpa_supplicant"
 install -m600 "$ZPKG_RECIPE_DIR/wpa_supplicant.conf" \
 	"$ZPKG_DESTROOT/etc/wpa_supplicant/wpa_supplicant.conf"
+
+# NetworkManager activates wpa_supplicant over D-Bus
+# (fi.w1.wpa_supplicant1). Upstream builds these files but its make install
+# target does not install them, so the WiFi device would stay unavailable
+# and nmtui/nmcli would show no networks.
+install -Dm644 \
+	"$ZPKG_SRC/wpa_supplicant-$ZPKG_VERSION/wpa_supplicant/dbus/fi.w1.wpa_supplicant1.service" \
+	"$ZPKG_DESTROOT/usr/share/dbus-1/system-services/fi.w1.wpa_supplicant1.service"
+install -Dm644 \
+	"$ZPKG_SRC/wpa_supplicant-$ZPKG_VERSION/wpa_supplicant/dbus/dbus-wpa_supplicant.conf" \
+	"$ZPKG_DESTROOT/etc/dbus-1/system.d/dbus-wpa_supplicant.conf"

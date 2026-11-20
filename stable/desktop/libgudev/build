@@ -1,0 +1,8 @@
+#!/bin/sh
+# libgudev - GObject bindings for libudev (libwacom dependency).
+set -e
+
+cd "$ZPKG_SRC/libgudev-238"
+meson setup build --prefix=/usr --libdir=lib --buildtype=release -Dtests=disabled
+ninja -C build
+DESTDIR="$ZPKG_DESTROOT" meson install -C build

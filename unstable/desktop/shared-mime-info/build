@@ -1,0 +1,10 @@
+#!/bin/sh
+# shared-mime-info — freedesktop.org MIME database. KService/KIO resolve
+# file types and service associations through it.
+set -e
+
+cd "$ZPKG_SRC/shared-mime-info-2.4"
+rm -rf build
+meson setup build --prefix=/usr --libdir=lib --buildtype=release 	-Dupdate-mimedb=false 	-Dbuild-tests=false
+ninja -C build
+DESTDIR="$ZPKG_DESTROOT" meson install -C build

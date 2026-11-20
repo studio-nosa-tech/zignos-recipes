@@ -1,0 +1,8 @@
+#!/bin/sh
+# libXft - X11 library required by plasma-workspace.
+set -e
+
+cd "$ZPKG_SRC/libXft-2.3.8"
+./configure --prefix=/usr --libdir=/usr/lib --disable-static
+make
+make DESTDIR="$ZPKG_DESTROOT" install

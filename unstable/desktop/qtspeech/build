@@ -1,0 +1,8 @@
+#!/bin/sh
+# Qt Speech - text-to-speech API required by KTextEditor/KTextWidgets.
+set -e
+
+cd "$ZPKG_SRC/qtspeech-everywhere-src-$ZPKG_VERSION"
+cmake -S . -B build -G Ninja 	-DCMAKE_INSTALL_PREFIX=/usr 	-DCMAKE_INSTALL_LIBDIR=lib 	-DCMAKE_BUILD_TYPE=Release 	-DQT_BUILD_TESTS=OFF 	-DQT_BUILD_EXAMPLES=OFF 	-DQT_FEATURE_speechd=OFF 	-DQT_FEATURE_flite=OFF
+cmake --build build
+DESTDIR="$ZPKG_DESTROOT" cmake --install build

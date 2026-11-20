@@ -1,0 +1,11 @@
+qtbase
+kconfig
+kconfigwidgets
+kcoreaddons
+kglobalaccel
+kguiaddons
+ki18n
+kiconthemes
+kitemviews
+ktextwidgets
+kwidgetsaddons

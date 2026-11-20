@@ -1,0 +1,8 @@
+#!/bin/sh
+# xcb-proto - XML protocol descriptions for libxcb.
+set -e
+
+cd "$ZPKG_SRC/xcb-proto-1.17.0"
+./configure --prefix=/usr
+make
+make DESTDIR="$ZPKG_DESTROOT" install

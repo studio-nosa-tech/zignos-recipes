@@ -1,0 +1,11 @@
+qtbase
+qtdeclarative
+karchive
+kconfig
+kcoreaddons
+kguiaddons
+ki18n
+kparts
+ktextwidgets
+syntax-highlighting
+qtspeech

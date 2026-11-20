@@ -1,0 +1,17 @@
+#!/bin/sh
+# plasma-nm — NetworkManager applet and KCM. OpenConnect VPN support is
+# disabled; WiFi/Ethernet use the existing NetworkManager + wpa_supplicant.
+set -e
+
+cd "$ZPKG_SRC/plasma-nm-$ZPKG_VERSION"
+cmake -S . -B build -G Ninja \
+	-DCMAKE_INSTALL_PREFIX=/usr \
+	-DCMAKE_INSTALL_LIBDIR=lib \
+	-DCMAKE_BUILD_TYPE=Release \
+	-DBUILD_OPENCONNECT=OFF \
+	-DBUILD_TESTING=OFF \
+	-DBUILD_HTML_DOCS=OFF \
+	-DBUILD_MAN_DOCS=OFF \
+	-DBUILD_QTHELP_DOCS=OFF
+cmake --build build
+DESTDIR="$ZPKG_DESTROOT" cmake --install build

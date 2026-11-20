@@ -1,0 +1,8 @@
+#!/bin/sh
+# libxml2 - required by libxkbcommon's xkbregistry.
+set -e
+
+cd "$ZPKG_SRC/libxml2-2.13.5"
+cmake -S . -B build -G Ninja 	-DCMAKE_INSTALL_PREFIX=/usr 	-DCMAKE_INSTALL_LIBDIR=lib 	-DCMAKE_BUILD_TYPE=Release 	-DLIBXML2_WITH_TESTS=OFF 	-DLIBXML2_WITH_PYTHON=OFF 	-DLIBXML2_WITH_ICU=OFF 	-DLIBXML2_WITH_LZMA=OFF
+cmake --build build
+DESTDIR="$ZPKG_DESTROOT" cmake --install build

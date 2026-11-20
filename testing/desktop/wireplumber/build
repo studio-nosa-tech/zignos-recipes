@@ -1,0 +1,21 @@
+#!/bin/sh
+# wireplumber — PipeWire session/policy manager. Uses the system Lua 5.4
+# (shared, built by main/lua) so the build does not download a subproject,
+# and elogind rather than systemd for logind integration.
+set -e
+
+cd "$ZPKG_SRC/wireplumber-$ZPKG_VERSION"
+meson setup build --prefix=/usr --libdir=lib --buildtype=release \
+	-Dsystem-lua=true -Dsystem-lua-version=5.4 \
+	-Delogind=enabled -Dsystemd=disabled \
+	-Dsystemd-system-service=false -Dsystemd-user-service=false \
+	-Dintrospection=disabled -Ddoc=disabled -Dtests=false -Ddbus-tests=false
+ninja -C build
+DESTDIR="$ZPKG_DESTROOT" meson install -C build
+
+# Plasma starts PipeWire/WirePlumber from XDG autostart because ZIGNOS uses
+# OpenRC and has no systemd user units.
+install -Dm755 "$ZPKG_RECIPE_DIR/zignos-pipewire-session" \
+	"$ZPKG_DESTROOT/usr/bin/zignos-pipewire-session"
+install -Dm644 "$ZPKG_RECIPE_DIR/wireplumber-autostart.desktop" \
+	"$ZPKG_DESTROOT/etc/xdg/autostart/wireplumber.desktop"

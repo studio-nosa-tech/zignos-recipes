@@ -1,0 +1,8 @@
+#%PAM-1.0
+# su(1): root needs no password; everyone else authenticates through the
+# common stack. pam_wheel is not used — doas is the policy tool.
+auth		sufficient	pam_rootok.so
+auth		include		system-auth
+account		include		system-auth
+password	include		system-auth
+session		include		system-auth

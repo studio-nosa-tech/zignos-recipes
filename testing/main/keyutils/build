@@ -1,0 +1,16 @@
+#!/bin/sh
+# keyutils — kernel keyring library used by libblockdev-crypto (LUKS
+# key handling). The upstream Makefile guesses /lib64 or /usr/lib64 from
+# the host's libc; force the usr-merged /usr/lib layout and drop -Werror
+# so modern GCC warnings do not fail the build.
+set -e
+
+cd "$ZPKG_SRC/keyutils-$ZPKG_VERSION"
+make -j"$(nproc)" \
+	CFLAGS="-O2 -Wall" NO_ARLIB=1 \
+	LIBDIR=/usr/lib USRLIBDIR=/usr/lib \
+	BINDIR=/usr/bin SBINDIR=/usr/sbin
+make DESTDIR="$ZPKG_DESTROOT" install \
+	CFLAGS="-O2 -Wall" NO_ARLIB=1 \
+	LIBDIR=/usr/lib USRLIBDIR=/usr/lib \
+	BINDIR=/usr/bin SBINDIR=/usr/sbin

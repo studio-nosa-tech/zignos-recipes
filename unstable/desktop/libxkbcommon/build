@@ -1,0 +1,6 @@
+#!/bin/sh
+set -e
+cd "$ZPKG_SRC/libxkbcommon-xkbcommon-1.13.2"
+meson setup build --prefix=/usr --libdir=lib --buildtype=release 	-Denable-x11=true -Denable-wayland=true 	-Denable-docs=false -Denable-bash-completion=false 	-Denable-xkbregistry=true
+ninja -C build
+DESTDIR="$ZPKG_DESTROOT" meson install -C build

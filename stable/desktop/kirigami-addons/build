@@ -1,0 +1,14 @@
+#!/bin/sh
+# kirigami-addons — QML modules used by Plasma applets (kickoff and others).
+set -e
+
+cd "$ZPKG_SRC/kirigami-addons-$ZPKG_VERSION"
+cmake -S . -B build -G Ninja \
+	-DCMAKE_INSTALL_PREFIX=/usr \
+	-DCMAKE_INSTALL_LIBDIR=lib \
+	-DCMAKE_BUILD_TYPE=Release \
+	-DBUILD_TESTING=OFF \
+	-DBUILD_EXAMPLES=OFF \
+	-DBUILD_QCH=OFF
+cmake --build build
+DESTDIR="$ZPKG_DESTROOT" cmake --install build

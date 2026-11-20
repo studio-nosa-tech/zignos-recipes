@@ -16,16 +16,15 @@ zignos-recipes/
 
 | チャンネル | パッケージ数 | 内容 |
 |---|---|---|
-| `stable/` | **168** | 安定版。`zpkg` の既定 |
-| `testing/` | **168** | stable 候補。まずここで検証する |
-| `unstable/` | **168** | 開発中。破壊的変更を含み得る |
-| **合計** | **504** | 初期状態では3チャンネルとも同一内容 |
+| `stable/` | **382** | 安定版。`zpkg` の既定 |
+| `testing/` | **388** | stable 候補。まずここで検証する |
+| `unstable/` | **388** | 開発中。破壊的変更を含み得る |
+| **合計** | **1158** | stable は LTS 系列、testing/unstable は新しい依存を含む |
 
 `core/` と `main/` はチャンネル間で同じ内容を基本とする。ただし **`core/linux`
 はチャンネルごとに系列が分岐**する: stable は Linux LTS、testing は最新安定版、
-unstable は mainline / RC。KDE 導入後は **`desktop/` も分岐**し、stable は
-KDE LTS、testing は最新安定版、unstable は RC / beta / git snapshot を含む
-挑戦的な構成になる。レシピ数もチャンネルで異なり得る。
+unstable は mainline / RC。**`desktop/` も分岐**し、stable は LTS/旧安定系列、
+testing は最新安定版、unstable は RC / beta / git snapshot を含む挑戦的な構成になる。
 
 変更は必ず **Unstable → Testing → Stable** の順に検証する。Stable は LTS
 ブランチのため、Testing の最新版をそのまま入れるのではなく、検証済みの
@@ -33,33 +32,34 @@ KDE LTS、testing は最新安定版、unstable は RC / beta / git snapshot を
 
 各チャンネル内の内訳:
 
-| カテゴリ | パッケージ数 | 内容 |
-|---|---|---|
-| `core/` | **76** | ベースシステム + ビルドツール一式(base.list の大半) |
-| `main/` | **86** | CLI・システム管理パッケージ + firmware(好みで追加インストール) |
-| `desktop/` | **6** | GUI 基盤(M43: PAM / elogind / polkit / duktape / Jinja2) |
-| **合計** | **168** | うち **37 が `zignos-build/base.list` のトップレベル**(依存込みのベースは 64) |
+| カテゴリ | stable | testing / unstable | 内容 |
+|---|---|---|---|
+| `core/` | **77** | **77** | ベースシステム + ビルドツール一式(base.list の大半) |
+| `main/` | **100** | **102** | CLI・システム管理パッケージ + firmware(好みで追加インストール) |
+| `desktop/` | **205** | **209** | GUI(KDE Plasma 6 / KF6 / Qt6 / Xwayland+GLX / Mesa / PipeWire / plasma-nm / powerdevil / UDisks2 / KDE アプリ) |
+| **合計** | **382** | **388** | うち **37 が `zignos-build/base.list` のトップレベル** |
 
 `base.list` はトップレベルだけを列挙する(Gentoo の `@system` 相当の最小構成)。
 依存と makedepends は zpkg が解決して自動で入れる。sudo / doas / SSH / エディタは
 すべて任意インストール。
 
-### core/(76)
+### core/(77)
 
 autoconf bash bc binutils bison bubblewrap busybox bzip2 ca-certificates chrony cmake coreutils dbus
 dhcpcd diffutils doas e2fsprogs eudev elfutils file findutils flex gawk gcc gdbm gettext gperf
 glibc gmp go grep groff grub gzip inetutils initscripts initramfs kbd kmod libcap
-libevent libffi libpipeline libxcrypt linux linux-headers m4 make
+libevent libffi libpipeline libxcrypt linux linux-headers linux-pam m4 make
 man-db man-pages meson mpc mpdecimal mpfr ncurses ninja openrc openssh
 openssl patch pcre2 perl pkgconf procps python3 readline sed shadow tar
 texinfo tzdata util-linux xz zlib zpkg zstd
 
-### main/(86)
+### main/(98)
 
 curl expat fastfetch git htop iproute2 less libmnl nano rsync sudo tmux vim wget which
 dmidecode dosfstools efibootmgr efivar iw jq libnl libpcap lshw linux-firmware lsof ncdu pciutils
 smartmontools socat strace sysstat tcpdump tree unzip wpa_supplicant zip
 
+networkmanager networkmanager-wifi
 # CLI tools added in M30 (network / build / archive / monitoring)
 ethtool iputils iperf mtr nmap whois
 automake ccache fzf libtool lua sqlite
@@ -71,34 +71,103 @@ cronie cpio fuse3 gdb glib gnupg
 libassuan libgcrypt libgpg-error libksba libnftnl lm-sensors
 logrotate nftables npth pinentry popt screen sshfs
 
-### desktop/(6)
+# M46 storage / graphics libraries
+cryptsetup exiv2 json-c keyutils libarchive libatasmart libblockdev
+libbytesize libnvme lvm2 poppler
 
-M43 のセッション基盤から実装中。最初のデスクトップ環境として **KDE Plasma 6 (Wayland)** を導入する。
+### desktop/(203)
+
+M44 で KF6 + KWin + Plasma 最小、M45 で音声・ネットワーク・電源、M46 で
+UDisks2 と KDE アプリを実装。
+最初のデスクトップ環境として **KDE Plasma 6 (Wayland)** を導入する。
 デスクトップ本体と KDE アプリは **`plasma-meta`** と **`kde-applications`** に
 分ける(`plasma-meta` はアプリを含めず、`kde-applications` は Plasma 本体に
 依存しない)。
 
 チャンネル方針:
 
-- `stable/desktop` — Linux 6.18 LTS / Plasma 6.6 LTS / Qt 6.8 LTS / KF6 6.18 /
-  Gear 25.04.3
-- `testing/desktop` — Linux 7.3 最新安定 / Plasma 6.8 / Qt 6.11 / KF6 6.32 /
-  Gear 26.08
-- `unstable/desktop` — Linux 7.4-rc / mainline、Plasma 6.9 dev / beta、
-  Qt 6.12 dev / beta、KF6 6.33 / master、Gear 26.12 beta
+- `stable/desktop` — Linux 6.18.64 LTS / **Plasma 6.4.5** / Qt 6.8.5 LTS /
+  KF6 6.18 / Gear 25.04.3 / Mesa 26.2.7
+- `testing/desktop` — Linux 7.3.5 / Plasma 6.8.3 / Qt 6.11.3 / KF6 6.32 /
+  Gear 26.08.3 / Mesa 26.3.1
+- `unstable/desktop` — Linux 7.4-rc3、Gear 26.11.80 beta。
+  Qt 6.12 / KF6 6.33 / Plasma 6.9 は Plasma 6.9 と同時に移行するため、
+  現時点では Testing と同じ Qt 6.11.3 / KF6 6.32 / Plasma 6.8.3 / Mesa 26.3.1
+  を使う(Mesa main は QEMU softpipe の KWin 検証が通るまで保留)
 
 昇格順は **Unstable → Testing → Stable**。Stable は LTS へバックポートする。
 
-実装済み(M43 基盤):
+実装済み(M43 基盤 + M44):
 
-- `linux-pam 1.7.3` — PAM 本体と `/etc/pam.d/system-auth`
 - `duktape 2.7.0` — polkit 128 の JavaScript エンジン
 - `python-markupsafe 3.0.3` / `python-jinja2 3.1.6` — elogind の Meson ビルド用
 - `elogind 257.16` — logind/seat マネージャ(KWin の DRM/seat に必須)
 - `polkit 128` — 認可フレームワーク(polkitd アカウント付き)
+- **Linux-PAM 1.7.3 は `core/` に移動**し、shadow を PAM 対応にした
+  (`/etc/pam.d` の login/su/passwd 等も shadow が同梱)
+- `wayland 1.25.0` / `wayland-protocols 1.49` / `libxkbcommon 1.13.2` /
+  `xkeyboard-config 2.45` — Wayland クライアント基盤
+- `libdrm 2.4.134` / `libevdev 1.13.4` / `mtdev 1.1.7` / `libinput 1.32.0` /
+  `pixman 0.46.4` — DRM・入力・描画
+- `libpng 1.6.59` / `libjpeg-turbo 3.2.1` / `freetype 2.15.0` /
+  `harfbuzz 15.1.0` / `fontconfig 2.18.3` / `dejavu-fonts 2.37` — フォント
+- `libglvnd 1.7.0` + `mesa 26.2.7` — EGL/GLES(virgl / softpipe、LLVM なし)。
+  Mesa 26 の DRI megadriver (`dril`)を作るため `platforms=wayland,x11` でビルドし、
+  `virtio_gpu` / `kms_swrast` / `swrast` を導入
+- `qtbase 6.8.5` — QtCore/Gui/Widgets/DBus/Network。Plasma 向けに xcb を有効化し、
+  EGL + OpenGL ES 2 でビルド。`qtshadertools` / `qtdeclarative` / `qtwayland` /
+  `qtsvg` / `qttools` / `qt5compat` / `qtpositioning` / `qtlocation` /
+  `qtsensors` も追加
+- **ECM 6.18.0 + KF6 6.18.0** — KConfig / KCoreAddons / KIO / KCMUtils /
+  KRunner / KWallet / KPackage / KDeclarative / KNewStuff / KSvg など
+- **Plasma 6.4.5** — KWin / plasma-workspace / plasma-desktop /
+  plasma-integration / breeze / kscreenlocker / kscreen / systemsettings /
+  kglobalacceld / kactivitymanagerd / aurorae / qqc2-breeze-style など
+- **Xwayland 24.1.9** / xkbcomp 1.4.7 / libXfont2 2.0.7 / libfontenc 1.1.8 /
+  libxshmfence 1.3.3 — ksmserver は Wayland でも xcb を要求するため必須
+- **M45 音声** — `alsa-lib 1.2.16` / `libpulse 17.0` / `libsndfile 1.2.2` /
+  `pipewire 1.6.7` / `wireplumber 0.5.19` / `pulseaudio-qt 1.7.0` /
+  `plasma-pa 6.4.5`。PipeWire は Plasma の XDG autostart から起動する
+- **M45 ネットワーク/電源** — `networkmanager` の polkit 化、`plasma-nm`、
+  `modemmanager` + `modemmanager-qt`、`upower` + OpenRC サービス、`powerdevil`
+- **M45 アプリ/設定** — `kirigami-addons`、壁紙、`polkit-kde-agent-1`、
+  Konsole / Dolphin / KCalc / Filelight 25.04.3
+- **M45 GLX** — `libglvnd` の X11/GLX、Mesa `glx=dri`、`libXxf86vm`、
+  Xwayland `glx=true`。Mesa は `libGL`/`libGLX_mesa` を導入
+- **M46 ストレージ** — `libatasmart 0.19` / `libblockdev 3.2.2`
+  (part/fs/loop/swap/mdraid/crypto/nvme)/ `udisks2 2.10.2`。暗号・NVMe のため
+  `cryptsetup 2.8.8` / `lvm2 2.03.44` / `libnvme 1.16.2` / `json-c 0.19` /
+  `keyutils 1.6.3` / `libbytesize 2.12` を追加。D-Bus 起動を確認済み
+- **M46 アプリ** — `libarchive 3.8.11` + Ark、Kate、Gwenview(Exiv2 0.28.9 /
+  LCMS2 2.16 / kImageAnnotator 0.7.2 / kColorPicker 0.3.1)、Okular
+  (Poppler 25.04.0)、KWalletManager。Spectacle(OpenCV 必須)と kio-extras は
+  次の増分へ
+- **M46 クリーン root の依存修正** — stage3 からデスクトップを入れると
+  開発 chroot では見えなかった実行時依存が欠けるため、`libtool` に libltdl
+  (`--enable-ltdl-install`)を追加して `libcanberra` から依存、`kwin` に
+  `xwayland` / `kglobalacceld` / `qttools`、`xwayland` に `xkbcomp`、
+  `kiconthemes` に `breeze-icons`、`breeze` に `frameworkintegration`、
+  `plasma-workspace` に `kunitconversion`、`libksysguard` に `lm-sensors`、
+  `python3` に `mpdecimal` を追加。`plasma-meta` に `dejavu-fonts` を入れ、
+  `fc-cache -f` を post_install で実行する
+- **M46 日本語フォント** — `desktop/ipaex-fonts 00401`(IPAex Gothic /
+  Mincho)を追加し、`plasma-meta` から依存。`fc-cache -f` を post_install で
+  実行する。`fc-match :lang=ja` が IPAexGothic を返し、Kate で日本語表示を確認
+- **M46 MIME データベース** — `desktop/shared-mime-info 2.4` を追加し、
+  `kservice` から依存。post_install で `update-mime-database` を実行する。
+  MIME データベースが無いと KService が `Service type not found` を出し、
+  Dolphin のファイル種別/アイコンが解決できない
+- `plasma-meta` / `kde-applications` — Plasma 本体とアプリのメタレシピ。
+  M46 の `kde-applications` は Konsole / Dolphin / KCalc / Filelight / Kate /
+  Ark / Gwenview / Okular / KWalletManager。`plasma-meta` は UDisks2、
+  DejaVu / IPAex フォントを含む
 
 `initscripts` は r17 で `elogind` / `polkit` の OpenRC サービスを同梱する
-(どちらも opt-in)。カーネルと KDE 本体は M43 の後半で追加する。
+(どちらも opt-in)。r18 では `/usr/sbin/zignos-fstab`(マウント情報から
+`/etc/fstab` を生成)と boot の `root-rw` サービス(fstab の UUID 不一致で
+`/` が read-only になった場合に実デバイスで remount)を追加した。
+r19 は `/etc/os-release` を 2026.11.20-alpha に、r20 は SDDM 用の
+`sddm` アカウントを、r21 は sshd 起動時の OpenSSH 未導入チェックを追加した。
 
 設計メモは `zignos` リポジトリの `docs/desktop-kde.md`、公開サマリは
 サイトの `/docs/desktop/`。

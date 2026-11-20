@@ -1,0 +1,16 @@
+#!/bin/sh
+# LVM2 — built mainly for libdevmapper, which cryptsetup requires for
+# dm-crypt. systemd, SELinux, readline, lvmpolld and the optional libaio/
+# libnvme/liburing integrations are disabled; udev and blkid are used.
+set -e
+
+cd "$ZPKG_SRC/LVM2.$ZPKG_VERSION"
+./configure --prefix=/usr --libdir=/usr/lib --sysconfdir=/etc \
+	--disable-selinux --disable-readline \
+	--disable-fsadm --disable-blkdeactivate \
+	--disable-lvmpolld --disable-use-lvmpolld \
+	--disable-systemd-journal --disable-sd-notify \
+	--without-systemd --without-libaio --without-libnvme --without-liburing \
+	--enable-pkgconfig
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install

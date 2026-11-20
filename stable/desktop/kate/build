@@ -1,0 +1,14 @@
+#!/bin/sh
+# Kate — KDE advanced text editor (KDE Gear 25.04.3). Documentation is
+# optional and is skipped automatically because KF6DocTools is not in the
+# tree; the editor and all plugins are built.
+set -e
+
+cd "$ZPKG_SRC/kate-$ZPKG_VERSION"
+cmake -S . -B build -G Ninja \
+	-DCMAKE_INSTALL_PREFIX=/usr \
+	-DCMAKE_INSTALL_LIBDIR=lib \
+	-DCMAKE_BUILD_TYPE=Release \
+	-DBUILD_TESTING=OFF
+cmake --build build
+DESTDIR="$ZPKG_DESTROOT" cmake --install build

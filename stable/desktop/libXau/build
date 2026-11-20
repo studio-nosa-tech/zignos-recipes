@@ -1,0 +1,8 @@
+#!/bin/sh
+# libXau - X11 authorization library (libxcb dependency).
+set -e
+
+cd "$ZPKG_SRC/libXau-1.0.11"
+./configure --prefix=/usr --libdir=/usr/lib --disable-static
+make
+make DESTDIR="$ZPKG_DESTROOT" install

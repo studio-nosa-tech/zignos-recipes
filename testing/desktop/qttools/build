@@ -1,0 +1,14 @@
+#!/bin/sh
+# Qt Tools — provides Qt6LinguistTools (lrelease) used by KDE Frameworks
+# translations, plus lupdate/designer/assistant/help.
+set -e
+
+cd "$ZPKG_SRC/qttools-everywhere-src-$ZPKG_VERSION"
+cmake -S . -B build -G Ninja \
+	-DCMAKE_INSTALL_PREFIX=/usr \
+	-DCMAKE_INSTALL_LIBDIR=lib \
+	-DCMAKE_BUILD_TYPE=Release \
+	-DQT_BUILD_TESTS=OFF \
+	-DQT_BUILD_EXAMPLES=OFF
+cmake --build build
+DESTDIR="$ZPKG_DESTROOT" cmake --install build

@@ -1,0 +1,6 @@
+wayland
+xkeyboard-config
+xorgproto
+libxcb
+libX11
+libxml2

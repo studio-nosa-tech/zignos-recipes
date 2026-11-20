@@ -1,0 +1,13 @@
+#!/bin/sh
+# Konsole — KDE terminal emulator (KDE Gear 25.04.3).
+set -e
+
+cd "$ZPKG_SRC/konsole-$ZPKG_VERSION"
+cmake -S . -B build -G Ninja \
+	-DCMAKE_INSTALL_PREFIX=/usr \
+	-DCMAKE_INSTALL_LIBDIR=lib \
+	-DCMAKE_BUILD_TYPE=Release \
+	-DBUILD_TESTING=OFF \
+	-DWITH_X11=ON
+cmake --build build
+DESTDIR="$ZPKG_DESTROOT" cmake --install build

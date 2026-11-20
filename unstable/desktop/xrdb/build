@@ -1,0 +1,9 @@
+#!/bin/sh
+# xrdb — X resource database utility. kcm_style runs it from its kcminit
+# hook to export Xft/color resources into the X11 session.
+set -e
+
+cd "$ZPKG_SRC/xrdb-$ZPKG_VERSION"
+./configure --prefix=/usr --disable-static
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install

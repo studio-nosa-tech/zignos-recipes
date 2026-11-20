@@ -1,3 +1,8 @@
 #!/bin/sh
 # the system bus and wpa_supplicant live on this socket
 install -d -m755 "$ZPKG_ROOT/run/dbus"
+# zpkg installs files as root:root, so the setuid launch helper would not be
+# executable by the messagebus user. The system bus needs it to activate
+# User=root services (wpa_supplicant, UPower, ...).
+chown root:messagebus "$ZPKG_ROOT/usr/libexec/dbus-daemon-launch-helper"
+chmod 4750 "$ZPKG_ROOT/usr/libexec/dbus-daemon-launch-helper"

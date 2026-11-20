@@ -22,9 +22,16 @@ depend() {
 
 start_pre() {
 	checkpath -d -m 0755 /run/sshd
+	# The service script ships with the base even when openssh is not
+	# installed. Fail with an actionable message instead of "ssh-keygen:
+	# command not found" (and avoid relying on the service PATH).
+	if [ ! -x /usr/bin/ssh-keygen ] || [ ! -x /usr/sbin/sshd ]; then
+		eerror "OpenSSH is not installed; run: zpkg install openssh"
+		return 1
+	fi
 	if [ ! -f /etc/ssh/ssh_host_ed25519_key ]; then
 		ebegin "Generating SSH host key (ed25519)"
-		ssh-keygen -q -t ed25519 -N "" -f /etc/ssh/ssh_host_ed25519_key
+		/usr/bin/ssh-keygen -q -t ed25519 -N "" -f /etc/ssh/ssh_host_ed25519_key
 		eend $?
 	fi
 }

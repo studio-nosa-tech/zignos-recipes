@@ -1,0 +1,9 @@
+qtbase
+kcoreaddons
+kconfig
+kdbusaddons
+boost
+xorgproto
+libxcb
+libX11
+xcb-util

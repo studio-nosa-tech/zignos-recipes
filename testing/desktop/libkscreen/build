@@ -1,0 +1,46 @@
+#!/bin/sh
+# KDE Plasma 6.4.5 component (stable channel). Wayland-only: drop the XCB
+# DPMS helper (it includes Qt's private X11 header, unavailable because Qt
+# is built without the xcb feature). The Wayland DPMS helper stays.
+set -e
+
+cd "$ZPKG_SRC/libkscreen-$ZPKG_VERSION"
+python3 - <<'PY'
+from pathlib import Path
+p = Path("src/libdpms/CMakeLists.txt")
+s = p.read_text()
+s = s.replace(" dpms.cpp dpms.h abstractdpmshelper.cpp waylanddpmshelper.cpp xcbdpmshelper.cpp waylanddpmshelper.cpp",
+              " dpms.cpp dpms.h abstractdpmshelper.cpp waylanddpmshelper.cpp")
+s = "\n".join(line for line in s.splitlines() if "XCB::XCB XCB::DPMS XCB::RANDR" not in line) + "\n"
+p.write_text(s)
+
+p = Path("src/libdpms/dpms.cpp")
+s = p.read_text()
+s = s.replace('#include "xcbdpmshelper_p.h"\n', "")
+s = s.replace("#include <QtGui/private/qtx11extras_p.h>\n", "")
+s = s.replace("""    if (QX11Info::isPlatformX11()) {
+        m_helper.reset(new XcbDpmsHelper);
+    } else if (QGuiApplication::platformName()""",
+              """    if (QGuiApplication::platformName()""")
+p.write_text(s)
+
+p = Path("src/backendmanager.cpp")
+s = p.read_text()
+s = s.replace("#include <QtGui/private/qtx11extras_p.h>\n", "")
+s = s.replace("QX11Info::isPlatformX11()", "false")
+p.write_text(s)
+PY
+cmake -S . -B build -G Ninja \
+	-DCMAKE_INSTALL_PREFIX=/usr \
+	-DCMAKE_INSTALL_LIBDIR=lib \
+	-DCMAKE_BUILD_TYPE=Release \
+	-DBUILD_TESTING=OFF \
+	-DBUILD_HTML_DOCS=OFF \
+	-DBUILD_MAN_DOCS=OFF \
+	-DBUILD_PYTHON_BINDINGS=OFF \
+	-DWITH_X11=OFF \
+	-DCMAKE_DISABLE_FIND_PACKAGE_XCB=ON \
+	-DWITHOUT_X11=ON \
+	-DBUILD_QTHELP_DOCS=OFF
+cmake --build build
+DESTDIR="$ZPKG_DESTROOT" cmake --install build

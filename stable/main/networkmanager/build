@@ -25,7 +25,7 @@ meson setup build \
 	-Dsession_tracking=no -Dsession_tracking_consolekit=false \
 	-Dsuspend_resume=consolekit \
 	-Dsystemd_journal=false \
-	-Dpolkit=false -Dselinux=false -Dlibaudit=no \
+	-Dpolkit=true -Dselinux=false -Dlibaudit=no \
 	-Dmodem_manager=false -Dppp=false -Dofono=false \
 	-Dovs=false -Dteamdctl=false -Dnm_cloud_setup=false \
 	-Dnbft=false -Dclat=false -Dconcheck=false -Dlibpsl=false \
@@ -36,10 +36,14 @@ meson setup build \
 	-Dconfig_logging_backend_default=syslog \
 	-Dconfig_wifi_backend_default=wpa_supplicant \
 	-Dconfig_dhcp_default=internal \
-	-Dconfig_auth_polkit_default=root-only
+	-Dconfig_auth_polkit_default=default
 ninja -C build
 DESTDIR="$ZPKG_DESTROOT" ninja -C build install
 
 # The OpenRC service. It is not enabled by default; the admin chooses.
 install -Dm755 "$ZPKG_RECIPE_DIR/networkmanager.initd" \
 	"$ZPKG_DESTROOT/etc/init.d/networkmanager"
+
+# NetworkManager alone has no firmware or supplicant. The WiFi meta pulls
+# wpa_supplicant, iw and linux-firmware in one step.
+printf '>>> NOTE: for WiFi install networkmanager-wifi (wpa_supplicant + iw + linux-firmware)\n'

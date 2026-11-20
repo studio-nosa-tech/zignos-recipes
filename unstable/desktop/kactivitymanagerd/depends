@@ -1,0 +1,12 @@
+qtbase
+qtdeclarative
+kconfig
+kcoreaddons
+kcrash
+kdbusaddons
+ki18n
+kio
+kservice
+kwindowsystem
+kxmlgui
+plasma-activities

@@ -1,0 +1,8 @@
+#!/bin/sh
+# Phonon4Qt6 - multimedia abstraction required by plasma-workspace.
+set -e
+
+cd "$ZPKG_SRC/phonon-4.12.0"
+cmake -S . -B build -G Ninja 	-DCMAKE_INSTALL_PREFIX=/usr 	-DCMAKE_INSTALL_LIBDIR=lib 	-DCMAKE_BUILD_TYPE=Release 	-DPHONON_BUILD_QT5=OFF 	-DPHONON_BUILD_QT6=ON 	-DPHONON_BUILD_TESTS=OFF 	-DPHONON_BUILD_DEMOS=OFF
+cmake --build build
+DESTDIR="$ZPKG_DESTROOT" cmake --install build

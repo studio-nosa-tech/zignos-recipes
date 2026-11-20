@@ -1,0 +1,8 @@
+#%PAM-1.0
+# ZIGNOS console login. login(1) is PAM-based; the session stack in
+# system-auth registers the tty with elogind (pam_elogind), which gives
+# KWin and other seat users a logind session and access to /dev/dri.
+auth		include		system-auth
+account		include		system-auth
+password	include		system-auth
+session		include		system-auth

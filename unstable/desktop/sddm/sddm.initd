@@ -1,0 +1,12 @@
+#!/sbin/openrc-run
+# OpenRC service for SDDM. Enable with: rc-update add sddm default
+description="Simple Desktop Display Manager"
+command="/usr/bin/sddm"
+command_background=true
+pidfile="/run/sddm.pid"
+
+depend() {
+	need localmount dbus
+	after elogind
+	use logger
+}

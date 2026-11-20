@@ -1,0 +1,13 @@
+#!/bin/sh
+# libkexiv2 — Exiv2-based image metadata library (KDE Gear 26.08.3).
+# Plasma's image wallpaper plugin reads EXIF data through KExiv2Qt6.
+set -e
+
+cd "$ZPKG_SRC/libkexiv2-$ZPKG_VERSION"
+cmake -S . -B build -G Ninja \
+	-DCMAKE_INSTALL_PREFIX=/usr \
+	-DCMAKE_INSTALL_LIBDIR=lib \
+	-DCMAKE_BUILD_TYPE=Release \
+	-DBUILD_TESTING=OFF
+cmake --build build
+DESTDIR="$ZPKG_DESTROOT" cmake --install build

@@ -1,0 +1,5 @@
+qtbase
+xorgproto
+libxcb
+libX11
+xcb-util

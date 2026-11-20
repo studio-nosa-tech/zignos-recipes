@@ -1,0 +1,10 @@
+#!/bin/sh
+# Rebuild the font cache so the newly installed Japanese faces are visible
+# to Qt/Plasma immediately.
+if [ -x "$ZPKG_ROOT/usr/bin/fc-cache" ]; then
+	if [ "$ZPKG_ROOT" = "/" ]; then
+		/usr/bin/fc-cache -f >/dev/null 2>&1 || true
+	else
+		chroot "$ZPKG_ROOT" /usr/bin/fc-cache -f >/dev/null 2>&1 || true
+	fi
+fi

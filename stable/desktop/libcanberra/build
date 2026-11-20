@@ -1,0 +1,21 @@
+#!/bin/sh
+# libcanberra - event sound library required by KNotifications.
+# The PulseAudio backend connects to PipeWire's pulse server at runtime;
+# ALSA/OSS/GStreamer/GTK backends remain disabled.
+set -e
+
+cd "$ZPKG_SRC/libcanberra-0.30"
+./configure \
+	--prefix=/usr \
+	--libdir=/usr/lib \
+	--disable-static \
+	--disable-alsa \
+	--disable-oss \
+	--enable-pulse \
+	--disable-gstreamer \
+	--disable-gtk \
+	--disable-gtk3 \
+	--disable-tdb \
+	--disable-gtk-doc
+make
+make DESTDIR="$ZPKG_DESTROOT" install

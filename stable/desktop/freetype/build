@@ -1,0 +1,8 @@
+#!/bin/sh
+set -e
+cd "$ZPKG_SRC/freetype-2.15.0"
+# HarfBuzz is built separately against this FreeType; avoid the circular
+# build dependency here.
+meson setup build --prefix=/usr --libdir=lib --buildtype=release 	-Dharfbuzz=disabled -Dbrotli=disabled -Dbzip2=disabled 	-Dpng=enabled -Dzlib=system -Dtests=disabled
+ninja -C build
+DESTDIR="$ZPKG_DESTROOT" meson install -C build

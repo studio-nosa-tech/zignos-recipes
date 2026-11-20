@@ -1,0 +1,8 @@
+#!/bin/sh
+# PolkitQt6-1 - PolicyKit D-Bus wrapper for Qt (plasma-workspace KCMs).
+set -e
+
+cd "$ZPKG_SRC/polkit-qt-1-v0.201.1"
+cmake -S . -B build -G Ninja 	-DCMAKE_INSTALL_PREFIX=/usr 	-DCMAKE_INSTALL_LIBDIR=lib 	-DCMAKE_BUILD_TYPE=Release 	-DQT_MAJOR_VERSION=6 	-DBUILD_EXAMPLES=OFF 	-DBUILD_TEST=OFF
+cmake --build build
+DESTDIR="$ZPKG_DESTROOT" cmake --install build

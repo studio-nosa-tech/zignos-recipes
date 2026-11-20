@@ -1,0 +1,8 @@
+zlib
+bzip2
+xz
+zstd
+lz4
+openssl
+libxml2
+expat

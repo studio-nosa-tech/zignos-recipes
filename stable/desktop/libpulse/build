@@ -1,0 +1,19 @@
+#!/bin/sh
+# libpulse — PulseAudio client libraries only. The PulseAudio daemon is not
+# built: PipeWire's pulse server provides the protocol at runtime, and
+# plasma-pa/pulseaudio-qt link against libpulse + libpulse-mainloop-glib.
+set -e
+
+cd "$ZPKG_SRC/pulseaudio-$ZPKG_VERSION"
+meson setup build --prefix=/usr --libdir=lib --buildtype=release \
+	-Ddaemon=false -Dclient=true -Dglib=enabled \
+	-Ddbus=disabled -Dalsa=disabled -Djack=disabled -Doss-output=disabled \
+	-Dx11=disabled -Dgtk=disabled -Dgsettings=disabled -Dudev=disabled \
+	-Dsystemd=disabled -Delogind=disabled -Dbluez5=disabled \
+	-Dbluez5-gstreamer=disabled -Dgstreamer=disabled \
+	-Dwebrtc-aec=disabled -Dopenssl=disabled -Dsoxr=disabled \
+	-Ddatabase=simple -Dman=false -Dtests=false -Ddoxygen=false \
+	-Dzshcompletiondir=no -Dbashcompletiondir=no \
+	-Dstream-restore-clear-old-devices=false
+ninja -C build
+DESTDIR="$ZPKG_DESTROOT" meson install -C build

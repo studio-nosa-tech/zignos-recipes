@@ -1,0 +1,11 @@
+#!/bin/sh
+set -e
+cd "$ZPKG_SRC/libjpeg-turbo-3.2.1"
+cmake -S . -B build -G Ninja \
+	-DCMAKE_INSTALL_PREFIX=/usr \
+	-DCMAKE_INSTALL_LIBDIR=lib \
+	-DCMAKE_BUILD_TYPE=Release \
+	-DENABLE_SHARED=ON -DENABLE_STATIC=OFF -DWITH_TURBOJPEG=ON \
+	-DWITH_JAVA=OFF -DWITH_12BIT=OFF
+cmake --build build
+DESTDIR="$ZPKG_DESTROOT" cmake --install build

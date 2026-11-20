@@ -1,0 +1,8 @@
+#!/bin/sh
+# libXfont2 - X font handling library (Xwayland's built-in font path).
+set -e
+
+cd "$ZPKG_SRC/libXfont2-2.0.7"
+./configure --prefix=/usr --libdir=/usr/lib --disable-static
+make
+make DESTDIR="$ZPKG_DESTROOT" install

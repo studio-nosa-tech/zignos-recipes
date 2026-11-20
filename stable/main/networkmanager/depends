@@ -5,3 +5,4 @@ libndp
 util-linux
 readline
 newt
+polkit

@@ -1,0 +1,39 @@
+#!/bin/sh
+# KDE Plasma 6.4.5 component (stable channel).
+set -e
+
+cd "$ZPKG_SRC/plasma-workspace-6.4.5"
+# Plasma's interactive scripting console requires KTextEditor; skip it for
+# the minimal Wayland session.
+python3 - <<'PY2'
+from pathlib import Path
+p = Path("CMakeLists.txt")
+s = p.read_text()
+s = s.replace(" NotifyConfig Package Parts Prison Runner StatusNotifierItem Svg TextEditor",
+              " NotifyConfig Package Parts Prison Runner StatusNotifierItem Svg")
+s = chr(10).join(l for l in s.splitlines() if "add_subdirectory(interactiveconsole)" not in l)
+s = s + chr(10)
+p2 = Path("kcms/kfontinst/lib/Fc.h")
+s2 = p2.read_text()
+if "fcfreetype.h" not in s2:
+    s2 = s2.replace("#include <fontconfig/fontconfig.h>",
+                    "#include <fontconfig/fontconfig.h>" + chr(10) + "#include <fontconfig/fcfreetype.h>")
+    p2.write_text(s2)
+p.write_text(s)
+PY2
+cmake -S . -B build -G Ninja \
+	-DCMAKE_INSTALL_PREFIX=/usr \
+	-DCMAKE_CXX_FLAGS=-I/usr/include/freetype2 \
+	-DCMAKE_INSTALL_LIBDIR=lib \
+	-DCMAKE_BUILD_TYPE=Release \
+	-DBUILD_TESTING=OFF \
+	-DBUILD_HTML_DOCS=OFF \
+	-DBUILD_MAN_DOCS=OFF \
+	-DBUILD_PYTHON_BINDINGS=OFF \
+	-DBUILD_QTHELP_DOCS=OFF
+cmake --build build
+DESTDIR="$ZPKG_DESTROOT" cmake --install build
+
+# kcm_style's kcminit hook runs xrdb to export Xft/color resources. xrdb is
+# now a real dependency (desktop/xrdb); keep the hook enabled so System
+# Settings and the X11/Xwayland bridge see the same resources as Plasma.

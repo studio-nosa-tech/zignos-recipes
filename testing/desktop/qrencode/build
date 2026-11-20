@@ -1,0 +1,8 @@
+#!/bin/sh
+# libqrencode - QR code generator required by Prison.
+set -e
+
+cd "$ZPKG_SRC/libqrencode-4.1.1"
+cmake -S . -B build -G Ninja 	-DCMAKE_INSTALL_PREFIX=/usr 	-DCMAKE_INSTALL_LIBDIR=lib 	-DCMAKE_BUILD_TYPE=Release 	-DBUILD_TESTING=OFF 	-DWITH_TOOLS=OFF -DBUILD_SHARED_LIBS=ON -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+cmake --build build
+DESTDIR="$ZPKG_DESTROOT" cmake --install build

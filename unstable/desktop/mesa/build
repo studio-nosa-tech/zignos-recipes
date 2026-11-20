@@ -1,0 +1,32 @@
+#!/bin/sh
+# Mesa — Wayland compositor PoC build. virgl is the QEMU/virtio-gpu guest
+# driver; softpipe provides the swrast/kms_swrast DRI fallbacks. Mesa 26 only
+# builds the DRI megadriver (`dril`, which installs virtio_gpu_dri.so and
+# friends) when the X11 platform is enabled, even for a Wayland-only session,
+# so x11 is on. LLVM (llvmpipe/radeonsi) and Vulkan are deferred to
+# real-hardware work.
+set -e
+
+cd "$ZPKG_SRC/mesa-$ZPKG_VERSION"
+rm -rf build
+meson setup build --prefix=/usr --libdir=lib --buildtype=release \
+	-Dplatforms=wayland,x11 \
+	-Dgallium-drivers=virgl,softpipe \
+	-Dvulkan-drivers= \
+	-Dglx=dri \
+	-Dglvnd=enabled \
+	-Dopengl=true \
+	-Dgles1=disabled \
+	-Dgles2=enabled \
+	-Degl=enabled \
+	-Dgbm=enabled \
+	-Dllvm=disabled \
+	-Dtools= \
+	-Dbuild-tests=false \
+	-Dvalgrind=disabled \
+	-Dlibunwind=disabled \
+	-Dlmsensors=disabled \
+	-Dzstd=disabled \
+	-Dvideo-codecs=
+ninja -C build
+DESTDIR="$ZPKG_DESTROOT" meson install -C build

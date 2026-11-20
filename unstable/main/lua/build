@@ -1,9 +1,25 @@
 #!/bin/sh
 # lua — the Lua 5.4 interpreter and library. The "linux" target enables
 # readline in the REPL; INSTALL_TOP redirects the upstream install.
+#
+# WirePlumber links against Lua 5.4 through pkg-config. Upstream only
+# installs liblua.a, so build the objects with -fPIC and create a shared
+# library plus a lua5.4.pc for system-lua builds.
 set -e
 
 cd "$ZPKG_SRC/lua-5.4.9"
 
-make -j"$(nproc)" linux
+make -j"$(nproc)" linux MYCFLAGS="-fPIC"
 make install INSTALL_TOP="$ZPKG_DESTROOT/usr"
+
+cd src
+cc -shared -fPIC -Wl,-soname,liblua.so.5.4 \
+	-o "$ZPKG_DESTROOT/usr/lib/liblua.so.5.4.9" \
+	$(ls *.o | grep -vE '^(lua|luac)\.o$') -lm
+ln -sf liblua.so.5.4.9 "$ZPKG_DESTROOT/usr/lib/liblua.so.5.4"
+ln -sf liblua.so.5.4 "$ZPKG_DESTROOT/usr/lib/liblua.so"
+
+install -Dm644 "$ZPKG_RECIPE_DIR/lua5.4.pc" \
+	"$ZPKG_DESTROOT/usr/lib/pkgconfig/lua5.4.pc"
+ln -sf lua5.4.pc "$ZPKG_DESTROOT/usr/lib/pkgconfig/lua-5.4.pc"
+ln -sf lua5.4.pc "$ZPKG_DESTROOT/usr/lib/pkgconfig/lua54.pc"

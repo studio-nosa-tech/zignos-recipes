@@ -1,0 +1,14 @@
+#!/bin/sh
+# json-c — JSON library used by cryptsetup (LUKS2) and optionally libnvme.
+set -e
+
+cd "$ZPKG_SRC/json-c-$ZPKG_VERSION"
+cmake -S . -B build -G Ninja \
+	-DCMAKE_INSTALL_PREFIX=/usr \
+	-DCMAKE_INSTALL_LIBDIR=lib \
+	-DCMAKE_BUILD_TYPE=Release \
+	-DBUILD_SHARED_LIBS=ON \
+	-DBUILD_STATIC_LIBS=OFF \
+	-DBUILD_TESTING=OFF
+cmake --build build
+DESTDIR="$ZPKG_DESTROOT" cmake --install build

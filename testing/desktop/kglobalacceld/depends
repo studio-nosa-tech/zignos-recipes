@@ -1,0 +1,11 @@
+qtbase
+qtdeclarative
+kconfig
+kcoreaddons
+kdbusaddons
+kglobalaccel
+kwindowsystem
+xorgproto
+libxcb
+libX11
+xcb-util

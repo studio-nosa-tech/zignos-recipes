@@ -1,0 +1,8 @@
+#!/bin/sh
+# KNightTime — Plasma 6.8 night-light calculation library (used by KWin).
+set -e
+
+cd "$ZPKG_SRC/knighttime-$ZPKG_VERSION"
+cmake -S . -B build -G Ninja 	-DCMAKE_INSTALL_PREFIX=/usr 	-DCMAKE_INSTALL_LIBDIR=lib 	-DCMAKE_BUILD_TYPE=Release 	-DBUILD_TESTING=OFF 	-DBUILD_HTML_DOCS=OFF 	-DBUILD_MAN_DOCS=OFF 	-DBUILD_PYTHON_BINDINGS=OFF 	-DWITH_X11=OFF 	-DBUILD_QTHELP_DOCS=OFF
+cmake --build build
+DESTDIR="$ZPKG_DESTROOT" cmake --install build

@@ -1,0 +1,5 @@
+meson
+ninja
+python-mako
+python-pyyaml
+python-packaging

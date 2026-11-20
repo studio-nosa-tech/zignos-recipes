@@ -1,0 +1,5 @@
+cmake
+ninja
+perl
+python3
+pkgconf

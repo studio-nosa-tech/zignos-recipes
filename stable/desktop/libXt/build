@@ -1,0 +1,8 @@
+#!/bin/sh
+# libXt — X Toolkit Intrinsics (libXmu's build and X11 applications).
+set -e
+
+cd "$ZPKG_SRC/libXt-$ZPKG_VERSION"
+./configure --prefix=/usr --disable-static
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install

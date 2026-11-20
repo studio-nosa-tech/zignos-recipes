@@ -1,0 +1,13 @@
+qtbase
+qtdeclarative
+kcoreaddons
+kconfig
+ki18n
+kitemmodels
+kwindowsystem
+libnl
+xorgproto
+libxcb
+libX11
+xcb-util
+lm-sensors

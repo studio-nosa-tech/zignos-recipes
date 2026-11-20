@@ -1,0 +1,13 @@
+#!/bin/sh
+# Qt SVG — used by KDE icon themes and Plasma SVG artwork.
+set -e
+
+cd "$ZPKG_SRC/qtsvg-everywhere-src-6.8.5"
+cmake -S . -B build -G Ninja \
+	-DCMAKE_INSTALL_PREFIX=/usr \
+	-DCMAKE_INSTALL_LIBDIR=lib \
+	-DCMAKE_BUILD_TYPE=Release \
+	-DQT_BUILD_TESTS=OFF \
+	-DQT_BUILD_EXAMPLES=OFF
+cmake --build build
+DESTDIR="$ZPKG_DESTROOT" cmake --install build

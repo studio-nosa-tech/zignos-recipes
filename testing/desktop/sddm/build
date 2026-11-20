@@ -1,0 +1,32 @@
+#!/bin/sh
+# SDDM 0.21 — graphical login manager. Built for Qt 6 + elogind with no
+# systemd support. The Wayland greeter runs on KWin; OpenRC starts it from
+# /etc/init.d/sddm (not enabled by default).
+set -e
+
+cd "$ZPKG_SRC/sddm-$ZPKG_VERSION"
+cmake -S . -B build -G Ninja \
+	-DCMAKE_INSTALL_PREFIX=/usr \
+	-DCMAKE_INSTALL_SYSCONFDIR=/etc \
+	-DCMAKE_INSTALL_LIBDIR=lib \
+	-DCMAKE_BUILD_TYPE=Release \
+	-DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
+	-DBUILD_WITH_QT6=ON \
+	-DNO_SYSTEMD=ON \
+	-DUSE_ELOGIND=ON \
+	-DENABLE_JOURNALD=OFF \
+	-DBUILD_MAN_PAGES=OFF \
+	-DINSTALL_PAM_CONFIGURATION=ON
+cmake --build build
+DESTDIR="$ZPKG_DESTROOT" cmake --install build
+
+install -Dm755 "$ZPKG_RECIPE_DIR/sddm.initd" \
+	"$ZPKG_DESTROOT/etc/init.d/sddm"
+install -Dm644 "$ZPKG_RECIPE_DIR/10-wayland.conf" \
+	"$ZPKG_DESTROOT/etc/sddm.conf.d/10-wayland.conf"
+
+# SDDM 0.21 installs sddm-greeter-qt6; themes without an explicit QtVersion
+# ask for the unversioned name. The sddm user/group (620) come from
+# core/initscripts; the greeter needs a writable home for its cache.
+ln -sf sddm-greeter-qt6 "$ZPKG_DESTROOT/usr/bin/sddm-greeter"
+install -d -m 0750 -o 620 -g 620 "$ZPKG_DESTROOT/var/lib/sddm"

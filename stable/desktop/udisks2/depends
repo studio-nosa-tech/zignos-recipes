@@ -1,0 +1,10 @@
+glib
+dbus
+eudev
+libgudev
+polkit
+elogind
+libatasmart
+libblockdev
+util-linux
+e2fsprogs

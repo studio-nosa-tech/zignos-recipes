@@ -1,0 +1,13 @@
+#!/bin/sh
+# polkit-kde-agent-1 — Polkit authentication agent for Plasma. NetworkManager
+# and other system services request authorization through this agent.
+set -e
+
+cd "$ZPKG_SRC/polkit-kde-agent-1-$ZPKG_VERSION"
+cmake -S . -B build -G Ninja \
+	-DCMAKE_INSTALL_PREFIX=/usr \
+	-DCMAKE_INSTALL_LIBDIR=lib \
+	-DCMAKE_BUILD_TYPE=Release \
+	-DBUILD_TESTING=OFF
+cmake --build build
+DESTDIR="$ZPKG_DESTROOT" cmake --install build

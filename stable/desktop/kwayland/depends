@@ -1,0 +1,8 @@
+qtbase
+qtwayland
+wayland
+libglvnd
+xorgproto
+libxcb
+libX11
+xcb-util

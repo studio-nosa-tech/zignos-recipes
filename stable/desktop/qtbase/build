@@ -1,0 +1,37 @@
+#!/bin/sh
+# Qt 6 base — QtCore/QtGui/QtWidgets/QtDBus/QtNetwork plus the build tools
+# (moc, rcc, uic). Wayland-only: X11/xcb and GLX are off, OpenGL ES 2 runs
+# on EGL from libglvnd + Mesa. OpenSSL is loaded at runtime (KIO needs
+# QSslSocket); ICU and glib/GTK integration are not needed for KDE.
+set -e
+
+cd "$ZPKG_SRC/qtbase-everywhere-src-6.8.5"
+# OpenSSL 4 made ASN1_STRING opaque; use Qt's runtime-loaded wrappers
+# (Qt 6.8 predates the OpenSSL 4 accessor changes).
+sed -i -e 's/auth_key->keyid->data/q_ASN1_STRING_get0_data(auth_key->keyid)/' -e 's/auth_key->keyid->length/q_ASN1_STRING_length(auth_key->keyid)/' -e 's/genName->d.iPAddress->data/q_ASN1_STRING_get0_data(genName->d.iPAddress)/g' -e 's/serialNumber->length/q_ASN1_STRING_length(serialNumber)/g' -e 's/serialNumber->data\[a\]/q_ASN1_STRING_get0_data(serialNumber)[a]/g' src/plugins/tls/openssl/qx509_openssl.cpp
+sed -i 's/reinterpret_cast<quint32 [*]>(q_ASN1_STRING_get0_data/reinterpret_cast<const quint32 *>(q_ASN1_STRING_get0_data/' src/plugins/tls/openssl/qx509_openssl.cpp
+sed -i 's/reinterpret_cast<quint8 [*]>(q_ASN1_STRING_get0_data/reinterpret_cast<const quint8 *>(q_ASN1_STRING_get0_data/' src/plugins/tls/openssl/qx509_openssl.cpp
+mkdir -p build
+cd build
+../configure \
+	-prefix /usr \
+	-libdir /usr/lib \
+	-archdatadir /usr/lib/qt6 \
+	-release \
+	-opensource -confirm-license \
+	-nomake examples -nomake tests \
+	-feature-xcb \
+	-opengl es2 -egl \
+	-no-feature-glib \
+	-no-feature-icu \
+	-no-feature-cups \
+	-no-feature-gtk3 \
+	-openssl-runtime \
+	-feature-xkbcommon \
+	--zlib=system \
+	--freetype=system \
+	--harfbuzz=system \
+	--libpng=system \
+	--libjpeg=system
+ninja
+DESTDIR="$ZPKG_DESTROOT" ninja install

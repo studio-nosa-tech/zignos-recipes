@@ -1,0 +1,8 @@
+#!/bin/sh
+set -e
+cd "$ZPKG_SRC/libdrm-2.4.134"
+# Intel needs libpciaccess, which is not in the base yet; enable it when
+# the X11/Intel support lands. AMD/radeon/nouveau APIs are built.
+meson setup build --prefix=/usr --libdir=lib --buildtype=release 	-Dtests=false -Dman-pages=disabled -Dvalgrind=disabled 	-Dintel=disabled
+ninja -C build
+DESTDIR="$ZPKG_DESTROOT" meson install -C build

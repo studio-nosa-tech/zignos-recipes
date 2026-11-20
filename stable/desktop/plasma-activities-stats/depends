@@ -1,0 +1,9 @@
+qtbase
+kcoreaddons
+kconfig
+plasma-activities
+boost
+xorgproto
+libxcb
+libX11
+xcb-util

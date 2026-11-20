@@ -1,0 +1,8 @@
+qtbase
+qtdeclarative
+kcoreaddons
+ki18n
+xorgproto
+libxcb
+libX11
+xcb-util

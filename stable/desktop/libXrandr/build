@@ -1,0 +1,8 @@
+#!/bin/sh
+# libXrandr - X11 client library (Qt XCB / KDE X11 build support).
+set -e
+
+cd "$ZPKG_SRC/libXrandr-1.5.4"
+./configure --prefix=/usr --libdir=/usr/lib --disable-static
+make
+make DESTDIR="$ZPKG_DESTROOT" install

@@ -1,0 +1,20 @@
+#!/bin/sh
+# Qt Multimedia — Konsole uses QMediaPlayer for terminal bell sounds. The
+# GStreamer/FFmpeg media backends are off (no media files are needed);
+# the PulseAudio low-level audio backend talks to PipeWire.
+set -e
+
+cd "$ZPKG_SRC/qtmultimedia-everywhere-src-$ZPKG_VERSION"
+cmake -S . -B build -G Ninja \
+	-DCMAKE_INSTALL_PREFIX=/usr \
+	-DCMAKE_INSTALL_LIBDIR=lib \
+	-DCMAKE_BUILD_TYPE=Release \
+	-DQT_BUILD_TESTS=OFF \
+	-DQT_BUILD_EXAMPLES=OFF \
+	-DFEATURE_ffmpeg=OFF \
+	-DFEATURE_gstreamer=OFF \
+	-DFEATURE_pulseaudio=ON \
+	-DFEATURE_alsa=OFF \
+	-DFEATURE_pipewire=OFF
+cmake --build build
+DESTDIR="$ZPKG_DESTROOT" cmake --install build

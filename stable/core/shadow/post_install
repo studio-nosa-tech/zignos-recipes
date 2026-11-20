@@ -1,0 +1,11 @@
+#!/bin/sh
+# shadow's PAM-aware helpers need elevated access when authentication runs
+# as an unprivileged user (screen locker, display manager, cron).
+# /etc/shadow itself stays readable only by root and the shadow group.
+chown root:42 /usr/sbin/unix_chkpwd 2>/dev/null || true
+chmod 2711 /usr/sbin/unix_chkpwd 2>/dev/null || true
+for f in /etc/shadow /etc/gshadow; do
+	[ -e "$f" ] || continue
+	chown root:42 "$f" 2>/dev/null || true
+	chmod 640 "$f"
+done

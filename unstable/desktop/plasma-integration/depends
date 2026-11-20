@@ -1,0 +1,11 @@
+qtbase
+kconfig
+kconfigwidgets
+ki18n
+kiconthemes
+kwindowsystem
+qtwayland
+xorgproto
+libxcb
+libX11
+xcb-util

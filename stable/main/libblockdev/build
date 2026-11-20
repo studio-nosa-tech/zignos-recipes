@@ -1,0 +1,19 @@
+#!/bin/sh
+# libblockdev — storage operations library used by udisks2. UDisks2
+# requires the part, fs, loop, swap, mdraid, crypto and nvme plugins; LVM,
+# device-mapper, btrfs, multipath, NVMe-oF, SMART and the bd_* CLI tools
+# are disabled. crypto uses libcryptsetup, nvme uses libnvme and mdraid
+# uses libbytesize.
+set -e
+
+cd "$ZPKG_SRC/libblockdev-$ZPKG_VERSION"
+./configure --prefix=/usr --libdir=/usr/lib \
+	--disable-static --enable-tests=no --enable-introspection=no \
+	--with-gtk-doc=no --with-python3=no --with-tools=no \
+	--with-crypto=yes --with-nvme=yes --with-mdraid=yes \
+	--with-dm=no --with-lvm=no --with-lvm_dbus=no --with-mpath=no \
+	--with-btrfs=no --with-nvdimm=no \
+	--with-smart=no --with-smartmontools=no --with-escrow=no \
+	--with-s390=no
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install

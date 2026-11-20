@@ -1,0 +1,13 @@
+#!/bin/sh
+# QCA - Qt Cryptographic Architecture. KWallet needs libqca-qt6.
+set -e
+
+cd "$ZPKG_SRC/qca-2.3.12"
+# CMake 4 rejects the OLD setting of CMP0042.
+sed -i "s/cmake_policy(SET CMP0042 OLD)/cmake_policy(SET CMP0042 NEW)/" CMakeLists.txt
+# OpenSSL 4 removed SSLv3_client_method(); TLS_client_method() covers TLS.
+sed -i "s/SSLv3_client_method()/TLS_client_method()/" plugins/qca-ossl/qca-ossl.cpp
+cmake -S . -B build -G Ninja 	-DCMAKE_INSTALL_PREFIX=/usr 	-DCMAKE_INSTALL_LIBDIR=lib 	-DCMAKE_BUILD_TYPE=Release 	-DCMAKE_CXX_FLAGS=-fpermissive \
+	-DBUILD_WITH_QT6=ON 	-DBUILD_TESTS=OFF 	-DBUILD_TOOLS=OFF 	-DBUILD_PLUGINS=ossl
+cmake --build build
+DESTDIR="$ZPKG_DESTROOT" cmake --install build

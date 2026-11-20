@@ -1,0 +1,8 @@
+#!/bin/sh
+# Meta package: the full NetworkManager WiFi stack. NetworkManager alone
+# does not ship firmware or the supplicant; installing this pulls
+# wpa_supplicant, iw and linux-firmware so an Intel/MediaTek/Realtek card
+# is recognized and can associate. Marker only, no payload.
+set -e
+install -d "$ZPKG_DESTROOT/usr/share/zignos/meta"
+: > "$ZPKG_DESTROOT/usr/share/zignos/meta/networkmanager-wifi"

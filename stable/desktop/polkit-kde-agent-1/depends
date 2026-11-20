@@ -1,0 +1,10 @@
+qtbase
+qtdeclarative
+ki18n
+kwindowsystem
+knotifications
+kdbusaddons
+kcoreaddons
+kcrash
+polkit
+polkit-qt

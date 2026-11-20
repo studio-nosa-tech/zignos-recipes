@@ -1,0 +1,6 @@
+#!/bin/sh
+set -e
+cd "$ZPKG_SRC/pixman-0.46.4"
+meson setup build --prefix=/usr --libdir=lib --buildtype=release 	-Dtests=disabled -Ddemos=disabled -Dgtk=disabled 	-Dlibpng=disabled -Dopenmp=disabled
+ninja -C build
+DESTDIR="$ZPKG_DESTROOT" meson install -C build

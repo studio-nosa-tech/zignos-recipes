@@ -1,0 +1,8 @@
+#!/bin/sh
+# ICU - Unicode/i18n libraries required by plasma-workspace.
+set -e
+
+cd "$ZPKG_SRC/icu/source"
+./configure --prefix=/usr --libdir=/usr/lib --disable-static --disable-samples --disable-tests
+make
+make DESTDIR="$ZPKG_DESTROOT" install

@@ -1,0 +1,9 @@
+#!/bin/sh
+# libatasmart — ATA S.M.A.R.T. library. udisks2 links it directly for
+# drive health and SSD detection.
+set -e
+
+cd "$ZPKG_SRC/libatasmart-$ZPKG_VERSION"
+./configure --prefix=/usr --libdir=/usr/lib --disable-static
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install

@@ -1,0 +1,12 @@
+#!/bin/sh
+# Dolphin — KDE file manager (KDE Gear 25.04.3).
+set -e
+
+cd "$ZPKG_SRC/dolphin-$ZPKG_VERSION"
+cmake -S . -B build -G Ninja \
+	-DCMAKE_INSTALL_PREFIX=/usr \
+	-DCMAKE_INSTALL_LIBDIR=lib \
+	-DCMAKE_BUILD_TYPE=Release \
+	-DBUILD_TESTING=OFF
+cmake --build build
+DESTDIR="$ZPKG_DESTROOT" cmake --install build

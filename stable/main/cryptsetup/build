@@ -1,0 +1,19 @@
+#!/bin/sh
+# cryptsetup — libcryptsetup is used by libblockdev-crypto (and therefore
+# udisks2) for LUKS. OpenSSL is the crypto backend and Argon2 is the
+# bundled implementation; SSH tokens, verity/integrity tools, asciidoc
+# man pages and SELinux are disabled.
+#
+# The top-level `make` also descends into tests/, whose helper scripts use
+# bash process substitution (/dev/fd) that the zpkg bubblewrap sandbox does
+# not provide. all-am/install-am build and install the library, tools and
+# pkg-config file without the test subdirectories.
+set -e
+
+cd "$ZPKG_SRC/cryptsetup-$ZPKG_VERSION"
+./configure --prefix=/usr --libdir=/usr/lib --sysconfdir=/etc \
+	--disable-static --disable-asciidoc --disable-nls \
+	--disable-ssh-token --disable-veritysetup --disable-integritysetup \
+	--disable-selinux --with-crypto_backend=openssl
+make -j"$(nproc)" all-am
+make DESTDIR="$ZPKG_DESTROOT" install-am

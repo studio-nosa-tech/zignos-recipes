@@ -1,0 +1,13 @@
+libdrm
+wayland
+wayland-protocols
+libglvnd
+expat
+zlib
+libX11
+libxcb
+libXext
+libXfixes
+libxshmfence
+libXdamage
+libXxf86vm

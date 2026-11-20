@@ -1,0 +1,16 @@
+#!/bin/sh
+# upower — power management D-Bus service used by powerdevil. Built without
+# the systemd unit and without libimobiledevice; polkit is used for access
+# control, matching the elogind/PAM session stack.
+set -e
+
+cd "$ZPKG_SRC"/upower-v$ZPKG_VERSION-*
+meson setup build --prefix=/usr --libdir=lib --buildtype=release \
+	-Dman=false -Dgtk-doc=false -Dintrospection=disabled \
+	-Didevice=disabled -Dpolkit=enabled -Dsystemdsystemunitdir=no \
+	-Dinstalled_tests=false -Dos_backend=linux
+ninja -C build
+DESTDIR="$ZPKG_DESTROOT" meson install -C build
+
+install -Dm755 "$ZPKG_RECIPE_DIR/upower.initd" \
+	"$ZPKG_DESTROOT/etc/init.d/upower"

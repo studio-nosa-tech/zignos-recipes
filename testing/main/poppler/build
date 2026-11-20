@@ -1,0 +1,23 @@
+#!/bin/sh
+# poppler — PDF rendering library. Only the Qt6 frontend needed by Okular
+# is built; GLib/CPP frontends, utility programs, NSS, GPGME, LCMS, TIFF
+# and OpenJPEG are disabled. zlib, freetype, fontconfig and libjpeg are
+# the remaining requirements.
+set -e
+
+cd "$ZPKG_SRC/poppler-$ZPKG_VERSION"
+cmake -S . -B build -G Ninja \
+	-DCMAKE_INSTALL_PREFIX=/usr \
+	-DCMAKE_INSTALL_LIBDIR=lib \
+	-DCMAKE_BUILD_TYPE=Release \
+	-DBUILD_SHARED_LIBS=ON \
+	-DENABLE_QT5=OFF -DENABLE_QT6=ON \
+	-DENABLE_GLIB=OFF -DENABLE_CPP=OFF -DENABLE_UTILS=OFF \
+	-DENABLE_LCMS=OFF -DENABLE_LIBOPENJPEG=none \
+	-DENABLE_LIBTIFF=OFF -DENABLE_NSS3=OFF \
+	-DENABLE_GPGME=OFF -DENABLE_BOOST=OFF -DENABLE_LIBCURL=OFF \
+	-DBUILD_CPP_TESTS=OFF -DBUILD_GTK_TESTS=OFF \
+	-DBUILD_QT5_TESTS=OFF -DBUILD_QT6_TESTS=OFF \
+	-DBUILD_MANUAL_TESTS=OFF
+cmake --build build
+DESTDIR="$ZPKG_DESTROOT" cmake --install build

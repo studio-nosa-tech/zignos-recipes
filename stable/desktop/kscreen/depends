@@ -1,0 +1,13 @@
+qtbase
+qtdeclarative
+kconfig
+kcoreaddons
+kdbusaddons
+kguiaddons
+ki18n
+kitemmodels
+libkscreen
+xorgproto
+libxcb
+libX11
+xcb-util

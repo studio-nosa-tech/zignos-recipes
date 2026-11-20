@@ -1,0 +1,12 @@
+#!/bin/sh
+# packaging — version parsing helpers. Mesa's build-time Python check
+# imports packaging.version (distutils is gone in Python 3.14).
+set -e
+
+cd "$ZPKG_SRC/packaging-26.3"
+purelib=$(python3 -c 'import sysconfig; print(sysconfig.get_path("purelib"))')
+install -d "$ZPKG_DESTROOT$purelib"
+cp -a src/packaging "$ZPKG_DESTROOT$purelib/"
+install -Dm644 LICENSE "$ZPKG_DESTROOT/usr/share/licenses/packaging/LICENSE"
+install -Dm644 LICENSE.APACHE "$ZPKG_DESTROOT/usr/share/licenses/packaging/LICENSE.APACHE"
+install -Dm644 LICENSE.BSD "$ZPKG_DESTROOT/usr/share/licenses/packaging/LICENSE.BSD"

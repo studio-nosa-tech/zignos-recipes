@@ -1,0 +1,17 @@
+qtbase
+libarchive
+karchive
+kconfig
+kconfigwidgets
+kcoreaddons
+kcrash
+kdbusaddons
+kfilemetadata
+ki18n
+kio
+kservice
+kparts
+kwidgetsaddons
+kwindowsystem
+kiconthemes
+kpty

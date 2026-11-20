@@ -1,0 +1,8 @@
+#!/bin/sh
+# libXxf86vm — XFree86 video mode extension library (Mesa's GLX DRI path).
+set -e
+
+cd "$ZPKG_SRC/libXxf86vm-$ZPKG_VERSION"
+./configure --prefix=/usr --disable-static
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install

@@ -1,0 +1,8 @@
+#!/bin/sh
+# libvorbis - required by libcanberra/KNotifications.
+set -e
+
+cd "$ZPKG_SRC/libvorbis-1.3.7"
+./configure --prefix=/usr --libdir=/usr/lib --disable-static --disable-docs
+make
+make DESTDIR="$ZPKG_DESTROOT" install

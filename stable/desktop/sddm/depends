@@ -1,0 +1,13 @@
+qtbase
+qtdeclarative
+qtwayland
+libxcb
+libX11
+libXau
+libxkbcommon
+xorgproto
+linux-pam
+elogind
+dbus
+kwin
+layer-shell-qt

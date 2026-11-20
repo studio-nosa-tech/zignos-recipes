@@ -1,0 +1,24 @@
+#!/bin/sh
+# pipewire — media server with the PulseAudio-compatible server. Built for
+# the OpenRC/elogind profile: no systemd units, no GStreamer/FFmpeg/BlueZ,
+# and WirePlumber is built as a separate package rather than a subproject.
+set -e
+
+cd "$ZPKG_SRC/pipewire-$ZPKG_VERSION"
+meson setup build --prefix=/usr --libdir=lib --buildtype=release \
+	-Ddocs=disabled -Dman=disabled -Dexamples=disabled \
+	-Dtests=disabled -Dinstalled_tests=disabled \
+	-Dgstreamer=disabled -Dgstreamer-device-provider=disabled \
+	-Dlibsystemd=disabled -Dlogind=enabled -Dlogind-provider=libelogind \
+	-Dsystemd-system-service=disabled -Dsystemd-user-service=disabled \
+	-Dselinux=disabled -Ddbus=enabled -Dudev=enabled \
+	-Dpipewire-alsa=enabled -Dalsa=enabled \
+	-Dpipewire-jack=disabled -Dpipewire-v4l2=disabled \
+	-Dbluez5=disabled -Dffmpeg=disabled -Djack=disabled \
+	-Dlibcamera=disabled -Dvulkan=disabled -Davahi=disabled \
+	-Dlibusb=disabled -Dsession-managers=[] -Draop=disabled \
+	-Dx11=disabled -Dlibcanberra=disabled -Dlegacy-rtkit=false \
+	-Devl=disabled -Dv4l2=disabled -Dsndfile=disabled \
+	-Dpw-cat=disabled -Dtest=disabled -Dvolume=disabled
+ninja -C build
+DESTDIR="$ZPKG_DESTROOT" meson install -C build

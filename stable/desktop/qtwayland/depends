@@ -1,0 +1,7 @@
+qtbase
+qtdeclarative
+wayland
+wayland-protocols
+libxkbcommon
+libglvnd
+mesa

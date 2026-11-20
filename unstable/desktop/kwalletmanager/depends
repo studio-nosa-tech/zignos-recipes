@@ -1,0 +1,16 @@
+qtbase
+karchive
+kauth
+kcmutils
+kconfig
+kconfigwidgets
+kcoreaddons
+kcrash
+kdbusaddons
+ki18n
+kio
+kservice
+kstatusnotifieritem
+kwallet
+kwindowsystem
+kxmlgui

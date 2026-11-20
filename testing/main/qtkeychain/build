@@ -1,0 +1,16 @@
+#!/bin/sh
+# qtkeychain — Qt6 keychain abstraction used by plasma-nm to store
+# Wi-Fi and VPN secrets. libsecret provides the Secret Service backend.
+set -e
+
+cd "$ZPKG_SRC/qtkeychain-$ZPKG_VERSION"
+cmake -S . -B build -G Ninja \
+	-DCMAKE_INSTALL_PREFIX=/usr \
+	-DCMAKE_INSTALL_LIBDIR=lib \
+	-DCMAKE_BUILD_TYPE=Release \
+	-DBUILD_WITH_QT6=ON \
+	-DLIBSECRET_SUPPORT=ON \
+	-DBUILD_TEST_APPLICATION=OFF \
+	-DBUILD_TESTING=OFF
+cmake --build build
+DESTDIR="$ZPKG_DESTROOT" cmake --install build

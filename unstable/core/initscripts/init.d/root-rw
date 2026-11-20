@@ -1,0 +1,34 @@
+#!/sbin/openrc-run
+# OpenRC's root service remounts / read-write with
+#   mount -o remount,rw /
+# which resolves the root device through /etc/fstab. If that entry is wrong
+# (for example an unfilled stage3 UUID placeholder), the remount fails but
+# the service still reports "started", leaving the whole system read-only.
+# This service runs right after root and remounts the device that is
+# actually mounted, then tells the user to repair fstab.
+
+description="Remount / read/write when fstab has the wrong root device"
+
+depend()
+{
+	need root
+	before localmount hostname bootmisc
+}
+
+start()
+{
+	checkpath -W / && return 0
+
+	src=$(findmnt -no SOURCE /)
+	if [ -z "$src" ]; then
+		eerror "cannot resolve the device mounted on /"
+		return 1
+	fi
+
+	ebegin "Remounting / read/write from $src"
+	mount -o remount,rw "$src" /
+	rc=$?
+	eend $rc "failed to remount / read/write"
+	[ "$rc" -eq 0 ] || return "$rc"
+	ewarn "/etc/fstab has the wrong root entry; run 'zignos-fstab /' to repair it"
+}

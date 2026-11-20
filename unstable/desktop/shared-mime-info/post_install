@@ -1,0 +1,6 @@
+#!/bin/sh
+# Generate mime.cache in the target root. QMimeDatabase can fall back to the
+# XML files, but every KService/KIO lookup would rescan them.
+if [ -x "$ZPKG_ROOT/usr/bin/update-mime-database" ]; then
+	"$ZPKG_ROOT/usr/bin/update-mime-database" "$ZPKG_ROOT/usr/share/mime" >/dev/null 2>&1 || true
+fi

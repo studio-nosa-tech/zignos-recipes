@@ -1,0 +1,11 @@
+#!/bin/sh
+# Plasma 6.8 ships its bundled applets as compiled plugins. Upgrading from
+# 6.4/6.5 leaves the old plasmoid package directories behind; kpackage then
+# warns about missing metadata and the default panel cannot be created.
+# Remove only directories that no longer carry metadata.
+for d in /usr/share/plasma/plasmoids/*; do
+	[ -d "$d" ] || continue
+	[ -f "$d/metadata.json" ] && continue
+	[ -f "$d/metadata.desktop" ] && continue
+	rm -rf "$d"
+done

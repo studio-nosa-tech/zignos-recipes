@@ -1,0 +1,9 @@
+#!/bin/sh
+# ipaex-fonts — IPAex Gothic / Mincho. Covers the JIS X 0208/0213 range
+# that DejaVu does not, so Japanese text falls back to a real CJK face.
+set -e
+
+cd "$ZPKG_SRC/IPAexfont00401"
+install -d "$ZPKG_DESTROOT/usr/share/fonts/ipaex"
+install -m644 ipaexg.ttf ipaexm.ttf "$ZPKG_DESTROOT/usr/share/fonts/ipaex/"
+install -Dm644 IPA_Font_License_Agreement_v1.0.txt 	"$ZPKG_DESTROOT/usr/share/licenses/ipaex-fonts/LICENSE"

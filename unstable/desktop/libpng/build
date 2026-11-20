@@ -1,0 +1,10 @@
+#!/bin/sh
+set -e
+cd "$ZPKG_SRC/libpng-1.6.59"
+cmake -S . -B build -G Ninja \
+	-DCMAKE_INSTALL_PREFIX=/usr \
+	-DCMAKE_INSTALL_LIBDIR=lib \
+	-DCMAKE_BUILD_TYPE=Release \
+	-DPNG_SHARED=ON -DPNG_STATIC=OFF -DPNG_TESTS=OFF -DPNG_TOOLS=OFF
+cmake --build build
+DESTDIR="$ZPKG_DESTROOT" cmake --install build

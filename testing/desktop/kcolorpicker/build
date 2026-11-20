@@ -1,0 +1,16 @@
+#!/bin/sh
+# kColorPicker-Qt6 — color picker widget used by kImageAnnotator (and
+# therefore Gwenview's image annotation support). Upstream tags default to
+# Qt5; build the Qt6-capable master snapshot with BUILD_WITH_QT6.
+set -e
+
+cd "$ZPKG_SRC"/kColorPicker-*/
+cmake -S . -B build -G Ninja \
+	-DCMAKE_INSTALL_PREFIX=/usr \
+	-DCMAKE_INSTALL_LIBDIR=lib \
+	-DCMAKE_BUILD_TYPE=Release \
+	-DBUILD_SHARED_LIBS=ON \
+	-DBUILD_WITH_QT6=ON \
+	-DBUILD_TESTING=OFF
+cmake --build build
+DESTDIR="$ZPKG_DESTROOT" cmake --install build

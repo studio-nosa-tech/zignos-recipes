@@ -1,0 +1,10 @@
+qtbase
+qtdeclarative
+kconfig
+kiconthemes
+kirigami
+qtsvg
+xorgproto
+libxcb
+libX11
+xcb-util

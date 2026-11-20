@@ -6,11 +6,18 @@
 set -e
 
 cd "$ZPKG_SRC/dbus-$ZPKG_VERSION"
-meson setup build --prefix=/usr --sysconfdir=/etc --localstatedir=/var \
+meson setup build --prefix=/usr --libdir=lib --sysconfdir=/etc --localstatedir=/var \
 	-Dmodular_tests=disabled -Dasserts=false \
 	-Dselinux=disabled -Dapparmor=disabled -Dlibaudit=disabled \
 	-Dsystemd=disabled -Dx11_autolaunch=disabled \
 	-Ddbus_user=messagebus
 ninja -C build
 DESTDIR="$ZPKG_DESTROOT" ninja -C build install
+# The system bus runs as messagebus and activates User=root services
+# through this setuid helper. Meson installs the setuid bit but leaves the
+# group as root, so messagebus cannot execute it: wpa_supplicant, UPower
+# and other root services then fail with "Permission denied". LFS fixes
+# the ownership/mode after install; do the same here.
+chown root:messagebus "$ZPKG_DESTROOT/usr/libexec/dbus-daemon-launch-helper"
+chmod 4750 "$ZPKG_DESTROOT/usr/libexec/dbus-daemon-launch-helper"
 install -d "$ZPKG_DESTROOT/var/lib/dbus"

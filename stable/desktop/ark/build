@@ -1,0 +1,22 @@
+#!/bin/sh
+# Ark — KDE archive manager (KDE Gear 25.04.3).
+#
+# Ark requires KF6DocTools and ships a handbook. ZIGNOS does not carry the
+# DocBook XML/XSL stack, so the DocTools requirement and the doc subdir are
+# removed; the application itself is unaffected.
+set -e
+
+cd "$ZPKG_SRC/ark-$ZPKG_VERSION"
+sed -i \
+	-e '/^[[:space:]]*DocTools[[:space:]]*$/d' \
+	-e '/^[[:space:]]*add_subdirectory(doc)[[:space:]]*$/d' \
+	-e '/^[[:space:]]*kdoctools_install(po)[[:space:]]*$/d' \
+	CMakeLists.txt
+
+cmake -S . -B build -G Ninja \
+	-DCMAKE_INSTALL_PREFIX=/usr \
+	-DCMAKE_INSTALL_LIBDIR=lib \
+	-DCMAKE_BUILD_TYPE=Release \
+	-DBUILD_TESTING=OFF
+cmake --build build
+DESTDIR="$ZPKG_DESTROOT" cmake --install build

@@ -1,0 +1,18 @@
+#!/bin/sh
+# udisks2 — D-Bus storage daemon used by Plasma's Solid backend and the
+# device notifier. Built for OpenRC: the systemd unit and tmpfiles snippets
+# are disabled, and D-Bus activation (org.freedesktop.UDisks2) starts the
+# daemon on demand. LVM, iSCSI, Btrfs and libstoragemgmt integrations are
+# not shipped.
+set -e
+
+cd "$ZPKG_SRC/udisks-$ZPKG_VERSION"
+./configure --prefix=/usr --libdir=/usr/lib \
+	--sysconfdir=/etc --localstatedir=/var \
+	--disable-static --disable-man --disable-introspection --disable-nls \
+	--disable-lvm2 --disable-iscsi --disable-btrfs --disable-lsm \
+	--with-systemdsystemunitdir=no --with-tmpfilesdir=no \
+	--with-udevdir=/usr/lib/udev \
+	--with-modloaddir=no --with-modprobedir=no
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install

@@ -1,0 +1,8 @@
+#!/bin/sh
+# libsecret - Secret Service client library used by KWallet's kwalletd.
+set -e
+
+cd "$ZPKG_SRC/libsecret-0.21.7"
+meson setup build --prefix=/usr --libdir=lib --buildtype=release 	-Dmanpage=false 	-Dcrypto=libgcrypt 	-Dvapi=false 	-Dgtk_doc=false 	-Dintrospection=false 	-Dbash_completion=disabled 	-Dpam=false
+ninja -C build
+DESTDIR="$ZPKG_DESTROOT" meson install -C build

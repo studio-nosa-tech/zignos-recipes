@@ -1,0 +1,14 @@
+#!/bin/sh
+# libnvme — NVMe user-space library required by libblockdev-nvme and
+# udisks2. Optional JSON, keyutils, OpenSSL, D-Bus, io_uring, Python
+# bindings, examples, tests and documentation are disabled so the library
+# has no dependencies beyond libc.
+set -e
+
+cd "$ZPKG_SRC/libnvme-$ZPKG_VERSION"
+meson setup build --prefix=/usr --libdir=lib --buildtype=release \
+	-Djson-c=disabled -Dkeyutils=disabled -Dopenssl=disabled \
+	-Dpython=disabled -Dlibdbus=disabled -Dliburing=disabled \
+	-Ddocs=false -Ddocs-build=false -Dtests=false -Dexamples=false
+meson compile -C build
+DESTDIR="$ZPKG_DESTROOT" meson install -C build --no-rebuild

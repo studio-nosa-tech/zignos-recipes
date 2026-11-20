@@ -1,0 +1,9 @@
+glib
+eudev
+kmod
+util-linux
+e2fsprogs
+libbytesize
+cryptsetup
+libnvme
+keyutils

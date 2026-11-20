@@ -1,0 +1,9 @@
+qtbase
+qtwayland
+wayland
+libglvnd
+mesa
+xorgproto
+libxcb
+libX11
+xcb-util

@@ -1,0 +1,8 @@
+#!/bin/sh
+# libwacom - tablet device database (plasma-desktop dependency).
+set -e
+
+cd "$ZPKG_SRC/libwacom-2.20.0"
+meson setup build --prefix=/usr --libdir=lib --buildtype=release -Dtests=disabled -Ddocumentation=disabled
+ninja -C build
+DESTDIR="$ZPKG_DESTROOT" meson install -C build

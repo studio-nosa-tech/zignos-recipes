@@ -1,0 +1,6 @@
+#!/bin/sh
+set -e
+cd "$ZPKG_SRC/wayland-$ZPKG_VERSION"
+meson setup build --prefix=/usr --libdir=lib --buildtype=release 	-Dtests=false -Ddocumentation=false -Ddtd_validation=false
+ninja -C build
+DESTDIR="$ZPKG_DESTROOT" meson install -C build

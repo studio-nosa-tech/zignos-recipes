@@ -1,0 +1,20 @@
+#!/bin/sh
+# QCoro - coroutine support for Qt (plasma-workspace dependency).
+# 0.13 handles the Qt 6.12 QmlPrivate target.
+set -e
+
+cd "$ZPKG_SRC/qcoro-$ZPKG_VERSION"
+cmake -S . -B build -G Ninja \
+	-DCMAKE_INSTALL_PREFIX=/usr \
+	-DCMAKE_INSTALL_LIBDIR=lib \
+	-DCMAKE_BUILD_TYPE=Release \
+	-DQCORO_BUILD_EXAMPLES=OFF \
+	-DQCORO_BUILD_TESTING=OFF \
+	-DQCORO_WITH_QTDBUS=ON \
+	-DQCORO_WITH_QTNETWORK=ON \
+	-DQCORO_WITH_QTWEBSOCKETS=OFF \
+	-DQCORO_WITH_QTQUICK=ON \
+	-DQCORO_WITH_QML=ON \
+	-DQCORO_WITH_QTTEST=OFF
+cmake --build build
+DESTDIR="$ZPKG_DESTROOT" cmake --install build

@@ -1,0 +1,17 @@
+#!/bin/sh
+# Ark — KDE archive manager (KDE Gear 26.08.3).
+#
+# Ark ships a handbook that needs KF6DocTools. ZIGNOS does not carry the
+# DocBook XML/XSL stack, so BUILD_DOC is off; the application itself is
+# unaffected.
+set -e
+
+cd "$ZPKG_SRC/ark-$ZPKG_VERSION"
+cmake -S . -B build -G Ninja \
+	-DCMAKE_INSTALL_PREFIX=/usr \
+	-DCMAKE_INSTALL_LIBDIR=lib \
+	-DCMAKE_BUILD_TYPE=Release \
+	-DBUILD_TESTING=OFF \
+	-DBUILD_DOC=OFF
+cmake --build build
+DESTDIR="$ZPKG_DESTROOT" cmake --install build

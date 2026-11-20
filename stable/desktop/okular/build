@@ -1,0 +1,16 @@
+#!/bin/sh
+# Okular — KDE document viewer (KDE Gear 25.04.3). Poppler-Qt6 is the
+# PDF backend; the optional DocTools, wallet, TIFF, Spectre, KExiv2,
+# DjVu, EPub, Mobipocket, Discount, Phonon, PlasmaActivities and TTS
+# integrations are downgraded to optional and auto-disabled when absent.
+set -e
+
+cd "$ZPKG_SRC/okular-$ZPKG_VERSION"
+cmake -S . -B build -G Ninja \
+	-DCMAKE_INSTALL_PREFIX=/usr \
+	-DCMAKE_INSTALL_LIBDIR=lib \
+	-DCMAKE_BUILD_TYPE=Release \
+	-DBUILD_TESTING=OFF \
+	-DFORCE_NOT_REQUIRED_DEPENDENCIES="KF6DocTools;KF6Wallet;KF6Purpose;TIFF;LibSpectre;KExiv2Qt6;DjVuLibre;EPub;QMobipocket6;Discount;Phonon4Qt6;PlasmaActivities;Qt6TextToSpeech"
+cmake --build build
+DESTDIR="$ZPKG_DESTROOT" cmake --install build

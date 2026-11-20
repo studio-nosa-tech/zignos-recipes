@@ -1,0 +1,8 @@
+#!/bin/sh
+# libxshmfence - X11 shared memory fence (Mesa DRI3/X11 platform).
+set -e
+
+cd "$ZPKG_SRC/libxshmfence-1.3.3"
+./configure --prefix=/usr --libdir=/usr/lib --disable-static
+make
+make DESTDIR="$ZPKG_DESTROOT" install

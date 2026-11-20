@@ -1,0 +1,8 @@
+#!/bin/sh
+# Vulkan-Headers — API headers for the Vulkan loader and KWin 6.8.
+set -e
+
+cd "$ZPKG_SRC/Vulkan-Headers-$ZPKG_VERSION"
+cmake -S . -B build -G Ninja 	-DCMAKE_INSTALL_PREFIX=/usr 	-DCMAKE_INSTALL_LIBDIR=lib 	-DCMAKE_BUILD_TYPE=Release 	-DVULKAN_HEADERS_ENABLE_TESTS=OFF
+cmake --build build
+DESTDIR="$ZPKG_DESTROOT" cmake --install build

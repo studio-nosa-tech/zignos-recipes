@@ -1,0 +1,16 @@
+#!/bin/sh
+# Linux-PAM — Pluggable Authentication Modules. Meson build; optional
+# audit/SELinux/NIS/econf/pwaccess support is disabled because those
+# libraries are not part of the base system.
+set -e
+
+cd "$ZPKG_SRC/Linux-PAM-1.7.3"
+meson setup build 	--prefix=/usr --libdir=lib --sysconfdir=/etc 	--buildtype=release 	-Ddocs=disabled -Di18n=disabled 	-Daudit=disabled -Dselinux=disabled -Deconf=disabled 	-Dpwaccess=disabled -Dnis=disabled 	-Dlogind=disabled -Delogind=disabled 	-Dpam_userdb=disabled -Dexamples=false -Dxtests=false 	-Dsecuredir=/usr/lib/security -Dsconfigdir=/etc/security
+ninja -C build
+DESTDIR="$ZPKG_DESTROOT" meson install -C build
+
+# Distro PAM stack used by login/polkit and display managers. Install the
+# whole pam.d/ directory so system-login/system-local-login ship with it.
+for f in "$ZPKG_RECIPE_DIR"/pam.d/*; do
+	install -Dm644 "$f" "$ZPKG_DESTROOT/etc/pam.d/$(basename "$f")"
+done

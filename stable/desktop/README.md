@@ -1,11 +1,11 @@
 # desktop (stable)
 
-GUI パッケージのカテゴリ。**現在 0 パッケージ(設計中)**。
+GUI パッケージのカテゴリ。**現在 203 パッケージ(M46: KDE Plasma 6.4.5 / KF6 6.18.0 / Qt 6.8.5 / UDisks2 / KDE アプリ)**。
 
-このチャンネルは **安定版 / LTS** を採用する。Linux は **6.18 LTS**、
-KDE は **Plasma 6.6 LTS** / Qt 6.8 LTS / KF6 6.18 / Gear 25.04.3。
-長期サポートと保守性を優先し、Testing で検証済みの変更だけを LTS へ
-バックポートする。
+このチャンネルは **安定版 / LTS** を採用する。Qt 6.8 LTS / KF6 6.18 と
+組み合わせられる **Plasma 6.4.5** を固定する(Plasma 6.6 系は Qt 6.10 /
+KF6 6.22 を要求するため Testing 以降)。長期サポートと保守性を優先し、
+Testing で検証済みの変更だけを LTS へバックポートする。
 
 - 設計メモ: `zignos` リポジトリの `docs/desktop-kde.md`
 - 公開サマリ: サイトの `/docs/desktop/`
@@ -15,11 +15,11 @@ KDE は **Plasma 6.6 LTS** / Qt 6.8 LTS / KF6 6.18 / Gear 25.04.3。
 デスクトップ本体と KDE アプリは別のメタパッケージに分ける。
 
 - `plasma-meta` — Plasma セッション(kwin / plasma-workspace / plasma-desktop /
-  systemsettings / plasma-nm / plasma-pa / powerdevil / PLM など)。
+  systemsettings / plasma-nm / plasma-pa / powerdevil / UDisks2 など)。
   KDE アプリは含めない
-- `kde-applications` — KDE Gear のアプリ(Dolphin / Konsole / Kate / Ark /
-  Gwenview / Okular / Spectacle / KCalc / Filelight / KWalletManager など)。
-  Plasma 本体には依存しない
+- `kde-applications` — KDE Gear のアプリ(Konsole / Dolphin / KCalc / Filelight /
+  Kate / Ark / Gwenview / Okular / KWalletManager の 9 アプリ)。
+  Plasma 本体には依存しない。Spectacle と kio-extras は次の増分
 
 将来は `kde-applications-{utilities,graphics,multimedia,network,office,pim,sdk}`
 のサブメタへ分割できる。メタパッケージは `/usr/share/zignos/meta/<name>` の
@@ -39,9 +39,8 @@ KDE は **Plasma 6.6 LTS** / Qt 6.8 LTS / KF6 6.18 / Gear 25.04.3。
   すべてレシピ化する
 - KWin 6 は logind API に依存するため、OpenRC では **elogind が必須**。
   seatd との併用はしない
-- PAM は現在ベースに無い。Plasma Login Manager / kscreenlocker / elogind の
-  セッション作成に必要になるため、PoC では `desktop/` に限定して導入し、
-  製品化時に `core` へ昇格する方針
+- PAM は M44 で `core/linux-pam` へ移し、shadow を PAM 対応にした。
+  kscreenlocker / Plasma Login Manager のセッション作成に使う
 - カーネルは DRM/KMS と virtio-gpu を持つが、音声(`CONFIG_SND*`)は未設定。
   PipeWire の前に追加が必要
 - レシピ形式は `main/` と同じ(version / sources / checksums / build)

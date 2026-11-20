@@ -1,0 +1,16 @@
+#!/bin/sh
+# modemmanager — provides libmm-glib, needed by modemmanager-qt (a required
+# dependency of plasma-nm). MBIM/QMI and the polkit integration are off;
+# WiFi/Ethernet do not depend on this daemon, and the service is not enabled.
+set -e
+
+cd "$ZPKG_SRC/ModemManager-$ZPKG_VERSION"
+meson setup build --prefix=/usr --libdir=lib --buildtype=release \
+	-Dudev=true -Dexamples=false -Dtests=false \
+	-Dsystemdsystemunitdir=no -Dsystemd_suspend_resume=false \
+	-Dpowerd_suspend_resume=false -Dsystemd_journal=false \
+	-Dpolkit=no -Dmbim=false -Dqmi=false -Dqrtr=false \
+	-Dbuiltin_plugins=true -Dintrospection=false \
+	-Dman=false -Dgtk_doc=false -Dbash_completion=false
+ninja -C build
+DESTDIR="$ZPKG_DESTROOT" meson install -C build

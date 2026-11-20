@@ -1,0 +1,10 @@
+qtbase
+kconfigwidgets
+kcoreaddons
+kguiaddons
+ki18n
+kio
+kitemviews
+kwidgetsaddons
+kxmlgui
+qtdeclarative

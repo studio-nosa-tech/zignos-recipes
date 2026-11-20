@@ -1,0 +1,18 @@
+#!/bin/sh
+# KDE Frameworks 6 module (stable channel: 6.18.0).
+set -e
+
+cd "$ZPKG_SRC/ktextwidgets-6.18.0"
+cmake -S . -B build -G Ninja \
+	-DCMAKE_INSTALL_PREFIX=/usr \
+	-DCMAKE_INSTALL_LIBDIR=lib \
+	-DCMAKE_BUILD_TYPE=Release \
+	-DBUILD_TESTING=OFF \
+	-DBUILD_HTML_DOCS=OFF \
+	-DBUILD_MAN_DOCS=OFF \
+	-DBUILD_PYTHON_BINDINGS=OFF \
+	-DWITH_X11=OFF \
+	-DWITH_TEXT_TO_SPEECH=OFF \
+	-DBUILD_QTHELP_DOCS=OFF
+cmake --build build
+DESTDIR="$ZPKG_DESTROOT" cmake --install build

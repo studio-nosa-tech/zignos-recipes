@@ -1,0 +1,8 @@
+#%PAM-1.0
+# Common login stack for display managers (SDDM etc.). system-auth carries
+# pam_unix and the optional pam_elogind session hook.
+auth      include   system-auth
+account   include   system-auth
+password  include   system-auth
+session   optional  pam_keyinit.so force revoke
+session   include   system-auth

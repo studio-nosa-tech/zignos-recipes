@@ -1,0 +1,11 @@
+qtbase
+qtwayland
+wayland
+libxkbcommon
+libglvnd
+plasma-wayland-protocols
+xorgproto
+libxcb
+libX11
+libXfixes
+xcb-util

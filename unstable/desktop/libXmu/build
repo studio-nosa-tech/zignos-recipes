@@ -1,0 +1,8 @@
+#!/bin/sh
+# libXmu — X11 miscellaneous utilities library (xmuu is used by xrdb).
+set -e
+
+cd "$ZPKG_SRC/libXmu-$ZPKG_VERSION"
+./configure --prefix=/usr --disable-static
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install

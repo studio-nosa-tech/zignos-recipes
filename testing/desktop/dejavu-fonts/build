@@ -1,0 +1,6 @@
+#!/bin/sh
+set -e
+cd "$ZPKG_SRC/dejavu-fonts-ttf-2.37"
+install -d "$ZPKG_DESTROOT/usr/share/fonts/dejavu"
+install -m644 ttf/*.ttf "$ZPKG_DESTROOT/usr/share/fonts/dejavu/"
+install -Dm644 LICENSE "$ZPKG_DESTROOT/usr/share/licenses/dejavu-fonts/LICENSE"

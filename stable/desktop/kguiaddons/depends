@@ -1,0 +1,7 @@
+qtbase
+qtwayland
+wayland
+libxkbcommon
+libglvnd
+mesa
+plasma-wayland-protocols
