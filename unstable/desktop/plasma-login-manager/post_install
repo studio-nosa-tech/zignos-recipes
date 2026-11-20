@@ -1,0 +1,7 @@
+#!/bin/sh
+# The greeter account and state directory are created by initscripts, but
+# keep the runtime directory and ownership correct after upgrades.
+mkdir -p /var/lib/plasmalogin /run/plasmalogin
+chown 621:621 /var/lib/plasmalogin
+chmod 750 /var/lib/plasmalogin
+chmod 711 /run/plasmalogin

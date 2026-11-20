@@ -1,0 +1,25 @@
+#!/sbin/openrc-run
+# OpenRC service for Plasma Login Manager. Enable with:
+#   rc-update add plasmalogin default
+# Do not enable sddm at the same time.
+description="Plasma Login Manager"
+command="/usr/bin/plasmalogin"
+command_background=true
+pidfile="/run/plasmalogin.pid"
+output_log="/var/log/plasmalogin.log"
+error_log="/var/log/plasmalogin.log"
+# The greeter is a KWin Wayland session, not a systemd user unit.
+export PLASMALOGIN_GREETER_EXEC="/usr/libexec/zignos-plasmalogin-greeter"
+
+depend() {
+	need localmount dbus elogind
+	use logger
+}
+
+start_pre() {
+	udevadm settle --timeout=10 2>/dev/null || true
+	mkdir -p /run/plasmalogin /var/lib/plasmalogin
+	chmod 711 /run/plasmalogin
+	chown plasmalogin:plasmalogin /var/lib/plasmalogin
+	chmod 750 /var/lib/plasmalogin
+}

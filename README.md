@@ -168,6 +168,11 @@ UDisks2 と KDE アプリを実装。
 `/` が read-only になった場合に実デバイスで remount)を追加した。
 r19 は `/etc/os-release` を 2026.11.20-alpha に、r20 は SDDM 用の
 `sddm` アカウントを、r21 は sshd 起動時の OpenSSH 未導入チェックを追加した。
+r22 は `video` / `render` / `input` / `audio` などの標準グループ、r23 は
+`shadow` グループ、r25 は SDDM と Plasma Login Manager が共有する
+`org.freedesktop.DisplayManager.conf` の D-Bus ポリシーを追加した。
+M48 で SDDM 0.21 を全チャンネル、`plasma-login-manager` 6.8.3 を
+testing / unstable に追加している。
 
 設計メモは `zignos` リポジトリの `docs/desktop-kde.md`、公開サマリは
 サイトの `/docs/desktop/`。

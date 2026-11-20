@@ -4,9 +4,10 @@ description="Simple Desktop Display Manager"
 command="/usr/bin/sddm"
 command_background=true
 pidfile="/run/sddm.pid"
+output_log="/var/log/sddm.log"
+error_log="/var/log/sddm.log"
 
 depend() {
-	need localmount dbus
-	after elogind
+	need localmount dbus elogind
 	use logger
 }

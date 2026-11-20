@@ -71,3 +71,7 @@ for a in poweroff reboot halt mdev; do
 	ln -sfv /bin/busybox "$D/sbin/$a"
 done
 install -vDm644 "$ZPKG_RECIPE_DIR/etc/mdev.conf" "$D/etc/mdev.conf"
+# Shared display-manager D-Bus policy: both SDDM and Plasma Login Manager
+# implement org.freedesktop.DisplayManager, so the policy is owned here.
+install -vDm644 "$ZPKG_RECIPE_DIR/dbus/org.freedesktop.DisplayManager.conf" \
+	"$D/usr/share/dbus-1/system.d/org.freedesktop.DisplayManager.conf"

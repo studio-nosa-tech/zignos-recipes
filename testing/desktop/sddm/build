@@ -5,6 +5,9 @@
 set -e
 
 cd "$ZPKG_SRC/sddm-$ZPKG_VERSION"
+
+# Do not copy root's ambient groups into user/greeter sessions.
+patch -p1 < "$ZPKG_RECIPE_DIR/no-ambient-groups.patch"
 cmake -S . -B build -G Ninja \
 	-DCMAKE_INSTALL_PREFIX=/usr \
 	-DCMAKE_INSTALL_SYSCONFDIR=/etc \
@@ -24,6 +27,10 @@ install -Dm755 "$ZPKG_RECIPE_DIR/sddm.initd" \
 	"$ZPKG_DESTROOT/etc/init.d/sddm"
 install -Dm644 "$ZPKG_RECIPE_DIR/10-wayland.conf" \
 	"$ZPKG_DESTROOT/etc/sddm.conf.d/10-wayland.conf"
+
+# The org.freedesktop.DisplayManager policy is shared with Plasma Login
+# Manager and shipped by initscripts, so do not own a second copy.
+rm -f "$ZPKG_DESTROOT/usr/share/dbus-1/system.d/org.freedesktop.DisplayManager.conf"
 
 # SDDM 0.21 installs sddm-greeter-qt6; themes without an explicit QtVersion
 # ask for the unversioned name. The sddm user/group (620) come from

@@ -1,0 +1,27 @@
+--- a/src/helper/UserSession.cpp	2026-11-21 03:17:44.838904600 +0900
++++ b/src/helper/UserSession.cpp	2026-11-21 03:17:36.209916800 +0900
+@@ -288,20 +288,11 @@
+             exit(Auth::HELPER_OTHER_ERROR);
+         }
+ 
+-        // fetch ambient groups from PAM's environment;
+-        // these are set by modules such as pam_groups.so
+-        int n_pam_groups = getgroups(0, NULL);
++        // OpenRC starts the helper as root; PAM does not reset supplementary
++        // groups, so ambient groups would leak root (gid 0) into the session.
++        // ZIGNOS takes all groups from getgrouplist() below.
++        int n_pam_groups = 0;
+         gid_t *pam_groups = NULL;
+-        if (n_pam_groups > 0) {
+-            pam_groups = new gid_t[n_pam_groups];
+-            if ((n_pam_groups = getgroups(n_pam_groups, pam_groups)) == -1) {
+-                qCritical() << "getgroups() failed to fetch supplemental"
+-                            << "PAM groups for user:" << username;
+-                exit(Auth::HELPER_OTHER_ERROR);
+-            }
+-        } else {
+-            n_pam_groups = 0;
+-        }
+ 
+         // fetch session's user's groups
+         int n_user_groups = 0;

@@ -1,0 +1,74 @@
+#!/bin/sh
+# Plasma Login Manager 6.8.3 for OpenRC + elogind.
+#
+# Upstream targets systemd: it launches the greeter through systemd user
+# units and installs a systemd service. ZIGNOS starts the daemon from an
+# OpenRC script and overrides the greeter command with a small wrapper that
+# starts kwin_wayland and plasma-login-greeter directly.
+set -e
+
+cd "$ZPKG_SRC/plasma-login-manager-$ZPKG_VERSION"
+
+# Do not copy root's ambient groups into user/greeter sessions.
+patch -p1 < "$ZPKG_RECIPE_DIR/no-ambient-groups.patch"
+
+# Do not install systemd units/sysusers/tmpfiles; the OpenRC script and
+# initscripts own the user and runtime directories.
+sed -i '/^add_subdirectory(services)$/d' CMakeLists.txt
+
+# Upstream checks for systemd/libsystemd with pkg-config. elogind provides
+# the logind/sd-bus API and headers; expose them as compatibility modules
+# for this build only.
+pc="$ZPKG_WORKDIR/plm-pc"
+mkdir -p "$pc"
+cat > "$pc/systemd.pc" <<'EOF'
+prefix=/usr
+exec_prefix=/usr
+libdir=/usr/lib
+includedir=/usr/include
+systemdsystemunitdir=/usr/lib/systemd/system
+systemdsysusersdir=/usr/lib/sysusers.d
+systemdtmpfilesdir=/usr/lib/tmpfiles.d
+Name: systemd
+Description: systemd compatibility (elogind)
+Version: 257
+Libs: -L${libdir} -lelogind
+Cflags: -I${includedir}/elogind
+EOF
+cat > "$pc/libsystemd.pc" <<'EOF'
+prefix=/usr
+exec_prefix=/usr
+libdir=/usr/lib
+includedir=/usr/include
+Name: libsystemd
+Description: systemd compatibility library (elogind)
+Version: 257
+Libs: -L${libdir} -lelogind
+Cflags: -I${includedir}/elogind
+EOF
+export PKG_CONFIG_PATH="$pc${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}"
+
+cmake -S . -B build -G Ninja \
+	-DCMAKE_INSTALL_PREFIX=/usr \
+	-DCMAKE_INSTALL_LIBDIR=lib \
+	-DCMAKE_BUILD_TYPE=Release \
+	-DCMAKE_POLICY_VERSION_MINIMUM=3.5 \
+	-DBUILD_TESTING=OFF \
+	-DINSTALL_PAM_CONFIGURATION=OFF \
+	-DPLASMALOGIN_INITIAL_VT=7
+cmake --build build
+DESTDIR="$ZPKG_DESTROOT" cmake --install build
+
+# The systemd-only session launcher is replaced by our greeter wrapper.
+rm -f "$ZPKG_DESTROOT/usr/bin/startplasma-login-wayland"
+
+# Shared with SDDM and provided by initscripts.
+rm -f "$ZPKG_DESTROOT/usr/share/dbus-1/system.d/org.freedesktop.DisplayManager.conf"
+
+install -Dm755 "$ZPKG_RECIPE_DIR/plasmalogin.initd" \
+	"$ZPKG_DESTROOT/etc/init.d/plasmalogin"
+install -Dm755 "$ZPKG_RECIPE_DIR/zignos-plasmalogin-greeter" \
+	"$ZPKG_DESTROOT/usr/libexec/zignos-plasmalogin-greeter"
+for f in "$ZPKG_RECIPE_DIR"/pam.d/*; do
+	install -Dm644 "$f" "$ZPKG_DESTROOT/etc/pam.d/$(basename "$f")"
+done

@@ -1,0 +1,5 @@
+#!/bin/sh
+# zpkg preserves file modes but not ownership, so restore the greeter home.
+mkdir -p /var/lib/sddm
+chown 620:620 /var/lib/sddm
+chmod 750 /var/lib/sddm

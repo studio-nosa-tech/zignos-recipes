@@ -1,0 +1,55 @@
+#!/bin/sh
+# Start the Plasma Login greeter without systemd user units.
+#
+# PLM's daemon launches this script as the plasmalogin user (PAM greeter
+# session). It starts KWin on the greeter's VT and then the QML greeter.
+set -e
+
+: "${XDG_RUNTIME_DIR:=/run/user/$(id -u)}"
+export XDG_RUNTIME_DIR
+mkdir -p "$XDG_RUNTIME_DIR"
+chmod 700 "$XDG_RUNTIME_DIR"
+
+# Optional test override (for example software GL under QEMU).
+[ -r /etc/plasmalogin-greeter.env ] && . /etc/plasmalogin-greeter.env
+
+# Plasma expects a user session bus. systemd starts one through dbus.socket;
+# on OpenRC run the rest of this script under dbus-run-session.
+if [ -z "${DBUS_SESSION_BUS_ADDRESS:-}" ]; then
+	exec dbus-run-session -- "$0" "$@"
+fi
+
+# KWin falls back to "default" when no cursor theme is configured, but the
+# generic default theme is not installed on ZIGNOS.
+: "${XCURSOR_THEME:=breeze_cursors}"
+: "${XCURSOR_SIZE:=24}"
+export XCURSOR_THEME XCURSOR_SIZE
+
+kwin_wayland --no-lockscreen --no-global-shortcuts --no-kactivities \
+	--inputmethod plasma-keyboard --locale1 &
+kwin_pid=$!
+cleanup() {
+	kill "$kwin_pid" 2>/dev/null || true
+}
+trap cleanup EXIT INT TERM
+
+# Wait for KWin's Wayland socket.
+i=0
+while [ "$i" -lt 100 ]; do
+	for s in "$XDG_RUNTIME_DIR"/wayland-*; do
+		[ -S "$s" ] || continue
+		case "$s" in *.lock) continue ;; esac
+		WAYLAND_DISPLAY=${s##*/}
+		export WAYLAND_DISPLAY
+		break 2
+	done
+	i=$((i + 1))
+	sleep 0.1
+done
+if [ -z "${WAYLAND_DISPLAY:-}" ]; then
+	echo "plasmalogin-greeter: KWin did not create a Wayland socket" >&2
+	exit 1
+fi
+
+export QT_QPA_PLATFORM=wayland
+/usr/lib/libexec/plasma-login-greeter
