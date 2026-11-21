@@ -1,3 +1,5 @@
 qtbase
 qtdeclarative
+qtmultimedia
 qrencode
+zxing-cpp

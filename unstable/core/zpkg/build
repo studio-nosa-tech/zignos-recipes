@@ -1,13 +1,21 @@
 #!/bin/sh
-# zpkg — self-hosting step: rebuild zpkg from the source snapshot mounted
-# at /sources/zignos-zpkg (see zignos-build/bootstrap.sh).
+# zpkg — the package manager itself. The source archive is shipped in this
+# recipe directory so a normal upgrade never depends on the bootstrap-only
+# /sources/zignos-zpkg mount. Bootstrap roots that build a working tree
+# without a packaged archive can still use /sources as a fallback.
 set -e
 
-# The workdir survives between builds. Remove the old copy first: cp -a
-# into an existing directory nests the source inside it, and a stale tree
-# would silently rebuild the previous zpkg version.
-rm -rf "$ZPKG_WORKDIR/zpkg-src"
-cp -a /sources/zignos-zpkg "$ZPKG_WORKDIR/zpkg-src"
+rm -rf "$ZPKG_WORKDIR/zpkg-src" "$ZPKG_WORKDIR/zignos-zpkg-$ZPKG_VERSION"
+archive="$ZPKG_RECIPE_DIR/zignos-zpkg-$ZPKG_VERSION.tar.xz"
+if [ -f "$archive" ]; then
+	tar -C "$ZPKG_WORKDIR" -xf "$archive"
+	mv "$ZPKG_WORKDIR/zignos-zpkg-$ZPKG_VERSION" "$ZPKG_WORKDIR/zpkg-src"
+elif [ -d /sources/zignos-zpkg ]; then
+	cp -a /sources/zignos-zpkg "$ZPKG_WORKDIR/zpkg-src"
+else
+	echo "zpkg: missing $archive and /sources/zignos-zpkg" >&2
+	exit 1
+fi
 cd "$ZPKG_WORKDIR/zpkg-src"
 # The bootstrap Go is a trimmed build: /usr/bin/go does not know its GOROOT
 # unless the environment provides it (the bootstrap exports it; a plain

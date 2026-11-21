@@ -1,0 +1,19 @@
+#!/bin/sh
+# zxing-cpp — barcode/QR decoding library required by PrisonScanner
+# (Spectacle uses it for scanning from the screen and camera).
+# 1.4.0 keeps the BitMatrix headers that Prison 6.18 uses.
+set -e
+
+cd "$ZPKG_SRC/zxing-cpp-$ZPKG_VERSION"
+cmake -S . -B build -G Ninja \
+	-DCMAKE_INSTALL_PREFIX=/usr \
+	-DCMAKE_INSTALL_LIBDIR=lib \
+	-DCMAKE_BUILD_TYPE=Release \
+	-DBUILD_SHARED_LIBS=ON \
+	-DBUILD_EXAMPLES=OFF \
+	-DBUILD_BLACKBOX_TESTS=OFF \
+	-DBUILD_UNIT_TESTS=OFF \
+	-DBUILD_PYTHON_MODULE=OFF \
+	-DBUILD_WRITERS=ON
+cmake --build build
+DESTDIR="$ZPKG_DESTROOT" cmake --install build

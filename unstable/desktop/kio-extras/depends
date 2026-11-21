@@ -1,0 +1,16 @@
+qtbase
+qtsvg
+karchive
+kconfig
+kcoreaddons
+kdbusaddons
+ki18n
+kio
+kcmutils
+solid
+syntax-highlighting
+plasma-activities
+plasma-activities-stats
+phonon
+qcoro
+libssh

@@ -1,0 +1,17 @@
+#!/bin/sh
+# kio-extras — additional KIO workers and thumbnail plugins.
+# Samba, libssh (SFTP), MTP, AFC and NFS support is skipped because their
+# libraries are not part of the tree yet. libproxy is disabled because the
+# WPAD proxy KCM would require libproxy-1.0.
+set -e
+
+cd "$ZPKG_SRC/kio-extras-$ZPKG_VERSION"
+cmake -S . -B build -G Ninja \
+	-DCMAKE_INSTALL_PREFIX=/usr \
+	-DCMAKE_INSTALL_LIBDIR=lib \
+	-DCMAKE_BUILD_TYPE=Release \
+	-DBUILD_TESTING=OFF \
+	-DBUILD_DOC=OFF \
+	-DWITH_LIBPROXY=OFF
+cmake --build build
+DESTDIR="$ZPKG_DESTROOT" cmake --install build

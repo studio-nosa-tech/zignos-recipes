@@ -1,0 +1,16 @@
+#!/bin/sh
+# libva — VA-API userspace library (KPipeWire hardware encoding).
+# X11/GLX backends are disabled; only the DRM and Wayland backends are built.
+set -e
+
+cd "$ZPKG_SRC/libva-$ZPKG_VERSION"
+meson setup build \
+	--prefix=/usr \
+	--libdir=lib \
+	--buildtype=release \
+	-Dwith_x11=no \
+	-Dwith_glx=no \
+	-Dwith_wayland=yes \
+	-Denable_docs=false
+ninja -C build
+DESTDIR="$ZPKG_DESTROOT" meson install -C build

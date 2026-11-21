@@ -1,0 +1,20 @@
+#!/bin/sh
+# Tesseract — OCR engine (Spectacle text extraction dependency).
+# Training tools are not needed on the target system. The tessdata package
+# installs language data under /usr/share/tessdata.
+set -e
+
+cd "$ZPKG_SRC/tesseract-$ZPKG_VERSION"
+cmake -S . -B build -G Ninja \
+	-DCMAKE_INSTALL_PREFIX=/usr \
+	-DCMAKE_INSTALL_LIBDIR=lib \
+	-DCMAKE_BUILD_TYPE=Release \
+	-DBUILD_SHARED_LIBS=ON \
+	-DBUILD_TRAINING_TOOLS=OFF \
+	-DBUILD_TESTS=OFF \
+	-DINSTALL_CONFIGS=ON \
+	-DDISABLE_ARCHIVE=ON \
+	-DDISABLE_CURL=ON \
+	-DTESSDATA_PREFIX=/usr/share
+cmake --build build
+DESTDIR="$ZPKG_DESTROOT" cmake --install build

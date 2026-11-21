@@ -1,1 +1,1 @@
-# no downloadable sources; bootstrap.sh mounts the source at /sources/zignos-zpkg
+# source archive is shipped in this recipe directory

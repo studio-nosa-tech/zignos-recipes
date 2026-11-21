@@ -1,0 +1,22 @@
+#!/bin/sh
+# FFmpeg — shared libraries required by KPipeWire for screen recording.
+# External codecs and protocols are not auto-detected so the package is
+# limited to FFmpeg's built-in codecs and containers. VAAPI encoding is
+# provided by libva; software VP8/VP9/H.264 encoders would need libvpx or
+# openh264, which are not part of the tree yet.
+set -e
+
+cd "$ZPKG_SRC/ffmpeg-$ZPKG_VERSION"
+./configure \
+	--prefix=/usr \
+	--libdir=/usr/lib \
+	--disable-autodetect \
+	--disable-static \
+	--enable-shared \
+	--disable-programs \
+	--disable-doc \
+	--disable-x86asm \
+	--disable-debug \
+	--disable-network
+make
+make DESTDIR="$ZPKG_DESTROOT" install

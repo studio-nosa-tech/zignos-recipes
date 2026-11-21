@@ -1,0 +1,8 @@
+#!/bin/sh
+# tessdata_fast — Tesseract language data (English, Japanese, orientation).
+set -e
+
+install -d "$ZPKG_DESTROOT/usr/share/tessdata"
+for f in eng jpn jpn_vert osd; do
+	install -m644 "$ZPKG_SRC/$f.traineddata" "$ZPKG_DESTROOT/usr/share/tessdata/$f.traineddata"
+done

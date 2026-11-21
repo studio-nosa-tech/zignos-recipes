@@ -1,6 +1,6 @@
 # desktop (stable)
 
-GUI パッケージのカテゴリ。**現在 203 パッケージ(M46: KDE Plasma 6.4.5 / KF6 6.18.0 / Qt 6.8.5 / UDisks2 / KDE アプリ)**。
+GUI パッケージのカテゴリ。**現在 212 パッケージ(M50: KDE Plasma 6.4.5 / KF6 6.18.0 / Qt 6.8.5 / UDisks2 / KDE アプリ / Spectacle / kio-extras)**。
 
 このチャンネルは **安定版 / LTS** を採用する。Qt 6.8 LTS / KF6 6.18 と
 組み合わせられる **Plasma 6.4.5** を固定する(Plasma 6.6 系は Qt 6.10 /
@@ -18,8 +18,8 @@ Testing で検証済みの変更だけを LTS へバックポートする。
   systemsettings / plasma-nm / plasma-pa / powerdevil / UDisks2 など)。
   KDE アプリは含めない
 - `kde-applications` — KDE Gear のアプリ(Konsole / Dolphin / KCalc / Filelight /
-  Kate / Ark / Gwenview / Okular / KWalletManager の 9 アプリ)。
-  Plasma 本体には依存しない。Spectacle と kio-extras は次の増分
+  Kate / Ark / Gwenview / Okular / KWalletManager / Spectacle / kio-extras の
+  11 アプリ)。Plasma 本体には依存しない
 
 将来は `kde-applications-{utilities,graphics,multimedia,network,office,pim,sdk}`
 のサブメタへ分割できる。メタパッケージは `/usr/share/zignos/meta/<name>` の

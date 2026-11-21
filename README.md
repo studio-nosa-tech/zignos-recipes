@@ -16,10 +16,10 @@ zignos-recipes/
 
 | チャンネル | パッケージ数 | 内容 |
 |---|---|---|
-| `stable/` | **382** | 安定版。`zpkg` の既定 |
-| `testing/` | **389** | stable 候補。まずここで検証する |
-| `unstable/` | **389** | 開発中。破壊的変更を含み得る |
-| **合計** | **1158** | stable は LTS 系列、testing/unstable は新しい依存を含む |
+| `stable/` | **389** | 安定版。`zpkg` の既定 |
+| `testing/` | **399** | stable 候補。まずここで検証する |
+| `unstable/` | **399** | 開発中。破壊的変更を含み得る |
+| **合計** | **1187** | stable は LTS 系列、testing/unstable は新しい依存を含む |
 
 `core/` と `main/` はチャンネル間で同じ内容を基本とする。ただし **`core/linux`
 はチャンネルごとに系列が分岐**する: stable は Linux LTS、testing は最新安定版、
@@ -36,8 +36,8 @@ testing は最新安定版、unstable は RC / beta / git snapshot を含む挑�
 |---|---|---|---|
 | `core/` | **77** | **77** | ベースシステム + ビルドツール一式(base.list の大半) |
 | `main/` | **100** | **102** | CLI・システム管理パッケージ + firmware(好みで追加インストール) |
-| `desktop/` | **205** | **210** | GUI(KDE Plasma 6 / KF6 / Qt6 / Xwayland+GLX / Mesa / PipeWire / plasma-nm / powerdevil / UDisks2 / KDE アプリ) |
-| **合計** | **382** | **389** | うち **37 が `zignos-build/base.list` のトップレベル** |
+| `desktop/` | **212** | **220** | GUI(KDE Plasma 6 / KF6 / Qt6 / Xwayland+GLX / Mesa / PipeWire / plasma-nm / powerdevil / UDisks2 / KDE アプリ / Spectacle / kio-extras) |
+| **合計** | **389** | **399** | うち **37 が `zignos-build/base.list` のトップレベル** |
 
 `base.list` はトップレベルだけを列挙する(Gentoo の `@system` 相当の最小構成)。
 依存と makedepends は zpkg が解決して自動で入れる。sudo / doas / SSH / エディタは
@@ -53,7 +53,7 @@ man-db man-pages meson mpc mpdecimal mpfr ncurses ninja openrc openssh
 openssl patch pcre2 perl pkgconf procps python3 readline sed shadow tar
 texinfo tzdata util-linux xz zlib zpkg zstd
 
-### main/(98)
+### main/(100)
 
 curl expat fastfetch git htop iproute2 less libmnl nano rsync sudo tmux vim wget which
 dmidecode dosfstools efibootmgr efivar iw jq libnl libpcap lshw linux-firmware lsof ncdu pciutils
@@ -75,7 +75,7 @@ logrotate nftables npth pinentry popt screen sshfs
 cryptsetup exiv2 json-c keyutils libarchive libatasmart libblockdev
 libbytesize libnvme lvm2 poppler
 
-### desktop/(203)
+### desktop/(212)
 
 M44 で KF6 + KWin + Plasma 最小、M45 で音声・ネットワーク・電源、M46 で
 UDisks2 と KDE アプリを実装。
@@ -140,8 +140,36 @@ UDisks2 と KDE アプリを実装。
   `keyutils 1.6.3` / `libbytesize 2.12` を追加。D-Bus 起動を確認済み
 - **M46 アプリ** — `libarchive 3.8.11` + Ark、Kate、Gwenview(Exiv2 0.28.9 /
   LCMS2 2.16 / kImageAnnotator 0.7.2 / kColorPicker 0.3.1)、Okular
-  (Poppler 25.04.0)、KWalletManager。Spectacle(OpenCV 必須)と kio-extras は
-  次の増分へ
+  (Poppler 25.04.0)、KWalletManager
+- **M50 Spectacle** — stable は Spectacle 6.4.5 + OpenCV 4.14.0
+  (core/imgproc のみ)。testing / unstable は Spectacle 6.8.3 で、
+  OpenCV の代わりに KQuickImageEditor 0.7.0.1(Highway 1.4.0 使用)と
+  Tesseract 5.5.4 / Leptonica 1.87.0 を要求する。OCR 用に
+  `tessdata`(tessdata_fast の eng / jpn / jpn_vert / osd)を同梱し、
+  Tesseract の既定データ位置を `/usr/share/tessdata` にする。
+  Prison は Spectacle の `PrisonScanner` のため scanner を有効化し、
+  stable は Prison 6.18 + ZXing-cpp 1.4.0(BitMatrix / MultiFormatWriter)、
+  testing / unstable は Prison 6.32 + ZXing-cpp 3.1.1 を使う
+- **M50 kio-extras** — stable 25.04.3 / testing 26.08.3 / unstable 26.11.80。
+  archive / fish / info / man / thumbnail / recent / 検索などの KIO worker を
+  追加し、Samba / MTP / AFC / NFS / libproxy は未導入のため無効。
+  testing / unstable は libssh があるため SFTP worker もビルドする
+- **M50 録画** — KPipeWire のビルドに FFmpeg 8.0.1(共有ライブラリのみ)と
+  libva 2.24.1(DRM/Wayland バックエンド)を追加。ソフトウェア VP8/VP9/H.264
+  エンコーダ(libvpx / openh264)は未導入のため、録画は VAAPI か
+  エンコーダ追加後の利用になる
+- **M51 zpkg の自己更新** — `core/zpkg 0.3.2` はソースアーカイブ
+  `zignos-zpkg-0.3.2.tar.xz` を recipe ディレクトリに同梱し、bootstrap 専用の
+  `/sources/zignos-zpkg` が無い通常システムでも `zpkg upgrade zpkg` が
+  ビルドできる。アーカイブが無い bootstrap 用に `/sources/zignos-zpkg` へ
+  フォールバックする
+- **M51 新規依存の自動導入** — `zpkg upgrade` は計画の `KindInstall`
+  (新しく必要になった依存)を先にビルド・インストールし、その後で
+  アップグレード対象を全ビルド→インストールする。新しい makedepends を
+  必要とするパッケージのビルドが依存未導入で失敗しない
+- **M51 initscripts r27** — 既定の `/etc/zpkg/sync.conf` が git モードの
+  ため、`git` を initscripts の依存に追加。0.3.2 の新規依存導入で
+  git が自動インストールされる
 - **M46 クリーン root の依存修正** — stage3 からデスクトップを入れると
   開発 chroot では見えなかった実行時依存が欠けるため、`libtool` に libltdl
   (`--enable-ltdl-install`)を追加して `libcanberra` から依存、`kwin` に
@@ -159,8 +187,8 @@ UDisks2 と KDE アプリを実装。
   Dolphin のファイル種別/アイコンが解決できない
 - `plasma-meta` / `kde-applications` — Plasma 本体とアプリのメタレシピ。
   M46 の `kde-applications` は Konsole / Dolphin / KCalc / Filelight / Kate /
-  Ark / Gwenview / Okular / KWalletManager。`plasma-meta` は UDisks2、
-  DejaVu / IPAex フォントを含む
+  Ark / Gwenview / Okular / KWalletManager。M50 で Spectacle と kio-extras を
+  追加。`plasma-meta` は UDisks2、DejaVu / IPAex フォントを含む
 
 `initscripts` は r17 で `elogind` / `polkit` の OpenRC サービスを同梱する
 (どちらも opt-in)。r18 では `/usr/sbin/zignos-fstab`(マウント情報から
@@ -174,9 +202,11 @@ r22 は `video` / `render` / `input` / `audio` などの標準グループ、r23
 r26 は `/etc/zpkg/sync.conf`(既定の GitHub リポジトリ、git モード)を
 同梱し、`/etc/passwd` / `/etc/group` をパッケージで上書きせず
 `/usr/share/zignos/base-accounts/` から不足分だけを post_install で
-マージするようにした。M48 で SDDM 0.21 を全チャンネル、
+マージするようにした。r27 は git モードの sync.conf に必要な `git` を
+依存に追加した。M48 で SDDM 0.21 を全チャンネル、
 `plasma-login-manager` 6.8.3 を testing / unstable に追加している。
-M49 で zpkg 0.3.1 の git sync と base の git 2.56.1 を追加した。
+M49 で zpkg 0.3.1 の git sync と base の git 2.56.1 を追加し、
+M51 で zpkg 0.3.2 の自己更新と新規依存の先行導入を追加した。
 
 設計メモは `zignos` リポジトリの `docs/desktop-kde.md`、公開サマリは
 サイトの `/docs/desktop/`。

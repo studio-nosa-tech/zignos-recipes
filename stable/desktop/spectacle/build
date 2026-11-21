@@ -1,0 +1,15 @@
+#!/bin/sh
+# Spectacle — KDE screenshot utility (Plasma 6.4.5).
+set -e
+
+cd "$ZPKG_SRC/spectacle-$ZPKG_VERSION"
+# Spectacle 6.4.5 adds its tests unconditionally; the test target links
+# KF6::PrisonScanner, which the stable Prison build does not provide.
+sed -i 's/^add_subdirectory(tests)$/if(BUILD_TESTING)\n    add_subdirectory(tests)\nendif()/' CMakeLists.txt
+cmake -S . -B build -G Ninja \
+	-DCMAKE_INSTALL_PREFIX=/usr \
+	-DCMAKE_INSTALL_LIBDIR=lib \
+	-DCMAKE_BUILD_TYPE=Release \
+	-DBUILD_TESTING=OFF
+cmake --build build
+DESTDIR="$ZPKG_DESTROOT" cmake --install build

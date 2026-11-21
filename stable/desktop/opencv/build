@@ -1,0 +1,30 @@
+#!/bin/sh
+# OpenCV — only the core and imgproc modules Spectacle 6.4.x needs.
+# Codecs, GUI, Python bindings, IPP and external accelerators are disabled
+# to keep the package small; OpenCV is not otherwise used by the desktop.
+set -e
+
+cd "$ZPKG_SRC/opencv-$ZPKG_VERSION"
+cmake -S . -B build -G Ninja \
+	-DCMAKE_INSTALL_PREFIX=/usr \
+	-DCMAKE_INSTALL_LIBDIR=lib \
+	-DCMAKE_BUILD_TYPE=Release \
+	-DBUILD_LIST=core,imgproc \
+	-DBUILD_SHARED_LIBS=ON \
+	-DBUILD_TESTS=OFF \
+	-DBUILD_PERF_TESTS=OFF \
+	-DBUILD_EXAMPLES=OFF \
+	-DBUILD_opencv_apps=OFF \
+	-DBUILD_JAVA=OFF \
+	-DBUILD_opencv_python3=OFF \
+	-DWITH_IPP=OFF \
+	-DWITH_OPENCL=OFF \
+	-DWITH_TBB=OFF \
+	-DWITH_EIGEN=OFF \
+	-DWITH_LAPACK=OFF \
+	-DWITH_FFMPEG=OFF \
+	-DWITH_GTK=OFF \
+	-DWITH_QT=OFF \
+	-DOPENCV_GENERATE_PKGCONFIG=ON
+cmake --build build
+DESTDIR="$ZPKG_DESTROOT" cmake --install build

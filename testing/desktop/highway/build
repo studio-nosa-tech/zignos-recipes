@@ -1,0 +1,16 @@
+#!/bin/sh
+# Highway — portable SIMD library (KQuickImageEditor dependency).
+set -e
+
+cd "$ZPKG_SRC/highway-$ZPKG_VERSION"
+cmake -S . -B build -G Ninja \
+	-DCMAKE_INSTALL_PREFIX=/usr \
+	-DCMAKE_INSTALL_LIBDIR=lib \
+	-DCMAKE_BUILD_TYPE=Release \
+	-DBUILD_SHARED_LIBS=ON \
+	-DHWY_ENABLE_CONTRIB=OFF \
+	-DHWY_ENABLE_EXAMPLES=OFF \
+	-DHWY_ENABLE_TESTS=OFF \
+	-DHWY_ENABLE_INSTALL=ON
+cmake --build build
+DESTDIR="$ZPKG_DESTROOT" cmake --install build

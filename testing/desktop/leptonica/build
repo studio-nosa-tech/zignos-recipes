@@ -1,0 +1,19 @@
+#!/bin/sh
+# Leptonica — image processing library used by Tesseract.
+# TIFF, GIF, WebP and OpenJPEG are disabled because those libraries are not
+# installed; PNG/JPEG/zlib support is kept.
+set -e
+
+cd "$ZPKG_SRC/leptonica-$ZPKG_VERSION"
+cmake -S . -B build -G Ninja \
+	-DCMAKE_INSTALL_PREFIX=/usr \
+	-DCMAKE_INSTALL_LIBDIR=lib \
+	-DCMAKE_BUILD_TYPE=Release \
+	-DBUILD_SHARED_LIBS=ON \
+	-DBUILD_PROG=OFF \
+	-DENABLE_GIF=OFF \
+	-DENABLE_TIFF=OFF \
+	-DENABLE_WEBP=OFF \
+	-DENABLE_OPENJPEG=OFF
+cmake --build build
+DESTDIR="$ZPKG_DESTROOT" cmake --install build

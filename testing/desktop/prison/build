@@ -1,5 +1,6 @@
 #!/bin/sh
-# KDE Frameworks 6 module (stable channel: 6.18.0).
+# KDE Frameworks 6 module. Multimedia scanner support is required by
+# Spectacle 6.8's barcode/QR scanning integration.
 set -e
 
 cd "$ZPKG_SRC/prison-$ZPKG_VERSION"
@@ -8,12 +9,12 @@ cmake -S . -B build -G Ninja \
 	-DCMAKE_INSTALL_LIBDIR=lib \
 	-DCMAKE_BUILD_TYPE=Release \
 	-DWITH_DMTX=OFF \
-	-DWITH_ZXING=OFF \
+	-DWITH_ZXING=ON \
 	-DBUILD_TESTING=OFF \
 	-DBUILD_HTML_DOCS=OFF \
 	-DBUILD_MAN_DOCS=OFF \
 	-DBUILD_PYTHON_BINDINGS=OFF \
-	-DWITH_MULTIMEDIA=OFF \
+	-DWITH_MULTIMEDIA=ON \
 	-DBUILD_QTHELP_DOCS=OFF
 cmake --build build
 DESTDIR="$ZPKG_DESTROOT" cmake --install build

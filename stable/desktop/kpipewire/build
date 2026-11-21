@@ -3,6 +3,8 @@
 set -e
 
 cd "$ZPKG_SRC/kpipewire-6.4.5"
+# FFmpeg 8 dropped the FF_PROFILE_* aliases; use the AV_PROFILE_* names.
+sed -i 's/\bFF_PROFILE_/AV_PROFILE_/g' src/*.cpp
 cmake -S . -B build -G Ninja \
 	-DCMAKE_INSTALL_PREFIX=/usr \
 	-DCMAKE_INSTALL_LIBDIR=lib \

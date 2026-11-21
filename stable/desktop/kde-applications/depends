@@ -1,6 +1,6 @@
 # KDE Gear applications only — must not pull in the Plasma session.
 # M46: Dolphin/Konsole/KCalc/Filelight plus Kate, Ark, Gwenview, Okular
-# and KWalletManager. Spectacle (OpenCV) and kio-extras are follow-ups.
+# and KWalletManager. M50 adds Spectacle (OpenCV) and kio-extras.
 dolphin
 konsole
 kcalc
@@ -10,3 +10,5 @@ ark
 gwenview
 okular
 kwalletmanager
+spectacle
+kio-extras

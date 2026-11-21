@@ -6,3 +6,9 @@ xorgproto
 libxcb
 libX11
 xcb-util
+pipewire
+libepoxy
+mesa
+libdrm
+libva
+ffmpeg

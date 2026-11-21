@@ -1,6 +1,6 @@
 # desktop (unstable)
 
-GUI パッケージのカテゴリ。**現在は stable と同じ 203 パッケージ**(チャンネル別の版数分岐は今後)。
+GUI パッケージのカテゴリ。**現在 220 パッケージ(Plasma 6.8.3 / KF6 6.32 / Qt 6.11.3 / Gear 26.11.80 beta / Spectacle / kio-extras)**。
 
 このチャンネルは **Testing よりさらに挑戦的**な構成にする。設計時点では
 Linux 7.4-rc / mainline、Plasma 6.9 dev / beta、Qt 6.12 dev / beta、
@@ -18,8 +18,8 @@ Testing → Stable の順に昇格させる。
   systemsettings / plasma-nm / plasma-pa / powerdevil / UDisks2 など)。
   KDE アプリは含めない
 - `kde-applications` — KDE Gear のアプリ(Konsole / Dolphin / KCalc / Filelight /
-  Kate / Ark / Gwenview / Okular / KWalletManager の 9 アプリ)。
-  Plasma 本体には依存しない
+  Kate / Ark / Gwenview / Okular / KWalletManager / Spectacle / kio-extras の
+  11 アプリ)。Plasma 本体には依存しない
 
 将来は `kde-applications-{utilities,graphics,multimedia,network,office,pim,sdk}`
 のサブメタへ分割できる。メタパッケージは `/usr/share/zignos/meta/<name>` の
