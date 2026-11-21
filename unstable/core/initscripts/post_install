@@ -1,0 +1,55 @@
+#!/bin/sh
+# Merge the base service accounts into the live account files.
+#
+# /etc/passwd and /etc/group are administrator-owned: a package upgrade
+# must not replace them (doing so deletes every account added after the
+# base install). The package ships templates under
+# /usr/share/zignos/base-accounts and only appends missing entries.
+set -e
+
+base=/usr/share/zignos/base-accounts
+[ -r "$base/passwd" ] || exit 0
+[ -r "$base/group" ] || exit 0
+
+touch /etc/passwd /etc/group
+chmod 644 /etc/passwd /etc/group
+
+merge_entries() {
+	tmpl=$1
+	dst=$2
+	while IFS= read -r line; do
+		case "$line" in
+		''|'#'*) continue ;;
+		esac
+		name=${line%%:*}
+		[ -n "$name" ] || continue
+		grep -q "^${name}:" "$dst" || printf '%s
+' "$line" >> "$dst"
+	done < "$tmpl"
+}
+
+merge_entries "$base/passwd" /etc/passwd
+merge_entries "$base/group" /etc/group
+
+# Service accounts need shadow/gshadow entries; the password is locked.
+for u in sddm plasmalogin sshd nobody; do
+	grep -q "^${u}:" /etc/passwd || continue
+	if [ -f /etc/shadow ] && ! grep -q "^${u}:" /etc/shadow; then
+		printf '%s:!:::::::
+' "$u" >> /etc/shadow
+	fi
+done
+for g in sddm plasmalogin shadow video render; do
+	grep -q "^${g}:" /etc/group || continue
+	if [ -f /etc/gshadow ] && ! grep -q "^${g}:" /etc/gshadow; then
+		printf '%s:!::
+' "$g" >> /etc/gshadow
+	fi
+done
+
+# Keep the password databases readable only by their owners (shadow group
+# members such as unix_chkpwd need /etc/shadow).
+if getent group shadow >/dev/null 2>&1; then
+	chown root:shadow /etc/shadow /etc/gshadow 2>/dev/null || true
+	chmod 640 /etc/shadow /etc/gshadow 2>/dev/null || true
+fi

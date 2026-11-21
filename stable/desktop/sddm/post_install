@@ -3,3 +3,11 @@
 mkdir -p /var/lib/sddm
 chown 620:620 /var/lib/sddm
 chmod 750 /var/lib/sddm
+
+# The initscripts package owns the video/render groups; add the greeter
+# account when the groups already existed on an upgraded system.
+if getent passwd sddm >/dev/null 2>&1; then
+	for g in video render; do
+		getent group "$g" >/dev/null 2>&1 && usermod -aG "$g" sddm 2>/dev/null || true
+	done
+fi

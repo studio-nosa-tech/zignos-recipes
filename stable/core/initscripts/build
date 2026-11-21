@@ -37,10 +37,12 @@ install -vDm644 "$ZPKG_RECIPE_DIR/etc/profile" "$D/etc/profile"
 install -vDm644 "$ZPKG_RECIPE_DIR/etc/securetty" "$D/etc/securetty"
 install -vDm644 "$ZPKG_RECIPE_DIR/etc/os-release" "$D/etc/os-release"
 install -vDm644 "$ZPKG_RECIPE_DIR/etc/motd" "$D/etc/motd"
-# Base accounts are runtime configuration owned by this package (passwords
-# stay in /etc/shadow, maintained by shadow's tools).
-install -vDm644 "$ZPKG_RECIPE_DIR/etc/passwd" "$D/etc/passwd"
-install -vDm644 "$ZPKG_RECIPE_DIR/etc/group" "$D/etc/group"
+# Base accounts are templates, not /etc files: installing a package must
+# never replace /etc/passwd or /etc/group on an existing system (that would
+# delete the administrator's accounts). post_install merges missing entries.
+install -vDm644 "$ZPKG_RECIPE_DIR/etc/passwd" "$D/usr/share/zignos/base-accounts/passwd"
+install -vDm644 "$ZPKG_RECIPE_DIR/etc/group" "$D/usr/share/zignos/base-accounts/group"
+install -vDm644 "$ZPKG_RECIPE_DIR/etc/zpkg/sync.conf" "$D/etc/zpkg/sync.conf"
 printf 'zignos\n' > "$D/etc/hostname"
 
 mkdir -pv "$D/etc/runlevels/sysinit" "$D/etc/runlevels/boot" "$D/etc/runlevels/default"

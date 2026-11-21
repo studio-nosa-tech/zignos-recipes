@@ -171,8 +171,12 @@ r19 は `/etc/os-release` を 2026.11.20-alpha に、r20 は SDDM 用の
 r22 は `video` / `render` / `input` / `audio` などの標準グループ、r23 は
 `shadow` グループ、r25 は SDDM と Plasma Login Manager が共有する
 `org.freedesktop.DisplayManager.conf` の D-Bus ポリシーを追加した。
-M48 で SDDM 0.21 を全チャンネル、`plasma-login-manager` 6.8.3 を
-testing / unstable に追加している。
+r26 は `/etc/zpkg/sync.conf`(既定の GitHub リポジトリ、git モード)を
+同梱し、`/etc/passwd` / `/etc/group` をパッケージで上書きせず
+`/usr/share/zignos/base-accounts/` から不足分だけを post_install で
+マージするようにした。M48 で SDDM 0.21 を全チャンネル、
+`plasma-login-manager` 6.8.3 を testing / unstable に追加している。
+M49 で zpkg 0.3.1 の git sync と base の git 2.56.1 を追加した。
 
 設計メモは `zignos` リポジトリの `docs/desktop-kde.md`、公開サマリは
 サイトの `/docs/desktop/`。

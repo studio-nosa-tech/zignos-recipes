@@ -7,6 +7,10 @@
 # add a rust recipe later if the Rust-only features matter). The flags
 # must be on BOTH make invocations: "make install" would otherwise pull
 # the Rust target in as a prerequisite.
+#
+# NO_INSTALL_HARDLINKS installs the builtins as symlinks to /usr/bin/git.
+# Hardlinks/copies would add ~3 GiB of duplicate 17 MiB binaries to the
+# package, which zpkg cannot deduplicate.
 set -e
 
 cd "$ZPKG_SRC/git-2.56.1"
@@ -15,11 +19,13 @@ make -j"$(nproc)" \
 	gitexecdir=/usr/libexec/git-core \
 	NO_TCLTK=1 \
 	NO_GETTEXT=1 \
-	NO_RUST=1
+	NO_RUST=1 \
+	NO_INSTALL_HARDLINKS=1
 make \
 	prefix=/usr \
 	gitexecdir=/usr/libexec/git-core \
 	NO_TCLTK=1 \
 	NO_GETTEXT=1 \
 	NO_RUST=1 \
+	NO_INSTALL_HARDLINKS=1 \
 	DESTDIR="$ZPKG_DESTROOT" install

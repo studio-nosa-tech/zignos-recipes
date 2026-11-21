@@ -5,3 +5,9 @@ mkdir -p /var/lib/plasmalogin /run/plasmalogin
 chown 621:621 /var/lib/plasmalogin
 chmod 750 /var/lib/plasmalogin
 chmod 711 /run/plasmalogin
+
+if getent passwd plasmalogin >/dev/null 2>&1; then
+	for g in video render; do
+		getent group "$g" >/dev/null 2>&1 && usermod -aG "$g" plasmalogin 2>/dev/null || true
+	done
+fi
