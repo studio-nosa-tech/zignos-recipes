@@ -17,8 +17,8 @@ zignos-recipes/
 | チャンネル | パッケージ数 | 内容 |
 |---|---|---|
 | `stable/` | **382** | 安定版。`zpkg` の既定 |
-| `testing/` | **388** | stable 候補。まずここで検証する |
-| `unstable/` | **388** | 開発中。破壊的変更を含み得る |
+| `testing/` | **389** | stable 候補。まずここで検証する |
+| `unstable/` | **389** | 開発中。破壊的変更を含み得る |
 | **合計** | **1158** | stable は LTS 系列、testing/unstable は新しい依存を含む |
 
 `core/` と `main/` はチャンネル間で同じ内容を基本とする。ただし **`core/linux`
@@ -36,8 +36,8 @@ testing は最新安定版、unstable は RC / beta / git snapshot を含む挑�
 |---|---|---|---|
 | `core/` | **77** | **77** | ベースシステム + ビルドツール一式(base.list の大半) |
 | `main/` | **100** | **102** | CLI・システム管理パッケージ + firmware(好みで追加インストール) |
-| `desktop/` | **205** | **209** | GUI(KDE Plasma 6 / KF6 / Qt6 / Xwayland+GLX / Mesa / PipeWire / plasma-nm / powerdevil / UDisks2 / KDE アプリ) |
-| **合計** | **382** | **388** | うち **37 が `zignos-build/base.list` のトップレベル** |
+| `desktop/` | **205** | **210** | GUI(KDE Plasma 6 / KF6 / Qt6 / Xwayland+GLX / Mesa / PipeWire / plasma-nm / powerdevil / UDisks2 / KDE アプリ) |
+| **合計** | **382** | **389** | うち **37 が `zignos-build/base.list` のトップレベル** |
 
 `base.list` はトップレベルだけを列挙する(Gentoo の `@system` 相当の最小構成)。
 依存と makedepends は zpkg が解決して自動で入れる。sudo / doas / SSH / エディタは
