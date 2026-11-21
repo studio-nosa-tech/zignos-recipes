@@ -1,0 +1,13 @@
+--- a/meson.build
++++ b/meson.build
+@@ -217,7 +217,10 @@
+ # systemd unit / sysuser / tmpfiles.d file installation directories
+ systemdsystemunitdir = get_option('systemdsystemunitdir')
+-systemd_dep = dependency('systemd', required : false)
++# ZIGNOS runs OpenRC. elogind provides a systemd.pc compatibility file, but
++# it does not expose the sysusers_dir/tmpfiles_dir variables polkit reads.
++# Do not treat that compatibility module as a real systemd installation.
++systemd_dep = disabler()
+ if systemd_dep.found()
+   if systemdsystemunitdir == ''
+     # FIXME: systemd.pc file does not use variables with relative paths, so `define_variable` cannot be used
