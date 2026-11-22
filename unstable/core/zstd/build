@@ -1,8 +1,9 @@
 #!/bin/sh
 # zstd — Zstandard compression (LFS 13.1-systemd 8.10).
+# Keep libzstd.a: LLVM's CMake package links LLVMSupport against
+# zstd::libzstd_static, which SPIRV-LLVM-Translator needs at configure time.
 set -e
 
 cd "$ZPKG_SRC/zstd-1.5.7"
 make prefix=/usr
 make prefix=/usr DESTDIR="$ZPKG_DESTROOT" install
-rm -fv "$ZPKG_DESTROOT/usr/lib/libzstd.a"
