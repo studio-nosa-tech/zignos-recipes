@@ -43,9 +43,13 @@ for card in $cards; do
 			add_gallium "${card/amdgpu/radeonsi}"
 			need_llvm=1
 			;;
+		nouveau|nvidia)
+			add_gallium nouveau
+			need_llvm=1
+			;;
 		*)
 			echo "mesa: unsupported VIDEO_CARDS entry '$card'" >&2
-			echo "mesa: supported: iris crocus i915 virgl radeonsi r600 llvmpipe softpipe" >&2
+			echo "mesa: supported: iris crocus i915 virgl nouveau radeonsi r600 llvmpipe softpipe" >&2
 			exit 1
 			;;
 	esac

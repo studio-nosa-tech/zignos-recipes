@@ -2,3 +2,4 @@
 # as VIDEO_CARDS-sensitive for binpkg keys and zpkg upgrade --newuse).
 iris intel i965 crocus i915 virgl virtio virtio_gpu softpipe swrast
 radeonsi amdgpu r600 llvmpipe
+nouveau nvidia
