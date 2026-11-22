@@ -170,6 +170,15 @@ UDisks2 と KDE アプリを実装。
 - **M51 initscripts r27** — 既定の `/etc/zpkg/sync.conf` が git モードの
   ため、`git` を initscripts の依存に追加。0.3.2 の新規依存導入で
   git が自動インストールされる
+- **zpkg 0.3.3 ビルドキャッシュ** — 既定ではインストール成功後に work dir と
+  ビルドに使ったソースアーカイブを削除し、binpkg を作らない。保持する場合は
+  `build.conf` の `KEEP_WORKDIR=1` / `BUILD_BINPKG=1` / `KEEP_SOURCES=1`
+  (または同名の環境変数)を使う。新しいビルドが成功すると、同じパッケージの
+  古い work dir と古い binpkg は削除される
+- **KF6 翻訳ツール** — KF6 / Plasma の `ecm_install_po_files_as_qm` は
+  `Qt6LinguistTools`(qttools)を必要とする。ECM の makedepends に `qttools` を
+  追加し、kconfig などがクリーンな環境で
+  `Could NOT find Qt6LinguistTools` で失敗するのを防ぐ
 - **M46 クリーン root の依存修正** — stage3 からデスクトップを入れると
   開発 chroot では見えなかった実行時依存が欠けるため、`libtool` に libltdl
   (`--enable-ltdl-install`)を追加して `libcanberra` から依存、`kwin` に

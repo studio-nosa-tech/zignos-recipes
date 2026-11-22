@@ -1,2 +1,6 @@
 cmake
 ninja
+# KDE's po/QM helpers (ecm_install_po_files_as_qm) need lrelease from Qt
+# LinguistTools. Every KF6/Plasma module calls them unconditionally, so
+# pull qttools in with ECM instead of repeating it in every recipe.
+qttools
