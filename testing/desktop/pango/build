@@ -3,6 +3,10 @@
 set -e
 
 cd "$ZPKG_SRC/pango-1.56.4"
+# fontconfig 2.18 moved FcFreeTypeQueryAll from fontconfig.h to
+# fcfreetype.h. Pango 1.57 includes it explicitly; backport that line.
+sed -i 's|^#include <hb-ft.h>$|#include <hb-ft.h>\n#include <fontconfig/fcfreetype.h>|' \
+	pango/pangofc-fontmap.c
 # HarfBuzz is a hard dependency in 1.56; there is no -Dharfbuzz option.
 meson setup build --prefix=/usr --libdir=lib --buildtype=release 	-Dintrospection=disabled -Dxft=disabled -Dlibthai=disabled 	-Dbuild-testsuite=false -Dbuild-examples=false 	-Dcairo=enabled -Dfontconfig=enabled -Dfreetype=enabled 	-Dsysprof=disabled
 ninja -C build
