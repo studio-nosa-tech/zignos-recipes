@@ -50,3 +50,8 @@ icu
 libXft
 libXtst
 xrdb
+kdeclarative
+kcmutils
+kded
+kparts
+ktexteditor

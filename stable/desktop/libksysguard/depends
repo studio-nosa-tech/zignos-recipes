@@ -11,3 +11,8 @@ libxcb
 libX11
 xcb-util
 lm-sensors
+kauth
+knewstuff
+kpackage
+kservice
+solid

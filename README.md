@@ -196,6 +196,10 @@ UDisks2 と KDE アプリを実装。
   IdleTime / KIO と Qt Quick/Qml を追加。testing / unstable ではさらに
   UnitConversion / Holidays も要求するため `kunitconversion` /
   `kholidays` を追加
+- **Plasma の依存監査** — stable 6.4.5 / testing・unstable 6.8.3 の
+  CMakeLists の REQUIRED とレシピを突き合わせ、aurorae / kscreenlocker /
+  kwin / libksysguard / libplasma / milou / plasma-workspace /
+  systemsettings の不足依存を追加
 - **M46 クリーン root の依存修正** — stage3 からデスクトップを入れると
   開発 chroot では見えなかった実行時依存が欠けるため、`libtool` に libltdl
   (`--enable-ltdl-install`)を追加して `libcanberra` から依存、`kwin` に

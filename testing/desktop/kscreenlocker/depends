@@ -16,3 +16,9 @@ libxcb
 libX11
 xcb-util
 qtwayland
+kidletime
+kcmutils
+kio
+solid
+ksvg
+kxmlgui
