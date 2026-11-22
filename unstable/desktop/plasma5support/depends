@@ -1,8 +1,16 @@
 qtbase
-kcoreaddons
+qtdeclarative
 kconfig
+kcoreaddons
 kguiaddons
 ki18n
+kidletime
+kio
+knotifications
+kservice
+kunitconversion
+kholidays
+solid
 kwindowsystem
 xorgproto
 libxcb
