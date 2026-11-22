@@ -1,0 +1,7 @@
+#%PAM-1.0
+# KScreenLocker — the lock screen authenticates with the PAM service "kde".
+auth		include		system-login
+account		include		system-login
+password	include		system-login
+session		optional	pam_keyinit.so	force revoke
+session		include		system-login

@@ -25,3 +25,7 @@ cmake -S . -B build -G Ninja \
 	-DBUILD_QTHELP_DOCS=OFF
 cmake --build build
 DESTDIR="$ZPKG_DESTROOT" cmake --install build
+
+# KScreenLocker authenticates through the PAM service "kde"; without this
+# file pam_start() fails and the lock screen rejects every password.
+install -Dm644 "$ZPKG_RECIPE_DIR/pam.d/kde" "$ZPKG_DESTROOT/etc/pam.d/kde"
