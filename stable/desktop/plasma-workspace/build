@@ -1,16 +1,21 @@
 #!/bin/sh
-# KDE Plasma 6.4.5 component (stable channel).
+# KDE Plasma Workspace (6.4.5 on stable, 6.8.3 on testing/unstable).
 set -e
 
-cd "$ZPKG_SRC/plasma-workspace-6.4.5"
+cd "$ZPKG_SRC/plasma-workspace-$ZPKG_VERSION"
 # Plasma's interactive scripting console requires KTextEditor; skip it for
-# the minimal Wayland session.
+# the minimal Wayland session. elogind ships a systemd.pc compatibility file
+# without the systemd headers, so force the non-systemd code paths.
 python3 - <<'PY2'
 from pathlib import Path
 p = Path("CMakeLists.txt")
 s = p.read_text()
+if "set(SYSTEMD_FOUND FALSE)" not in s:
+    s = s.replace('pkg_check_modules(SYSTEMD "systemd")',
+                  'pkg_check_modules(SYSTEMD "systemd")' + chr(10) + 'set(SYSTEMD_FOUND FALSE)')
 s = s.replace(" NotifyConfig Package Parts Prison Runner StatusNotifierItem Svg TextEditor",
               " NotifyConfig Package Parts Prison Runner StatusNotifierItem Svg")
+s = s.replace("Svg TextEditor TextWidgets", "Svg TextWidgets")
 s = chr(10).join(l for l in s.splitlines() if "add_subdirectory(interactiveconsole)" not in l)
 s = s + chr(10)
 p2 = Path("kcms/kfontinst/lib/Fc.h")

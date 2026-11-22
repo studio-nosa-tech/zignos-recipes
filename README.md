@@ -225,6 +225,13 @@ UDisks2 と KDE アプリを実装。
   ビルドするため `gyp` 0.22.4 を main に追加し、システム NSPR / SQLite に
   リンクする。libcups はライブラリコンポーネントのみをビルドする
   (cupsd なし、TLS / DNSSD / DBus / PAM なし)
+- **plasma-workspace の systemd 検出** — elogind が同梱する `systemd.pc` を
+  CMake が本物の systemd と誤認し、`kcms/autostart/unit.cpp` が存在しない
+  `<systemd/sd-journal.h>` をインクルードして失敗していた。
+  `pkg_check_modules(SYSTEMD "systemd")` の直後に `SYSTEMD_FOUND=FALSE` を
+  固定し、startkde の systemd ユニットもインストールしない。あわせて
+  KTextEditor を要求する interactiveconsole を全バージョンで無効化する
+  パッチ文字列を 6.8 系にも一致するよう修正した
 - **M46 クリーン root の依存修正** — stage3 からデスクトップを入れると
   開発 chroot では見えなかった実行時依存が欠けるため、`libtool` に libltdl
   (`--enable-ltdl-install`)を追加して `libcanberra` から依存、`kwin` に
