@@ -4,3 +4,10 @@
 # CLC build tools (and any other consumer) can run them.
 install -d "$ZPKG_ROOT/etc/ld.so.conf.d"
 echo "/usr/lib/llvm-23/lib" > "$ZPKG_ROOT/etc/ld.so.conf.d/llvm-23.conf"
+
+# The upstream Linux binaries are built on Ubuntu, where LLVM's static
+# zstd link is recorded as the absolute multiarch path. ZIGNOS has no
+# multiarch directory, so map it onto the LFS libdir; otherwise
+# `llvm-config --system-libs` makes Mesa's CLC link fail.
+install -d "$ZPKG_ROOT/usr/lib/x86_64-linux-gnu"
+ln -sfn ../libzstd.a "$ZPKG_ROOT/usr/lib/x86_64-linux-gnu/libzstd.a"
