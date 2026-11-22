@@ -65,13 +65,18 @@ ln -sv /etc/init.d/console-vga "$D/etc/runlevels/default/console-vga"
 #   zpkg install polkit        && rc-update add polkit default
 # (WPA_IFACE selects the wlan interface; the default is wlan0.)
 
-# /sbin: PID 1, the busybox power-control applets, and mdev (the kernel's
-# hotplug helper path; busybox ships only the binary).
+# /sbin: PID 1, the power-control wrappers, and mdev (the kernel's hotplug
+# helper path; busybox ships only the binary).
 mkdir -pv "$D/sbin"
 ln -sv /usr/sbin/openrc-init "$D/sbin/init"
-for a in poweroff reboot halt mdev; do
-	ln -sfv /bin/busybox "$D/sbin/$a"
+# BusyBox's reboot applet execs /sbin/telinit, which ZIGNOS does not ship;
+# `reboot -f` would skip the OpenRC shutdown sequence entirely. Route the
+# commands through openrc-init instead (services stop, filesystems unmount).
+install -vDm755 "$ZPKG_RECIPE_DIR/sbin/zignos-power" "$D/sbin/zignos-power"
+for a in poweroff reboot halt; do
+	ln -sfv zignos-power "$D/sbin/$a"
 done
+ln -sfv /bin/busybox "$D/sbin/mdev"
 install -vDm644 "$ZPKG_RECIPE_DIR/etc/mdev.conf" "$D/etc/mdev.conf"
 # Shared display-manager D-Bus policy: both SDDM and Plasma Login Manager
 # implement org.freedesktop.DisplayManager, so the policy is owned here.

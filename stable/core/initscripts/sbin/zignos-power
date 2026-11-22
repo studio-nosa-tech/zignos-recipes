@@ -1,0 +1,13 @@
+#!/bin/sh
+# Power control through OpenRC's init: stops services, syncs and unmounts
+# before handing the request to openrc-init. BusyBox's reboot applet instead
+# execs /sbin/telinit, which ZIGNOS does not ship.
+case "${0##*/}" in
+	reboot)   exec /usr/sbin/openrc-shutdown --reboot now ;;
+	poweroff) exec /usr/sbin/openrc-shutdown --poweroff now ;;
+	halt)     exec /usr/sbin/openrc-shutdown --halt now ;;
+	*)
+		echo "zignos-power: invoke as reboot, poweroff or halt" >&2
+		exit 1
+		;;
+esac
