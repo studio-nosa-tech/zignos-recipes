@@ -1,0 +1,8 @@
+#!/bin/sh
+# nlohmann-json — header-only JSON library required by fcitx5.
+set -e
+
+cd "$ZPKG_SRC/json-3.12.0"
+cmake -S . -B build -G Ninja 	-DCMAKE_INSTALL_PREFIX=/usr 	-DCMAKE_INSTALL_LIBDIR=lib 	-DJSON_BuildTests=OFF 	-DJSON_Install=ON
+cmake --build build
+DESTDIR="$ZPKG_DESTROOT" cmake --install build

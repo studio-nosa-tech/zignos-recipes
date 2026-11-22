@@ -1,0 +1,8 @@
+#!/bin/sh
+# libuv — event loop used by fcitx5.
+set -e
+
+cd "$ZPKG_SRC/libuv-v1.53.0"
+cmake -S . -B build -G Ninja 	-DCMAKE_INSTALL_PREFIX=/usr 	-DCMAKE_INSTALL_LIBDIR=lib 	-DCMAKE_BUILD_TYPE=Release 	-DLIBUV_BUILD_SHARED=ON 	-DLIBUV_BUILD_TESTS=OFF
+cmake --build build
+DESTDIR="$ZPKG_DESTROOT" cmake --install build

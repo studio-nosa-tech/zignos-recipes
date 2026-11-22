@@ -1,0 +1,8 @@
+#!/bin/sh
+# iso-codes — ISO language/country data for fcitx5's keyboard engine.
+set -e
+
+cd "$ZPKG_SRC/iso-codes-v4.20.1"
+meson setup build --prefix=/usr --buildtype=release
+ninja -C build
+DESTDIR="$ZPKG_DESTROOT" meson install -C build

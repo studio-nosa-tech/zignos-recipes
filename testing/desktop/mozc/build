@@ -1,0 +1,76 @@
+#!/bin/sh
+# mozc — Google Japanese input from the fcitx/mozc fork, built with Bazel.
+# The fcitx5 USE flag is required.
+set -e
+
+case " $ZPKG_USE " in
+*" fcitx5 "*) ;;
+*)
+	echo "mozc: enable the fcitx5 USE flag (add 'mozc fcitx5' to /etc/zpkg/package.use)" >&2
+	exit 1
+	;;
+esac
+
+cd "$ZPKG_SRC"
+chmod +x bazel-9.0.2-linux-x86_64
+export HOME="$ZPKG_WORKDIR/home"
+export TMPDIR="$ZPKG_WORKDIR/tmp"
+mkdir -p "$HOME" "$TMPDIR" "$ZPKG_WORKDIR/bazel"
+export PATH="$ZPKG_SRC/python/bin:$PATH"
+export CC=gcc CXX=g++ AR=ar
+BAZEL="$ZPKG_SRC/bazel-9.0.2-linux-x86_64"
+MOZC_SRC="$ZPKG_SRC/mozc-a74b67127d710da4dc6fdbbd17320d04741174de"
+
+cd "$MOZC_SRC/src"
+"$BAZEL" --output_user_root="$ZPKG_WORKDIR/bazel" build \
+	-c opt --config=oss_linux --spawn_strategy=local \
+	--define server=1 --copt=-fPIC \
+	--action_env=PATH --host_action_env=PATH \
+	--action_env=HOME --host_action_env=HOME \
+	--action_env=TMPDIR --host_action_env=TMPDIR \
+	--action_env=CC --host_action_env=CC \
+	--action_env=CXX --host_action_env=CXX \
+	--action_env=AR --host_action_env=AR \
+	--verbose_failures \
+	//server:mozc_server \
+	//gui/tool:mozc_tool \
+	//unix/fcitx5:fcitx5-mozc.so
+
+install -d "$ZPKG_DESTROOT/usr/lib/mozc/documents" "$ZPKG_DESTROOT/usr/lib/fcitx5"
+install -d "$ZPKG_DESTROOT/usr/share/fcitx5/addon" "$ZPKG_DESTROOT/usr/share/fcitx5/inputmethod"
+install -m755 bazel-bin/server/mozc_server "$ZPKG_DESTROOT/usr/lib/mozc/mozc_server"
+install -m755 bazel-bin/gui/tool/mozc_tool "$ZPKG_DESTROOT/usr/lib/mozc/mozc_tool"
+install -m755 bazel-bin/unix/fcitx5/fcitx5-mozc.so "$ZPKG_DESTROOT/usr/lib/fcitx5/fcitx5-mozc.so"
+install -m644 unix/fcitx5/mozc-addon.conf "$ZPKG_DESTROOT/usr/share/fcitx5/addon/mozc.conf"
+install -m644 unix/fcitx5/mozc.conf "$ZPKG_DESTROOT/usr/share/fcitx5/inputmethod/mozc.conf"
+install -m644 data/installer/credits_en.html "$ZPKG_DESTROOT/usr/lib/mozc/documents/"
+
+cd "$MOZC_SRC/src/unix/fcitx5/po"
+for lang in $(cat LINGUAS); do
+	install -d "$ZPKG_DESTROOT/usr/share/locale/$lang/LC_MESSAGES"
+	msgfmt "$lang.po" -o "$ZPKG_DESTROOT/usr/share/locale/$lang/LC_MESSAGES/fcitx5-mozc.mo"
+done
+install -d "$ZPKG_DESTROOT/usr/share/metainfo"
+msgfmt --xml -d . --template ../org.fcitx.Fcitx5.Addon.Mozc.metainfo.xml.in \
+	-o "$ZPKG_DESTROOT/usr/share/metainfo/org.fcitx.Fcitx5.Addon.Mozc.metainfo.xml"
+
+cd "$MOZC_SRC/src"
+for size in 128 32; do
+	if [ "$size" = 128 ]; then
+		icon=data/images/product_icon_32bpp-128.png
+	else
+		icon=data/images/unix/ime_product_icon_opensource-32.png
+	fi
+	install -d "$ZPKG_DESTROOT/usr/share/icons/hicolor/${size}x${size}/apps"
+	for name in org.fcitx.Fcitx5.fcitx_mozc fcitx_mozc; do
+		install -m644 "$icon" "$ZPKG_DESTROOT/usr/share/icons/hicolor/${size}x${size}/apps/$name.png"
+	done
+done
+install -d "$ZPKG_DESTROOT/usr/share/icons/hicolor/48x48/apps"
+for uiimg in scripts/icons/ui-*.png; do
+	dimg=${uiimg##*/ui-}
+	dimg=${dimg%.png}
+	for name in "org.fcitx.Fcitx5.fcitx_mozc_$dimg" "fcitx_mozc_$dimg"; do
+		install -m644 "$uiimg" "$ZPKG_DESTROOT/usr/share/icons/hicolor/48x48/apps/$name.png"
+	done
+done

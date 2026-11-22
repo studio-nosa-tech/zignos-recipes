@@ -1,0 +1,8 @@
+#!/bin/sh
+# Pango — text shaping for the fcitx5 classic UI.
+set -e
+
+cd "$ZPKG_SRC/pango-1.56.4"
+meson setup build --prefix=/usr --libdir=lib --buildtype=release 	-Dintrospection=disabled -Dxft=disabled -Dlibthai=disabled 	-Dbuild-testsuite=false -Dbuild-examples=false 	-Dcairo=enabled -Dfontconfig=enabled -Dfreetype=enabled 	-Dharfbuzz=enabled -Dsysprof=disabled
+ninja -C build
+DESTDIR="$ZPKG_DESTROOT" meson install -C build

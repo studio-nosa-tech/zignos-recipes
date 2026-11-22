@@ -1,0 +1,8 @@
+#!/bin/sh
+# GdkPixbuf — image loading for the fcitx5 classic UI.
+set -e
+
+cd "$ZPKG_SRC/gdk-pixbuf-2.44.8"
+meson setup build --prefix=/usr --libdir=lib --buildtype=release 	-Dpng=enabled -Djpeg=enabled -Dtiff=disabled -Dgif=enabled 	-Dintrospection=disabled -Dman=false -Dtests=false 	-Dinstalled_tests=false -Dgtk_doc=false -Ddocumentation=false
+ninja -C build
+DESTDIR="$ZPKG_DESTROOT" meson install -C build

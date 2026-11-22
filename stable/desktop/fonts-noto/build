@@ -1,0 +1,8 @@
+#!/bin/sh
+# fonts-noto — the core hinted Noto families.
+set -e
+
+cd "$ZPKG_SRC/notofonts.github.io-noto-monthly-release-2026.11.01"
+install -d "$ZPKG_DESTROOT/usr/share/fonts/noto"
+find fonts -type f -path '*/hinted/ttf/*.ttf' 	! -name '*-Condensed*.ttf' ! -name '*-Semi*.ttf' ! -name '*-Extra*.ttf' 	-exec install -m644 {} "$ZPKG_DESTROOT/usr/share/fonts/noto/" \;
+install -Dm644 LICENSE "$ZPKG_DESTROOT/usr/share/licenses/fonts-noto/LICENSE"

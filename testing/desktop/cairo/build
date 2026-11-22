@@ -1,0 +1,12 @@
+#!/bin/sh
+# cairo — 2D graphics for Pango and the fcitx5 classic UI. Xlib/XCB off.
+set -e
+
+cd "$ZPKG_SRC/cairo-1.18.4"
+meson setup build --prefix=/usr --libdir=lib --buildtype=release \
+	-Dxlib=disabled -Dxcb=disabled \
+	-Dglib=enabled -Dpng=enabled -Dfreetype=enabled -Dfontconfig=enabled \
+	-Dlzo=disabled -Dspectre=disabled -Dgtk2-utils=disabled \
+	-Dtests=disabled -Dsymbol-lookup=disabled
+ninja -C build
+DESTDIR="$ZPKG_DESTROOT" meson install -C build

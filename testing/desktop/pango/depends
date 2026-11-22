@@ -1,0 +1,6 @@
+glib
+fribidi
+harfbuzz
+fontconfig
+freetype
+cairo

@@ -1,0 +1,9 @@
+#!/bin/sh
+# Refresh the font cache so the new faces are visible immediately.
+if [ -x "$ZPKG_ROOT/usr/bin/fc-cache" ]; then
+	if [ "$ZPKG_ROOT" = "/" ]; then
+		/usr/bin/fc-cache -f >/dev/null 2>&1 || true
+	else
+		chroot "$ZPKG_ROOT" /usr/bin/fc-cache -f >/dev/null 2>&1 || true
+	fi
+fi

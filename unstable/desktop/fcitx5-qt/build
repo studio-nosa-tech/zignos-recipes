@@ -1,0 +1,8 @@
+#!/bin/sh
+# fcitx5-qt — Qt 6 input context plugin.
+set -e
+
+cd "$ZPKG_SRC/fcitx5-qt-5.1.16"
+cmake -S . -B build -G Ninja 	-DCMAKE_INSTALL_PREFIX=/usr 	-DCMAKE_INSTALL_LIBDIR=lib 	-DCMAKE_BUILD_TYPE=Release 	-DENABLE_QT5=OFF 	-DENABLE_QT6=ON 	-DENABLE_X11=ON
+cmake --build build
+DESTDIR="$ZPKG_DESTROOT" cmake --install build

@@ -1,0 +1,6 @@
+cmake
+ninja
+pkgconf
+extra-cmake-modules
+gettext
+libxkbcommon

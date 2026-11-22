@@ -1,0 +1,16 @@
+libuv
+dbus
+glib
+zlib
+expat
+libxkbcommon
+wayland
+wayland-protocols
+plasma-wayland-protocols
+xkeyboard-config
+iso-codes
+cairo
+pango
+gdk-pixbuf
+util-linux
+fontconfig

@@ -1,0 +1,7 @@
+#!/bin/sh
+# fonts-noto-extra — Condensed/Semi/Extra weights split from the monthly release.
+set -e
+
+cd "$ZPKG_SRC/notofonts.github.io-noto-monthly-release-2026.11.01"
+install -d "$ZPKG_DESTROOT/usr/share/fonts/noto"
+find fonts -type f -path '*/hinted/ttf/*.ttf' 	\( -name '*-Condensed*.ttf' -o -name '*-Semi*.ttf' -o -name '*-Extra*.ttf' \) 	-exec install -m644 {} "$ZPKG_DESTROOT/usr/share/fonts/noto/" \;

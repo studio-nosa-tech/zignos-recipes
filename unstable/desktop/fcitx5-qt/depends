@@ -1,0 +1,6 @@
+fcitx5
+qtbase
+libxkbcommon
+libxcb
+libX11
+qtwayland

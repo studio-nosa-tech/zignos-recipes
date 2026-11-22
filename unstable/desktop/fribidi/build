@@ -1,0 +1,8 @@
+#!/bin/sh
+# GNU FriBidi — bidi support for Pango.
+set -e
+
+cd "$ZPKG_SRC/fribidi-1.0.18"
+meson setup build --prefix=/usr --libdir=lib --buildtype=release 	-Ddocs=false -Dtests=false
+ninja -C build
+DESTDIR="$ZPKG_DESTROOT" meson install -C build

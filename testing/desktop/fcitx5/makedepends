@@ -1,0 +1,7 @@
+cmake
+ninja
+pkgconf
+extra-cmake-modules
+nlohmann-json
+gettext
+python3

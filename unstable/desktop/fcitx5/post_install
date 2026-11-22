@@ -1,0 +1,16 @@
+#!/bin/sh
+# Refresh the GSettings schema and desktop database if available.
+if [ -x "$ZPKG_ROOT/usr/bin/glib-compile-schemas" ]; then
+	if [ "$ZPKG_ROOT" = "/" ]; then
+		/usr/bin/glib-compile-schemas /usr/share/glib-2.0/schemas >/dev/null 2>&1 || true
+	else
+		chroot "$ZPKG_ROOT" /usr/bin/glib-compile-schemas /usr/share/glib-2.0/schemas >/dev/null 2>&1 || true
+	fi
+fi
+if [ -x "$ZPKG_ROOT/usr/bin/update-desktop-database" ]; then
+	if [ "$ZPKG_ROOT" = "/" ]; then
+		/usr/bin/update-desktop-database -q >/dev/null 2>&1 || true
+	else
+		chroot "$ZPKG_ROOT" /usr/bin/update-desktop-database -q >/dev/null 2>&1 || true
+	fi
+fi

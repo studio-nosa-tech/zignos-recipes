@@ -200,6 +200,14 @@ UDisks2 と KDE アプリを実装。
   CMakeLists の REQUIRED とレシピを突き合わせ、aurorae / kscreenlocker /
   kwin / libksysguard / libplasma / milou / plasma-workspace /
   systemsettings の不足依存を追加
+- **日本語入力** — `fonts-noto` / `fonts-noto-extra` / `fonts-noto-cjk` /
+  `fonts-noto-emoji`、`fcitx5` / `fcitx5-qt` / `fcitx5-gtk` /
+  `fcitx5-configtool`、`mozc` を追加。mozc は `USE=fcitx5` が必須で、
+  fcitx/mozc フォークを Bazel でビルドし、fcitx5 アドオン・mozc_server・
+  mozc_tool を導入する。依存として `libuv` / `fribidi` / `cairo` / `pango` /
+  `gdk-pixbuf` / `nlohmann-json` / `iso-codes` も追加。fcitx5 は
+  librsvg を要求しない最後の版 5.1.21、fcitx5-gtk は GTK スタックが
+  無いため GClient のみをビルドする
 - **M46 クリーン root の依存修正** — stage3 からデスクトップを入れると
   開発 chroot では見えなかった実行時依存が欠けるため、`libtool` に libltdl
   (`--enable-ltdl-install`)を追加して `libcanberra` から依存、`kwin` に
