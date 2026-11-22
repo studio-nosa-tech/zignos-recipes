@@ -57,6 +57,18 @@ for sym in CONFIG_SOUND=m CONFIG_SND=m CONFIG_SND_HDA_INTEL=m \
 	}
 done
 
+# Laptop touchpads: ELANTECH has no Kconfig default, and without it psmouse
+# falls back to bare mode (a jumping cursor). Check the merged result so a
+# dropped parent does not silently bring the problem back.
+for sym in CONFIG_MOUSE_PS2=y CONFIG_MOUSE_PS2_ELANTECH=y \
+           CONFIG_MOUSE_PS2_SYNAPTICS=y CONFIG_I2C_HID=y \
+           CONFIG_I2C_HID_ACPI=m CONFIG_HID_MULTITOUCH=m; do
+	grep -qx "$sym" .config || {
+		echo "linux: $sym missing from the merged config" >&2
+		exit 1
+	}
+done
+
 make -j"$(nproc)"
 KVER=$(make -s kernelrelease)
 make INSTALL_PATH="$ZPKG_DESTROOT/boot" install
@@ -78,3 +90,7 @@ depmod -b "$ZPKG_DESTROOT" "$KVER"
 # symlink support.
 cp "$ZPKG_DESTROOT/boot/vmlinuz" "$ZPKG_DESTROOT/boot/vmlinuz-$KVER"
 cp "$ZPKG_DESTROOT/boot/initramfs.img" "$ZPKG_DESTROOT/boot/initramfs-$KVER.img"
+
+# Keep the built config next to the kernel so `uname -r` is enough to find
+# it (CONFIG_IKCONFIG_PROC also provides /proc/config.gz).
+install -m 644 .config "$ZPKG_DESTROOT/boot/config-$KVER"
