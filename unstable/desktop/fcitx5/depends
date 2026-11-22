@@ -14,3 +14,4 @@ pango
 gdk-pixbuf
 util-linux
 fontconfig
+librsvg

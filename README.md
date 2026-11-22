@@ -205,9 +205,12 @@ UDisks2 と KDE アプリを実装。
   `fcitx5-configtool`、`mozc` を追加。mozc は `USE=fcitx5` が必須で、
   fcitx/mozc フォークを Bazel でビルドし、fcitx5 アドオン・mozc_server・
   mozc_tool を導入する。依存として `libuv` / `fribidi` / `cairo` / `pango` /
-  `gdk-pixbuf` / `nlohmann-json` / `iso-codes` も追加。fcitx5 は
-  librsvg を要求しない最後の版 5.1.21、fcitx5-gtk は GTK スタックが
-  無いため GClient のみをビルドする
+  `gdk-pixbuf` / `nlohmann-json` / `iso-codes` も追加。fcitx5 は 5.1.23 で、
+  SVG 描画のため `librsvg` を要求する。fcitx5-gtk は GTK スタックが無いため
+  GClient のみをビルドする
+- **Rust / librsvg** — `rust` 1.100.0(公式バイナリを bootstrap として導入)、
+  `cargo-c` 0.10.26、`librsvg` 2.63.4 を追加。Rust 本体のソースビルドは
+  LLVM 込みで非常に重いため、まず公式ツールチェーンをパッケージ化している
 - **M46 クリーン root の依存修正** — stage3 からデスクトップを入れると
   開発 chroot では見えなかった実行時依存が欠けるため、`libtool` に libltdl
   (`--enable-ltdl-install`)を追加して `libcanberra` から依存、`kwin` に

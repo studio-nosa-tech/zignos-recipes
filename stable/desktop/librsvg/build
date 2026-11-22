@@ -1,0 +1,12 @@
+#!/bin/sh
+# librsvg — SVG rendering required by fcitx5's classic UI.
+set -e
+
+cd "$ZPKG_SRC/librsvg-2.63.4"
+export CARGO_HOME="$ZPKG_WORKDIR/cargo-home"
+meson setup build --prefix=/usr --libdir=lib --buildtype=release \
+	-Ddocs=disabled -Dtests=false -Dintrospection=disabled \
+	-Dvala=disabled -Davif=disabled \
+	-Dpixbuf=enabled -Dpixbuf-loader=enabled -Drsvg-convert=enabled
+ninja -C build
+DESTDIR="$ZPKG_DESTROOT" meson install -C build

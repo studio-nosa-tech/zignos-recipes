@@ -1,0 +1,5 @@
+glib
+cairo
+pango
+gdk-pixbuf
+libxml2

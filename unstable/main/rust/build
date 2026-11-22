@@ -1,0 +1,12 @@
+#!/bin/sh
+# rust — official Rust 1.100.0 toolchain (rustc, cargo, rust-std).
+# The official binary distribution is used as the bootstrap; building the
+# compiler from source is a much larger, LLVM-including job.
+set -e
+
+cd "$ZPKG_SRC/rust-1.100.0-x86_64-unknown-linux-gnu"
+./install.sh \
+	--destdir="$ZPKG_DESTROOT" \
+	--prefix=/usr \
+	--disable-ldconfig \
+	--components=rustc,rust-std-x86_64-unknown-linux-gnu,cargo

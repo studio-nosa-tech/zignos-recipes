@@ -1,0 +1,7 @@
+meson
+ninja
+pkgconf
+rust
+cargo-c
+gettext
+python3

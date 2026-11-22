@@ -1,0 +1,9 @@
+#!/bin/sh
+# cargo-c — provides cargo-cbuild, required by librsvg's Meson build.
+set -e
+
+cd "$ZPKG_SRC/cargo-c-0.10.26"
+export CARGO_HOME="$ZPKG_WORKDIR/cargo-home"
+export CARGO_TARGET_DIR="$ZPKG_WORKDIR/cargo-target"
+cargo install --path . --root "$ZPKG_DESTROOT/usr" --locked --no-track
+rm -f "$ZPKG_DESTROOT/usr/.crates.toml" "$ZPKG_DESTROOT/usr/.crates2.json"
