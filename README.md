@@ -189,6 +189,9 @@ UDisks2 と KDE アプリを実装。
   KF6 Config / CoreAddons / DBusAddons / Holidays を要求するため、
   depends に `qtpositioning` / `kconfig` / `kcoreaddons` / `kdbusaddons` /
   `kholidays` を追加。kholidays のビルドには `flex` / `bison` も必要
+- **kscreen の不足依存** — kscreen は KF6 Svg / KCMUtils / XmlGui / Crash、
+  Plasma / PlasmaQuick(`libplasma`)、LayerShellQt、Plasma5Support、
+  Qt Wayland / Wayland Protocols を要求するため depends に追加
 - **M46 クリーン root の依存修正** — stage3 からデスクトップを入れると
   開発 chroot では見えなかった実行時依存が欠けるため、`libtool` に libltdl
   (`--enable-ltdl-install`)を追加して `libcanberra` から依存、`kwin` に
