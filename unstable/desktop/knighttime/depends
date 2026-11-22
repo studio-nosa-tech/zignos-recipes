@@ -1,2 +1,7 @@
 qtbase
+qtpositioning
+kconfig
+kcoreaddons
+kdbusaddons
+kholidays
 ki18n

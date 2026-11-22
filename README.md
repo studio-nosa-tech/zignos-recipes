@@ -185,6 +185,10 @@ UDisks2 と KDE アプリを実装。
 - **KCMUtils の Kirigami** — kcmutils 6.32 は `org.kde.kirigami` QML
   モジュールを必須とするため、`kcmutils` の depends / makedepends に
   `kirigami` を追加
+- **knighttime の不足依存** — knighttime 6.8.3 は Qt6 Positioning と
+  KF6 Config / CoreAddons / DBusAddons / Holidays を要求するため、
+  depends に `qtpositioning` / `kconfig` / `kcoreaddons` / `kdbusaddons` /
+  `kholidays` を追加。kholidays のビルドには `flex` / `bison` も必要
 - **M46 クリーン root の依存修正** — stage3 からデスクトップを入れると
   開発 chroot では見えなかった実行時依存が欠けるため、`libtool` に libltdl
   (`--enable-ltdl-install`)を追加して `libcanberra` から依存、`kwin` に

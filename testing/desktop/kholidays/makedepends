@@ -1,3 +1,5 @@
 cmake
 ninja
 extra-cmake-modules
+flex
+bison
