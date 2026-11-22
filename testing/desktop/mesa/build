@@ -63,7 +63,9 @@ if [ "$need_llvm" = 1 ]; then
 	export PATH="/usr/lib/llvm-23/bin:$PATH"
 	export LD_LIBRARY_PATH="/usr/lib/llvm-23/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
 	export LLVM_CONFIG="/usr/lib/llvm-23/bin/llvm-config"
-	llvm_opts="-Dllvm=enabled -Dshared-llvm=enabled -Dspirv-tools=enabled"
+	# The llvm package is the official static-only binary tarball: it has
+	# no libLLVM.so, so Mesa's LLVM dependency must link statically.
+	llvm_opts="-Dllvm=enabled -Dshared-llvm=disabled -Dspirv-tools=enabled"
 else
 	llvm_opts="-Dllvm=disabled -Dspirv-tools=disabled"
 fi
