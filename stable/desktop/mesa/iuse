@@ -1,0 +1,12 @@
+# Compatible-bootstrap declarations: zpkg 0.3.3 only understands USE flag
+# conditions and requires every condition to be listed in iuse. Declaring the
+# video_cards_* atoms here lets an old zpkg parse this recipe tree (they are
+# simply disabled as USE flags); zpkg 0.3.4 evaluates them against VIDEO_CARDS.
+video_cards_iris
+video_cards_intel
+video_cards_i965
+video_cards_crocus
+video_cards_radeonsi
+video_cards_amdgpu
+video_cards_r600
+video_cards_llvmpipe
