@@ -7,6 +7,8 @@ chmod 750 /var/lib/plasmalogin
 chmod 711 /run/plasmalogin
 
 if getent passwd plasmalogin >/dev/null 2>&1; then
+	uid=$(id -u plasmalogin)
+	install -d -m 700 -o plasmalogin -g plasmalogin "/run/user/$uid"
 	for g in video render; do
 		getent group "$g" >/dev/null 2>&1 && usermod -aG "$g" plasmalogin 2>/dev/null || true
 	done

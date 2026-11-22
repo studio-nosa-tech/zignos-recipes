@@ -22,4 +22,9 @@ start_pre() {
 	chmod 711 /run/plasmalogin
 	chown plasmalogin:plasmalogin /var/lib/plasmalogin
 	chmod 750 /var/lib/plasmalogin
+	# PLM does not pass XDG_RUNTIME_DIR to the greeter; zignos-plasmalogin-greeter
+	# falls back to /run/user/<uid>. pam_elogind does not create it for the
+	# greeter session, and /run/user is root-owned, so create it here.
+	uid=$(id -u plasmalogin 2>/dev/null || echo 621)
+	install -d -m 700 -o plasmalogin -g plasmalogin "/run/user/$uid"
 }
