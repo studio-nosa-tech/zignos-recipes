@@ -21,6 +21,11 @@ cat > "$ZPKG_DESTROOT/usr/bin/gyp" <<'WRAP'
 import sys
 sys.path.insert(0, "/usr/lib/gyp")
 import gyp
-sys.exit(gyp.script_main())
+
+# Python 3.14 defaults to the forkserver start method. gyp's parallel loader
+# re-imports this script in every worker, so only run when executed as the
+# entry point; otherwise the child calls script_main() recursively.
+if __name__ == "__main__":
+    sys.exit(gyp.script_main())
 WRAP
 chmod 755 "$ZPKG_DESTROOT/usr/bin/gyp"
