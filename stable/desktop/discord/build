@@ -1,0 +1,25 @@
+#!/bin/sh
+# Discord — official Linux distribution package.
+#
+# This is Discord's installer stub, not the full application: the first
+# launch downloads the current Electron build into ~/.config/discord and
+# then runs it from there. Upstream's postinst.sh is deliberately not
+# installed (it calls systemctl/apparmor and kills running clients); the
+# desktop database is refreshed from post_install instead.
+set -e
+
+cd "$ZPKG_SRC"
+install -d "$ZPKG_DESTROOT/opt/discord" "$ZPKG_DESTROOT/usr/bin"
+cp -a Discord/. "$ZPKG_DESTROOT/opt/discord/"
+rm -f "$ZPKG_DESTROOT/opt/discord/postinst.sh"
+
+cat > "$ZPKG_DESTROOT/usr/bin/discord" <<'WRAP'
+#!/bin/sh
+exec /opt/discord/discord "$@"
+WRAP
+chmod 755 "$ZPKG_DESTROOT/usr/bin/discord"
+
+install -Dm644 Discord/discord.desktop \
+	"$ZPKG_DESTROOT/usr/share/applications/discord.desktop"
+install -Dm644 Discord/discord.png \
+	"$ZPKG_DESTROOT/usr/share/icons/hicolor/256x256/apps/discord.png"

@@ -1,0 +1,14 @@
+#!/bin/sh
+# NSPR — Netscape Portable Runtime (NSS dependency for Electron/Discord).
+# --enable-64bit is required: without it NSPR configures itself for -m32.
+set -e
+
+cd "$ZPKG_SRC/nspr-4.41/nspr"
+./configure \
+	--prefix=/usr \
+	--libdir=/usr/lib \
+	--enable-64bit \
+	--disable-debug \
+	--enable-optimize
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install

@@ -1,0 +1,38 @@
+#!/bin/sh
+# NSS — Network Security Services (Electron/Discord TLS and certificate
+# handling). Built against the system NSPR and SQLite instead of the
+# bundled copies.
+set -e
+
+cd "$ZPKG_SRC/nss-3.134/nss"
+./build.sh --opt --disable-tests --system-nspr --system-sqlite
+
+# build.sh writes to <srcdir>/dist, one level above nss/.
+dist="$ZPKG_SRC/nss-3.134/dist/Release"
+lib="$ZPKG_DESTROOT/usr/lib"
+install -d "$lib" "$ZPKG_DESTROOT/usr/bin" "$ZPKG_DESTROOT/usr/include/nss" \
+	"$lib/pkgconfig"
+for f in "$dist"/lib/*.so; do
+	# The bundled SQLite is not built with --system-sqlite; skip it if a
+	# stale copy is present in the dist directory.
+	[ "$(basename "$f")" = "libsqlite3.so" ] && continue
+	install -m755 "$f" "$lib/"
+done
+install -m755 "$dist"/bin/* "$ZPKG_DESTROOT/usr/bin/"
+install -m644 "$ZPKG_SRC/nss-3.134/dist/public/nss"/*.h \
+	"$ZPKG_DESTROOT/usr/include/nss/"
+
+# Same metadata the upstream template would produce, with /usr paths.
+cat > "$lib/pkgconfig/nss.pc" <<'PC'
+prefix=/usr
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include/nss
+
+Name: NSS
+Description: Network Security Services
+Version: 3.134
+Requires: nspr >= 4.41
+Libs: -L${libdir} -lssl3 -lsmime3 -lnss3 -lnssutil3
+Cflags: -I${includedir}
+PC

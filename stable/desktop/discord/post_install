@@ -1,0 +1,9 @@
+#!/bin/sh
+for tool in update-desktop-database gtk-update-icon-cache; do
+	[ -x "$ZPKG_ROOT/usr/bin/$tool" ] || continue
+	if [ "$ZPKG_ROOT" = "/" ]; then
+		/usr/bin/$tool -q >/dev/null 2>&1 || true
+	else
+		chroot "$ZPKG_ROOT" /usr/bin/$tool -q >/dev/null 2>&1 || true
+	fi
+done

@@ -1,0 +1,16 @@
+#!/bin/sh
+# libnotify — desktop notifications (Discord / Electron).
+set -e
+
+cd "$ZPKG_SRC/libnotify-0.8.9"
+meson setup build \
+	--prefix=/usr \
+	--libdir=lib \
+	--buildtype=release \
+	-Dtests=false \
+	-Dintrospection=disabled \
+	-Dman=false \
+	-Dgtk_doc=false \
+	-Ddocbook_docs=disabled
+ninja -C build
+DESTDIR="$ZPKG_DESTROOT" meson install -C build

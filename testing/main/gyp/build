@@ -1,0 +1,26 @@
+#!/bin/sh
+# gyp-next — build file generator used by NSS (Electron's TLS stack).
+# Installed as a plain Python tree; ZIGNOS python3 ships without pip.
+set -e
+
+cd "$ZPKG_SRC/gyp-next-0.22.4"
+install -d "$ZPKG_DESTROOT/usr/lib/gyp" "$ZPKG_DESTROOT/usr/bin"
+cp -a pylib/gyp pylib/packaging "$ZPKG_DESTROOT/usr/lib/gyp/"
+
+# importlib.metadata backs `gyp --version`; no packaging metadata is generated
+# when installing by hand, so provide the minimal dist-info.
+install -d "$ZPKG_DESTROOT/usr/lib/gyp/gyp_next-0.22.4.dist-info"
+cat > "$ZPKG_DESTROOT/usr/lib/gyp/gyp_next-0.22.4.dist-info/METADATA" <<'META'
+Metadata-Version: 2.1
+Name: gyp-next
+Version: 0.22.4
+META
+
+cat > "$ZPKG_DESTROOT/usr/bin/gyp" <<'WRAP'
+#!/usr/bin/python3
+import sys
+sys.path.insert(0, "/usr/lib/gyp")
+import gyp
+sys.exit(gyp.script_main())
+WRAP
+chmod 755 "$ZPKG_DESTROOT/usr/bin/gyp"

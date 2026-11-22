@@ -1,0 +1,20 @@
+#!/bin/sh
+# libcups — CUPS client library. Discord (Electron) links libcups.so.2 even
+# though it never prints, and ZIGNOS's GTK3 has no CUPS print backend.
+# Only the library component is built (no cupsd), without TLS/DNSSD/DBus/PAM.
+set -e
+
+cd "$ZPKG_SRC/cups-2.4.20"
+# 2.4.20 moved num_local/local_dests into the DNSSD-only struct, but the
+# non-DNSSD build still uses them. Restore the fields for --with-dnssd=no.
+patch --force -p1 < "$ZPKG_RECIPE_DIR/getdata-local.patch"
+./configure \
+	--prefix=/usr \
+	--libdir=/usr/lib \
+	--with-components=libcups \
+	--with-tls=no \
+	--disable-dbus \
+	--disable-pam \
+	--with-dnssd=no
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install

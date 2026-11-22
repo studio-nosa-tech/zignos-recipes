@@ -43,7 +43,7 @@ testing は最新安定版、unstable は RC / beta / git snapshot を含む挑�
 依存と makedepends は zpkg が解決して自動で入れる。sudo / doas / SSH / エディタは
 すべて任意インストール。
 
-### core/(77)
+### core/(78)
 
 autoconf bash bc binutils bison bubblewrap busybox bzip2 ca-certificates chrony cmake coreutils dbus
 dhcpcd diffutils doas e2fsprogs eudev elfutils file findutils flex gawk gcc gdbm gettext gperf
@@ -53,7 +53,7 @@ man-db man-pages meson mpc mpdecimal mpfr ncurses ninja openrc openssh
 openssl patch pcre2 perl pkgconf procps python3 readline sed shadow tar
 texinfo tzdata util-linux xz zlib zpkg zstd
 
-### main/(100)
+### main/(stable 106 / testing 108 / unstable 108)
 
 curl expat fastfetch git htop iproute2 less libmnl nano rsync sudo tmux vim wget which
 dmidecode dosfstools efibootmgr efivar iw jq libnl libpcap lshw linux-firmware lsof ncdu pciutils
@@ -75,7 +75,7 @@ logrotate nftables npth pinentry popt screen sshfs
 cryptsetup exiv2 json-c keyutils libarchive libatasmart libblockdev
 libbytesize libnvme lvm2 poppler
 
-### desktop/(212)
+### desktop/(stable 241 / testing 249 / unstable 249)
 
 M44 で KF6 + KWin + Plasma 最小、M45 で音声・ネットワーク・電源、M46 で
 UDisks2 と KDE アプリを実装。
@@ -216,6 +216,15 @@ UDisks2 と KDE アプリを実装。
   `firefox` / `firefox-esr`(ソースビルド)の4系統を用意し、相互に conflicts
   で排他する。ソースビルドは `llvm`(公式 Clang/LLD バイナリ)、`nodejs`、
   `nasm`、`rust` を使って `mach build` する
+- **Discord** — `discord` 1.0.170(Discord 公式の Linux パッケージ)を追加。
+  上流の配布物は 4.3MB のインストーラ stub で、初回起動時に本体(約 466MB)を
+  `~/.config/discord` へダウンロードする。レシピは stub・デスクトップファイル・
+  アイコンを `/opt/discord` に配置し、上流の `postinst.sh` は使わない。
+  実行時依存として Electron が要求する `nspr` 4.41 / `nss` 3.134 /
+  `libnotify` 0.8.9 / `libcups` 2.4.20 を追加した。NSS は gyp + ninja で
+  ビルドするため `gyp` 0.22.4 を main に追加し、システム NSPR / SQLite に
+  リンクする。libcups はライブラリコンポーネントのみをビルドする
+  (cupsd なし、TLS / DNSSD / DBus / PAM なし)
 - **M46 クリーン root の依存修正** — stage3 からデスクトップを入れると
   開発 chroot では見えなかった実行時依存が欠けるため、`libtool` に libltdl
   (`--enable-ltdl-install`)を追加して `libcanberra` から依存、`kwin` に
