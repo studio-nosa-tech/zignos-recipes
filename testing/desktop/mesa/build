@@ -85,6 +85,7 @@ meson setup build --prefix=/usr --libdir=lib --buildtype=release \
 	$llvm_opts \
 	-Dtools= \
 	-Dbuild-tests=false \
+	-Dcpp_rtti=false \
 	-Dvalgrind=disabled \
 	-Dlibunwind=disabled \
 	-Dlmsensors=disabled \
