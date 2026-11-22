@@ -4,3 +4,7 @@ fontconfig
 libpng
 glib
 zlib
+libX11
+libXext
+libXrender
+libxcb

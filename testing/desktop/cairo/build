@@ -1,10 +1,11 @@
 #!/bin/sh
-# cairo — 2D graphics for Pango and the fcitx5 classic UI. Xlib/XCB off.
+# cairo — 2D graphics for Pango, GTK3 and the fcitx5 classic UI. GTK3's
+# X11 backend needs the cairo-xlib surface, and XCB is cheap to include.
 set -e
 
 cd "$ZPKG_SRC/cairo-1.18.4"
 meson setup build --prefix=/usr --libdir=lib --buildtype=release \
-	-Dxlib=disabled -Dxcb=disabled \
+	-Dxlib=enabled -Dxcb=enabled \
 	-Dglib=enabled -Dpng=enabled -Dfreetype=enabled -Dfontconfig=enabled \
 	-Dlzo=disabled -Dspectre=disabled -Dgtk2-utils=disabled \
 	-Dtests=disabled -Dsymbol-lookup=disabled
