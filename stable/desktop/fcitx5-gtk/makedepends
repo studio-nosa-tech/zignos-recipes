@@ -4,3 +4,4 @@ pkgconf
 extra-cmake-modules
 gettext
 libxkbcommon
+zstd

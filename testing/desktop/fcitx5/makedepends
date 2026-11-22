@@ -5,3 +5,4 @@ extra-cmake-modules
 nlohmann-json
 gettext
 python3
+zstd
