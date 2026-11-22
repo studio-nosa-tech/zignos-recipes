@@ -1,0 +1,30 @@
+#!/bin/sh
+# firefox-bin — Mozilla's official Japanese Linux build.
+set -e
+cd "$ZPKG_SRC"
+install -d "$ZPKG_DESTROOT/opt/firefox" "$ZPKG_DESTROOT/usr/bin"
+cp -a firefox/. "$ZPKG_DESTROOT/opt/firefox/"
+cat > "$ZPKG_DESTROOT/usr/bin/firefox" <<'WRAP'
+#!/bin/sh
+export MOZ_ENABLE_WAYLAND=1
+exec /opt/firefox/firefox "$@"
+WRAP
+chmod 755 "$ZPKG_DESTROOT/usr/bin/firefox"
+install -d "$ZPKG_DESTROOT/usr/share/applications"
+cat > "$ZPKG_DESTROOT/usr/share/applications/firefox.desktop" <<'DESK'
+[Desktop Entry]
+Name=Firefox
+Comment=Browse the World Wide Web
+Exec=firefox %u
+Icon=firefox
+Terminal=false
+Type=Application
+Categories=Network;WebBrowser;
+MimeType=text/html;text/xml;application/xhtml+xml;application/xml;application/rss+xml;application/rdf+xml;image/gif;image/jpeg;image/png;
+StartupNotify=true
+StartupWMClass=firefox
+DESK
+for s in 16 32 48 64 128; do
+	install -Dm644 "firefox/browser/chrome/icons/default/default$s.png" \
+		"$ZPKG_DESTROOT/usr/share/icons/hicolor/${s}x${s}/apps/firefox.png"
+done

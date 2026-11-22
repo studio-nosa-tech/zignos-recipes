@@ -1,0 +1,7 @@
+#!/bin/sh
+# libXinerama — Xinerama extension (GTK3 / Firefox).
+set -e
+cd "$ZPKG_SRC/libXinerama-1.1.5"
+./configure --prefix=/usr --libdir=/usr/lib --disable-static
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install

@@ -1,0 +1,9 @@
+#!/bin/sh
+# llvm — official LLVM/Clang binary toolchain, used to build Firefox.
+set -e
+cd "$ZPKG_SRC/LLVM-23.1.6-Linux-X64"
+install -d "$ZPKG_DESTROOT/usr/lib/llvm-23"
+for d in bin include lib libexec share; do
+	[ -e "$d" ] || continue
+	cp -a "$d" "$ZPKG_DESTROOT/usr/lib/llvm-23/"
+done

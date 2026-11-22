@@ -1,0 +1,13 @@
+#!/bin/sh
+# gtk3 — GTK+ 3 runtime for Firefox.
+set -e
+cd "$ZPKG_SRC/gtk+-3.24.43"
+meson setup build --prefix=/usr --libdir=lib --buildtype=release \
+	-Dintrospection=false -Ddemos=false -Dexamples=false -Dtests=false \
+	-Dinstalled_tests=false -Dgtk_doc=false -Dman=false \
+	-Dx11_backend=true -Dwayland_backend=true \
+	-Dwin32_backend=false -Dquartz_backend=false -Dbroadway_backend=false \
+	-Dcloudproviders=false -Dtracker3=false -Dcolord=no \
+	-Dprint_backends=file -Dxinerama=yes
+ninja -C build
+DESTDIR="$ZPKG_DESTROOT" meson install -C build

@@ -211,6 +211,11 @@ UDisks2 と KDE アプリを実装。
 - **Rust / librsvg** — `rust` 1.100.0(公式バイナリを bootstrap として導入)、
   `cargo-c` 0.10.26、`librsvg` 2.63.4 を追加。Rust 本体のソースビルドは
   LLVM 込みで非常に重いため、まず公式ツールチェーンをパッケージ化している
+- **GTK3 / Firefox** — `libXinerama` / `at-spi2-core` / `gtk3` を追加。
+  Firefox は `firefox-bin` / `firefox-esr-bin`(Mozilla 公式の ja バイナリ)と
+  `firefox` / `firefox-esr`(ソースビルド)の4系統を用意し、相互に conflicts
+  で排他する。ソースビルドは `llvm`(公式 Clang/LLD バイナリ)、`nodejs`、
+  `nasm`、`rust` を使って `mach build` する
 - **M46 クリーン root の依存修正** — stage3 からデスクトップを入れると
   開発 chroot では見えなかった実行時依存が欠けるため、`libtool` に libltdl
   (`--enable-ltdl-install`)を追加して `libcanberra` から依存、`kwin` に

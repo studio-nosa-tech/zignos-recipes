@@ -1,0 +1,30 @@
+#!/bin/sh
+# firefox-esr-bin — Mozilla's official Japanese ESR Linux build.
+set -e
+cd "$ZPKG_SRC"
+install -d "$ZPKG_DESTROOT/opt/firefox-esr" "$ZPKG_DESTROOT/usr/bin"
+cp -a firefox/. "$ZPKG_DESTROOT/opt/firefox-esr/"
+cat > "$ZPKG_DESTROOT/usr/bin/firefox-esr" <<'WRAP'
+#!/bin/sh
+export MOZ_ENABLE_WAYLAND=1
+exec /opt/firefox-esr/firefox "$@"
+WRAP
+chmod 755 "$ZPKG_DESTROOT/usr/bin/firefox-esr"
+install -d "$ZPKG_DESTROOT/usr/share/applications"
+cat > "$ZPKG_DESTROOT/usr/share/applications/firefox-esr.desktop" <<'DESK'
+[Desktop Entry]
+Name=Firefox ESR
+Comment=Browse the World Wide Web
+Exec=firefox-esr %u
+Icon=firefox-esr
+Terminal=false
+Type=Application
+Categories=Network;WebBrowser;
+MimeType=text/html;text/xml;application/xhtml+xml;application/xml;application/rss+xml;application/rdf+xml;image/gif;image/jpeg;image/png;
+StartupNotify=true
+StartupWMClass=firefox-esr
+DESK
+for s in 16 32 48 64 128; do
+	install -Dm644 "firefox/browser/chrome/icons/default/default$s.png" \
+		"$ZPKG_DESTROOT/usr/share/icons/hicolor/${s}x${s}/apps/firefox-esr.png"
+done

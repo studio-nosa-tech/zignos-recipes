@@ -1,0 +1,9 @@
+#!/bin/sh
+# nodejs — official Node.js LTS binary, required by Firefox's mach.
+set -e
+cd "$ZPKG_SRC/node-v26.13.1-linux-x64"
+for d in bin include lib share; do
+	[ -e "$d" ] || continue
+	cp -a "$d" "$ZPKG_DESTROOT/usr/"
+done
+install -Dm644 LICENSE "$ZPKG_DESTROOT/usr/share/licenses/nodejs/LICENSE"

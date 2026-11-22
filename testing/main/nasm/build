@@ -1,0 +1,7 @@
+#!/bin/sh
+# nasm — assembler used by parts of the Firefox build.
+set -e
+cd "$ZPKG_SRC/nasm-3.02"
+./configure --prefix=/usr
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install

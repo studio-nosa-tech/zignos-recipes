@@ -1,0 +1,5 @@
+meson
+ninja
+pkgconf
+gettext
+python3

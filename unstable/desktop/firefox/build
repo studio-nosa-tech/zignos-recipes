@@ -1,0 +1,33 @@
+#!/bin/sh
+# firefox — source build of Mozilla Firefox (unofficial branding).
+set -e
+cd "$ZPKG_SRC/firefox-160.0.1"
+cat > .mozconfig <<'MOZ'
+ac_add_options --enable-application=browser
+ac_add_options --enable-release
+ac_add_options --disable-tests
+ac_add_options --disable-debug
+ac_add_options --disable-crashreporter
+ac_add_options --disable-updater
+ac_add_options --disable-maintenance-service
+ac_add_options --enable-strip
+ac_add_options --enable-optimize
+ac_add_options --enable-linker=lld
+ac_add_options --prefix=/usr
+ac_add_options --libdir=/usr/lib
+ac_add_options --with-branding=browser/branding/unofficial
+MOZ
+export PATH="/usr/lib/llvm-23/bin:$PATH"
+export LD_LIBRARY_PATH="/usr/lib/llvm-23/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+export LIBCLANG_PATH="/usr/lib/llvm-23/lib"
+export CC=clang CXX=clang++ AR=llvm-ar NM=llvm-nm RANLIB=llvm-ranlib
+./mach build
+DESTDIR="$ZPKG_DESTROOT" ./mach install
+
+rm -f "$ZPKG_DESTROOT/usr/bin/firefox"
+cat > "$ZPKG_DESTROOT/usr/bin/firefox" <<'WRAP'
+#!/bin/sh
+export MOZ_ENABLE_WAYLAND=1
+exec /usr/lib/firefox/firefox "$@"
+WRAP
+chmod 755 "$ZPKG_DESTROOT/usr/bin/firefox"
