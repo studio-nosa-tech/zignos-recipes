@@ -2,6 +2,7 @@ qtbase
 kconfigwidgets
 kcoreaddons
 kguiaddons
+kirigami
 ki18n
 kio
 kitemviews

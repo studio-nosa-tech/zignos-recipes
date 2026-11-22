@@ -1,6 +1,7 @@
 qtbase
 qtdeclarative
 kdecoration
+kcmutils
 kconfig
 kcoreaddons
 kguiaddons

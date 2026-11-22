@@ -179,6 +179,12 @@ UDisks2 と KDE アプリを実装。
   `Qt6LinguistTools`(qttools)を必要とする。ECM の makedepends に `qttools` を
   追加し、kconfig などがクリーンな環境で
   `Could NOT find Qt6LinguistTools` で失敗するのを防ぐ
+- **Breeze の KCMUtils** — Breeze の kdecoration 設定プラグインは
+  `kcmutils_generate_desktop_file` と `KF6::KCMUtils` を使うため、
+  `breeze` の depends / makedepends に `kcmutils` を追加
+- **KCMUtils の Kirigami** — kcmutils 6.32 は `org.kde.kirigami` QML
+  モジュールを必須とするため、`kcmutils` の depends / makedepends に
+  `kirigami` を追加
 - **M46 クリーン root の依存修正** — stage3 からデスクトップを入れると
   開発 chroot では見えなかった実行時依存が欠けるため、`libtool` に libltdl
   (`--enable-ltdl-install`)を追加して `libcanberra` から依存、`kwin` に
