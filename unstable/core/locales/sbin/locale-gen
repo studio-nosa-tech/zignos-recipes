@@ -1,0 +1,31 @@
+#!/bin/sh
+# locale-gen — generate the locales listed in /etc/locale.gen.
+#
+# Individual locale directories are written under /usr/lib/locale (no
+# locale-archive), so `locale -a` and glibc find them normally.
+set -e
+
+GEN=${LOCALE_GEN:-/etc/locale.gen}
+[ -r "$GEN" ] || exit 0
+
+command -v localedef >/dev/null 2>&1 || {
+	echo "locale-gen: localedef not found (install glibc)" >&2
+	exit 1
+}
+
+mkdir -p /usr/lib/locale
+
+while read -r locale charset rest; do
+	case "$locale" in
+	''|\#*) continue ;;
+	esac
+	[ -n "$charset" ] || continue
+	# locale.gen uses en_US.UTF-8, while localedef -i wants en_US.
+	# Keep a modifier such as @latin: sr_RS.UTF-8@latin -> sr_RS@latin.
+	input=${locale%%@*}
+	modifier=${locale#"$input"}
+	input=${input%%.*}
+	input=$input$modifier
+	printf 'Generating %s (%s)\n' "$locale" "$charset"
+	localedef --no-archive -i "$input" -f "$charset" "$locale"
+done < "$GEN"

@@ -1,0 +1,8 @@
+# ZIGNOS locale configuration
+#
+# Format: <locale> <charmap>
+# Generate the entries with: locale-gen
+#
+# C.UTF-8 is built into glibc and does not need an entry.
+en_US.UTF-8 UTF-8
+ja_JP.UTF-8 UTF-8

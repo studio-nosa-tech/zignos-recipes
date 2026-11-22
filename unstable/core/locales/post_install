@@ -1,0 +1,5 @@
+#!/bin/sh
+# Generate the locales listed in /etc/locale.gen. This runs in the target
+# root (live system or stage3 chroot), so localedef writes to its /usr/lib.
+set -e
+/usr/sbin/locale-gen
