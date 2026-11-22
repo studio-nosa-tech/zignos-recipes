@@ -1,0 +1,17 @@
+#!/bin/sh
+# SPIRV-Tools — SPIR-V optimizer/valider libraries used by Mesa's CLC
+# (the build-time shader compiler for iris/crocus).
+set -e
+
+cd "$ZPKG_SRC/SPIRV-Tools-2026.4"
+cmake -S . -B build -G Ninja \
+	-DCMAKE_INSTALL_PREFIX=/usr \
+	-DCMAKE_INSTALL_LIBDIR=lib \
+	-DCMAKE_BUILD_TYPE=Release \
+	-DBUILD_SHARED_LIBS=ON \
+	-DSPIRV-Headers_SOURCE_DIR=/usr \
+	-DSPIRV_SKIP_TESTS=ON \
+	-DSPIRV_SKIP_EXECUTABLES=ON \
+	-DSPIRV_WERROR=OFF
+cmake --build build
+DESTDIR="$ZPKG_DESTROOT" cmake --install build

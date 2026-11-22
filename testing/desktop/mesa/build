@@ -1,17 +1,73 @@
 #!/bin/sh
-# Mesa — Wayland compositor PoC build. virgl is the QEMU/virtio-gpu guest
-# driver; softpipe provides the swrast/kms_swrast DRI fallbacks. Mesa 26 only
-# builds the DRI megadriver (`dril`, which installs virtio_gpu_dri.so and
-# friends) when the X11 platform is enabled, even for a Wayland-only session,
-# so x11 is on. LLVM (llvmpipe/radeonsi) and Vulkan are deferred to
-# real-hardware work.
+# Mesa — Wayland compositor build. The Gallium drivers come from VIDEO_CARDS
+# (ZPKG_VIDEO_CARDS), so each system builds the driver its GPU needs:
+#   iris (Intel Gen8+), crocus (Gen4-7), i915 (Gen3), virgl (QEMU),
+#   softpipe (software fallback, always included).
+# Mesa 26 only builds the DRI megadriver (`dril`, which installs
+# iris_dri.so / virtio_gpu_dri.so and friends) when the X11 platform is
+# enabled, even for a Wayland-only session, so x11 is on. LLVM-dependent
+# drivers (radeonsi, r600, llvmpipe) and Vulkan are not enabled yet.
 set -e
 
 cd "$ZPKG_SRC/mesa-$ZPKG_VERSION"
+
+cards="${ZPKG_VIDEO_CARDS:-}"
+# Fallback for zpkg < 0.3.4, which does not pass ZPKG_VIDEO_CARDS yet.
+if [ -z "$cards" ] && [ -r /etc/zpkg/make.conf ]; then
+	cards=$(sed -n 's/^VIDEO_CARDS=//p' /etc/zpkg/make.conf 2>/dev/null | tr -d '"' | tail -n 1)
+fi
+[ -n "$cards" ] || cards="virgl softpipe"
+cards=$(printf '%s\n' "$cards" | tr ',' ' ')
+gallium=""
+need_llvm=0
+add_gallium() {
+	case " $gallium " in
+		*" $1 "*) ;;
+		*) gallium="$gallium $1" ;;
+	esac
+}
+for card in $cards; do
+	case "$card" in
+		iris|intel|i965)
+			add_gallium iris
+			need_llvm=1
+			;;
+		crocus)
+			add_gallium crocus
+			need_llvm=1
+			;;
+		i915) add_gallium i915 ;;
+		virgl|virtio|virtio_gpu) add_gallium virgl ;;
+		softpipe|swrast) add_gallium softpipe ;;
+		radeonsi|amdgpu|r600|llvmpipe)
+			add_gallium "${card/amdgpu/radeonsi}"
+			need_llvm=1
+			;;
+		*)
+			echo "mesa: unsupported VIDEO_CARDS entry '$card'" >&2
+			echo "mesa: supported: iris crocus i915 virgl radeonsi r600 llvmpipe softpipe" >&2
+			exit 1
+			;;
+	esac
+done
+# Keep a software fallback for compositors and for GPUs without a driver.
+add_gallium softpipe
+gallium=$(printf '%s\n' "$gallium" | tr ' ' ',')
+gallium=${gallium#,}
+
+if [ "$need_llvm" = 1 ]; then
+	export PATH="/usr/lib/llvm-23/bin:$PATH"
+	export LD_LIBRARY_PATH="/usr/lib/llvm-23/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+	export LLVM_CONFIG="/usr/lib/llvm-23/bin/llvm-config"
+	llvm_opts="-Dllvm=enabled -Dshared-llvm=enabled -Dspirv-tools=enabled"
+else
+	llvm_opts="-Dllvm=disabled -Dspirv-tools=disabled"
+fi
+
 rm -rf build
 meson setup build --prefix=/usr --libdir=lib --buildtype=release \
 	-Dplatforms=wayland,x11 \
-	-Dgallium-drivers=virgl,softpipe \
+	-Dgallium-drivers="$gallium" \
 	-Dvulkan-drivers= \
 	-Dglx=dri \
 	-Dglvnd=enabled \
@@ -20,7 +76,7 @@ meson setup build --prefix=/usr --libdir=lib --buildtype=release \
 	-Dgles2=enabled \
 	-Degl=enabled \
 	-Dgbm=enabled \
-	-Dllvm=disabled \
+	$llvm_opts \
 	-Dtools= \
 	-Dbuild-tests=false \
 	-Dvalgrind=disabled \

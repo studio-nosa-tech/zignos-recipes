@@ -11,3 +11,8 @@ libXfixes
 libxshmfence
 libXdamage
 libXxf86vm
+# AMD and llvmpipe link libLLVM at runtime.
+video_cards_radeonsi?llvm
+video_cards_amdgpu?llvm
+video_cards_r600?llvm
+video_cards_llvmpipe?llvm

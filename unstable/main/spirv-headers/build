@@ -1,0 +1,13 @@
+#!/bin/sh
+# SPIRV-Headers — Khronos SPIR-V headers, pinned to the revision used by
+# SPIRV-Tools 2026.4 (Mesa's CLC build needs both).
+set -e
+
+cd "$ZPKG_SRC/SPIRV-Headers-496543121ce6419f23d6fa5d7194ba66c36212d2"
+cmake -S . -B build -G Ninja \
+	-DCMAKE_INSTALL_PREFIX=/usr \
+	-DCMAKE_INSTALL_LIBDIR=lib \
+	-DCMAKE_BUILD_TYPE=Release \
+	-DSPIRV_HEADERS_ENABLE_TESTS=OFF
+cmake --build build
+DESTDIR="$ZPKG_DESTROOT" cmake --install build

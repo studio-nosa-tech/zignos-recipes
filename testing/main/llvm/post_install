@@ -1,0 +1,6 @@
+#!/bin/sh
+# llvm-config, clang and the shared LLVM libraries live under
+# /usr/lib/llvm-23; add that directory to the loader search path so Mesa's
+# CLC build tools (and any other consumer) can run them.
+install -d "$ZPKG_ROOT/etc/ld.so.conf.d"
+echo "/usr/lib/llvm-23/lib" > "$ZPKG_ROOT/etc/ld.so.conf.d/llvm-23.conf"

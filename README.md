@@ -34,10 +34,10 @@ testing は最新安定版、unstable は RC / beta / git snapshot を含む挑�
 
 | カテゴリ | stable | testing / unstable | 内容 |
 |---|---|---|---|
-| `core/` | **77** | **77** | ベースシステム + ビルドツール一式(base.list の大半) |
-| `main/` | **100** | **102** | CLI・システム管理パッケージ + firmware(好みで追加インストール) |
-| `desktop/` | **212** | **220** | GUI(KDE Plasma 6 / KF6 / Qt6 / Xwayland+GLX / Mesa / PipeWire / plasma-nm / powerdevil / UDisks2 / KDE アプリ / Spectacle / kio-extras) |
-| **合計** | **389** | **399** | うち **37 が `zignos-build/base.list` のトップレベル** |
+| `core/` | **78** | **78** | ベースシステム + ビルドツール一式(base.list の大半) |
+| `main/` | **109** | **111** | CLI・システム管理パッケージ + firmware(好みで追加インストール) |
+| `desktop/` | **241** | **249** | GUI(KDE Plasma 6 / KF6 / Qt6 / Xwayland+GLX / Mesa / PipeWire / plasma-nm / powerdevil / UDisks2 / KDE アプリ / Spectacle / kio-extras) |
+| **合計** | **428** | **438** | うち **37 が `zignos-build/base.list` のトップレベル** |
 
 `base.list` はトップレベルだけを列挙する(Gentoo の `@system` 相当の最小構成)。
 依存と makedepends は zpkg が解決して自動で入れる。sudo / doas / SSH / エディタは
@@ -53,7 +53,7 @@ man-db man-pages meson mpc mpdecimal mpfr ncurses ninja openrc openssh
 openssl patch pcre2 perl pkgconf procps python3 readline sed shadow tar
 texinfo tzdata util-linux xz zlib zpkg zstd
 
-### main/(stable 106 / testing 108 / unstable 108)
+### main/(stable 109 / testing 111 / unstable 111)
 
 curl expat fastfetch git htop iproute2 less libmnl nano rsync sudo tmux vim wget which
 dmidecode dosfstools efibootmgr efivar iw jq libnl libpcap lshw linux-firmware lsof ncdu pciutils
@@ -74,6 +74,9 @@ logrotate nftables npth pinentry popt screen sshfs
 # M46 storage / graphics libraries
 cryptsetup exiv2 json-c keyutils libarchive libatasmart libblockdev
 libbytesize libnvme lvm2 poppler
+
+# LLVM toolchain and Mesa CLC helpers (Firefox source build / iris)
+llvm spirv-headers spirv-tools spirv-llvm-translator
 
 ### desktop/(stable 241 / testing 249 / unstable 249)
 
@@ -111,7 +114,8 @@ UDisks2 と KDE アプリを実装。
   `pixman 0.46.4` — DRM・入力・描画
 - `libpng 1.6.59` / `libjpeg-turbo 3.2.1` / `freetype 2.15.0` /
   `harfbuzz 15.1.0` / `fontconfig 2.18.3` / `dejavu-fonts 2.37` — フォント
-- `libglvnd 1.7.0` + `mesa 26.2.7` — EGL/GLES(virgl / softpipe、LLVM なし)。
+- `libglvnd 1.7.0` + `mesa 26.2.7` — EGL/GLES。Gallium ドライバは
+  `VIDEO_CARDS` で選ぶ(`iris` / `crocus` / `i915` / `virgl`、`softpipe` は常に同梱)。
   Mesa 26 の DRI megadriver (`dril`)を作るため `platforms=wayland,x11` でビルドし、
   `virtio_gpu` / `kms_swrast` / `swrast` を導入
 - `qtbase 6.8.5` — QtCore/Gui/Widgets/DBus/Network。Plasma 向けに xcb を有効化し、
@@ -232,6 +236,24 @@ UDisks2 と KDE アプリを実装。
   固定し、startkde の systemd ユニットもインストールしない。あわせて
   KTextEditor を要求する interactiveconsole を全バージョンで無効化する
   パッチ文字列を 6.8 系にも一致するよう修正した
+- **zpkg 0.3.4 / VIDEO_CARDS** — Mesa の Gallium ドライバを個人の GPU に
+  合わせて選べるよう、`VIDEO_CARDS`(`ZPKG_VIDEO_CARDS`)を追加した。
+  `zpkg video-cards iris` で `/etc/zpkg/make.conf` に書き込み、Mesa を
+  `zpkg install -f mesa` で再ビルドする。未指定時は従来どおり
+  `virgl softpipe`。`video_cards` ファイルを持つレシピだけが binpkg キーと
+  `zpkg upgrade --newuse` の比較対象になる。`video_cards_iris?pkg` の
+  条件付き依存にも対応
+- **Plasma Login の greeter** — PLM は greeter に `XDG_RUNTIME_DIR` を渡さず、
+  ラッパーが `/run/user/621` を作ろうとするが `/run/user` は root 所有で
+  作成できない。initd の `start_pre` と post_install で
+  `/run/user/<plasmalogin uid>` を 0700 で作成するようにした
+- **Mesa の実機 Intel 対応** — `VIDEO_CARDS=iris` で Mesa の `iris`
+  Gallium ドライバをビルドできるようにした。Mesa 26 の Iris は CLC を使うため
+  `llvm` 23.1.6、`spirv-headers`、`spirv-tools`、
+  `spirv-llvm-translator` 23.1.3 を追加し、`video_cards_iris?pkg` の
+  条件付き makedepends で自動導入する。llvm は `/usr/lib/llvm-23/lib` を
+  ld.so.conf.d に追加する。QEMU 向けの既定は `virgl,softpipe` のまま。
+  KWin の `iris: driver missing` はこれで解消する
 - **M46 クリーン root の依存修正** — stage3 からデスクトップを入れると
   開発 chroot では見えなかった実行時依存が欠けるため、`libtool` に libltdl
   (`--enable-ltdl-install`)を追加して `libcanberra` から依存、`kwin` に
@@ -301,16 +323,59 @@ M51 で zpkg 0.3.2 の自己更新と新規依存の先行導入を追加した�
 | `checksums` | 必須* | sha256(sources と同数) |
 | `build` | 必須 | ビルドスクリプト(恒久 shell、destroot 契約) |
 | `depends` | 任意 | 実行時依存(**1行1パッケージ**)。`flag?pkg` の条件付き依存可 |
-| `makedepends` | 任意 | ビルド時のみの依存(1行1パッケージ) |
+| `makedepends` | 任意 | ビルド時のみの依存(1行1パッケージ)。`video_cards_iris?pkg` も可 |
 | `build_network` | 任意 | `1` / `0` でビルド時ネットワークをグローバル設定より優先 |
 | `upgrade_warning` | 任意 | `zpkg upgrade` が実行前に表示する注意メッセージ(複数行可) |
 | `revision` | 任意 | レシピ改訂番号(`-rN`)。**内容を変えたら上げる**(binpkg キーが変わり upgrade で配信される) |
 | `slot` / `provides` / `conflicts` | 任意 | スロット / virtual 提供 / 競合(依存解決で使用) |
 | `iuse` | 任意 | このレシピが理解する USE フラグ(タイポ検出に使われる) |
+| `video_cards` | 任意 | このレシピが `VIDEO_CARDS` を使うことを示すマーカー。内容は対応カードの一覧 |
 | `post_install` / `post_remove` | 任意 | インストール/削除直後に実行されるフック |
 | 資産ファイル | 任意 | `x86_64-generic.config`・`logo.txt`・`config.jsonc`・`sudoers`・パッチなど(build から `$ZPKG_RECIPE_DIR` で参照) |
 
 詳細は zignos リポジトリの [docs/design-pkg.md](https://github.com/studio-nosa-tech/zignos/blob/main/docs/design-pkg.md)。
+
+## VIDEO_CARDS
+
+GPU ドライバは個人の環境で異なるため、Mesa の Gallium ドライバは
+`VIDEO_CARDS` で選ぶ(Gentoo 方式)。`/etc/zpkg/make.conf` の
+`VIDEO_CARDS=`、または環境変数 `ZPKG_VIDEO_CARDS` で指定し、ビルドには
+`ZPKG_VIDEO_CARDS` として渡される。
+
+```sh
+# 実機の Intel GPU (Skylake 以降)
+zpkg video-cards iris
+
+# QEMU / virtio-gpu
+zpkg video-cards virgl
+```
+
+`zpkg video-cards` は現在の設定を表示し、引数で追加、`-card` で削除する。
+変更後は Mesa を再ビルドする。
+
+```sh
+zpkg install -f mesa
+```
+
+Mesa が対応する主な値:
+
+| 値 | 内容 |
+|---|---|
+| `iris` / `intel` / `i965` | Intel Gen8 以降(Skylake 以降) |
+| `crocus` | Intel Gen4-7 |
+| `i915` | Intel Gen3 |
+| `virgl` / `virtio_gpu` | QEMU / virtio-gpu |
+| `radeonsi` / `amdgpu` | AMD GCN 以降 |
+| `r600` | AMD R600/7000 |
+| `llvmpipe` | LLVM ベースのソフトウェア |
+| `softpipe` / `swrast` | ソフトウェア(常に同梱) |
+
+未指定時の Mesa は `virgl softpipe` をビルドする。`iris` / `crocus` は
+Mesa の CLC を使うため `llvm` / `spirv-headers` / `spirv-tools` /
+`spirv-llvm-translator` を makedepends として自動導入する。`radeonsi` /
+`r600` / `llvmpipe` は `llvm` のみ必要。Mesa の binpkg キーには
+`VIDEO_CARDS` が含まれる(`video_cards` ファイルを持つレシピのみ)。
+変更後に `zpkg upgrade --newuse` を実行すると Mesa が再ビルド対象になる。
 
 ## 署名
 

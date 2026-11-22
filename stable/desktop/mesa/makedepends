@@ -3,3 +3,26 @@ ninja
 python-mako
 python-pyyaml
 python-packaging
+# Intel Gen8+ (iris) and Gen4-7 (crocus) use Mesa's CLC, which needs LLVM,
+# SPIRV-Tools and LLVMSPIRVLib.
+video_cards_iris?llvm
+video_cards_iris?spirv-headers
+video_cards_iris?spirv-tools
+video_cards_iris?spirv-llvm-translator
+video_cards_intel?llvm
+video_cards_intel?spirv-headers
+video_cards_intel?spirv-tools
+video_cards_intel?spirv-llvm-translator
+video_cards_i965?llvm
+video_cards_i965?spirv-headers
+video_cards_i965?spirv-tools
+video_cards_i965?spirv-llvm-translator
+video_cards_crocus?llvm
+video_cards_crocus?spirv-headers
+video_cards_crocus?spirv-tools
+video_cards_crocus?spirv-llvm-translator
+# AMD and llvmpipe need LLVM but not CLC.
+video_cards_radeonsi?llvm
+video_cards_amdgpu?llvm
+video_cards_r600?llvm
+video_cards_llvmpipe?llvm

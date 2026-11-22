@@ -1,0 +1,4 @@
+cmake
+ninja
+python3
+spirv-headers
