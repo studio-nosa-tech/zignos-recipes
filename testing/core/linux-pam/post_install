@@ -1,0 +1,7 @@
+#!/bin/sh
+# pam_unix delegates password checks to unix_chkpwd when the calling process
+# is not root. The Meson build installs it 0755, but it must be setuid root
+# for non-root PAM consumers such as kscreenlocker's worker (unlike the
+# display-manager helper, which authenticates as root).
+f="${ZPKG_ROOT:-/}/usr/sbin/unix_chkpwd"
+[ -e "$f" ] && chmod 4755 "$f"
