@@ -2,7 +2,8 @@
 # Qt 6 base — QtCore/QtGui/QtWidgets/QtDBus/QtNetwork plus the build tools
 # (moc, rcc, uic). Wayland-only: X11/xcb and GLX are off, OpenGL ES 2 runs
 # on EGL from libglvnd + Mesa. OpenSSL is loaded at runtime (KIO needs
-# QSslSocket); ICU and glib/GTK integration are not needed for KDE.
+# QSslSocket). ICU and GTK3 stay off, but glib is required: pulseaudio-qt
+# disables its integration when Qt has no GLib event loop (plasma-pa).
 set -e
 
 cd "$ZPKG_SRC/qtbase-everywhere-src-$ZPKG_VERSION"
@@ -22,7 +23,7 @@ cd build
 	-nomake examples -nomake tests \
 	-feature-xcb \
 	-opengl es2 -egl \
-	-no-feature-glib \
+	-feature-glib \
 	-no-feature-icu \
 	-no-feature-cups \
 	-no-feature-gtk3 \
