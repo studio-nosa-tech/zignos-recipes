@@ -3,7 +3,7 @@
 # Needed by the kernel build. Links readline (-r) for interactive use.
 set -e
 
-cd "$ZPKG_SRC/bc-7.0.3"
+cd "$ZPKG_SRC/bc-7.1.0"
 CC="gcc -std=c99" ./configure --prefix=/usr -G -O3 -r
 make
 make DESTDIR="$ZPKG_DESTROOT" install

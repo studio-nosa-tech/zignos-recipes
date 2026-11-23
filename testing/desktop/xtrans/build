@@ -2,7 +2,7 @@
 # xtrans - X11 client library (Qt XCB / KDE X11 build support).
 set -e
 
-cd "$ZPKG_SRC/xtrans-1.5.2"
+cd "$ZPKG_SRC/xtrans-1.6.0"
 ./configure --prefix=/usr --libdir=/usr/lib --disable-static
 make
 make DESTDIR="$ZPKG_DESTROOT" install

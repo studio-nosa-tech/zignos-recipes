@@ -3,7 +3,7 @@
 # The optional libyaml C extension is not built.
 set -e
 
-cd "$ZPKG_SRC/pyyaml-6.0.3"
+cd "$ZPKG_SRC/pyyaml-6.0.4"
 purelib=$(python3 -c 'import sysconfig; print(sysconfig.get_path("purelib"))')
 install -d "$ZPKG_DESTROOT$purelib"
 cp -a lib/yaml "$ZPKG_DESTROOT$purelib/"

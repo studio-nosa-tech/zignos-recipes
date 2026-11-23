@@ -1,5 +1,5 @@
 #!/bin/sh
-# KDE Plasma Workspace (6.4.5 on stable, 6.8.3 on testing/unstable).
+# KDE Plasma Workspace (6.4.6 on stable, 6.8.3 on testing/unstable).
 set -e
 
 cd "$ZPKG_SRC/plasma-workspace-$ZPKG_VERSION"

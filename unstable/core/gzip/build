@@ -2,7 +2,7 @@
 # gzip — compression (LFS 13.1-systemd 8.66).
 set -e
 
-cd "$ZPKG_SRC/gzip-1.14"
+cd "$ZPKG_SRC/gzip-1.15"
 ./configure --prefix=/usr
 make
 make DESTDIR="$ZPKG_DESTROOT" install

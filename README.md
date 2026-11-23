@@ -89,9 +89,9 @@ UDisks2 と KDE アプリを実装。
 
 チャンネル方針:
 
-- `stable/desktop` — Linux 6.18.64 LTS / **Plasma 6.4.5** / Qt 6.8.5 LTS /
+- `stable/desktop` — Linux 6.18.65 LTS / **Plasma 6.4.6** / Qt 6.8.5 LTS /
   KF6 6.18 / Gear 25.04.3 / Mesa 26.2.7
-- `testing/desktop` — Linux 7.3.5 / Plasma 6.8.3 / Qt 6.11.3 / KF6 6.32 /
+- `testing/desktop` — Linux 7.3.6 / Plasma 6.8.3 / Qt 6.11.3 / KF6 6.32 /
   Gear 26.08.3 / Mesa 26.3.1
 - `unstable/desktop` — Linux 7.4-rc3、Gear 26.11.80 beta。
   Qt 6.12 / KF6 6.33 / Plasma 6.9 は Plasma 6.9 と同時に移行するため、
@@ -110,10 +110,10 @@ UDisks2 と KDE アプリを実装。
   (`/etc/pam.d` の login/su/passwd 等も shadow が同梱)
 - `wayland 1.25.0` / `wayland-protocols 1.49` / `libxkbcommon 1.13.2` /
   `xkeyboard-config 2.45` — Wayland クライアント基盤
-- `libdrm 2.4.134` / `libevdev 1.13.4` / `mtdev 1.1.7` / `libinput 1.32.0` /
+- `libdrm 2.4.134` / `libevdev 1.13.7` / `mtdev 1.1.7` / `libinput 1.32.0` /
   `pixman 0.46.4` — DRM・入力・描画
 - `libpng 1.6.59` / `libjpeg-turbo 3.2.1` / `freetype 2.15.0` /
-  `harfbuzz 15.1.0` / `fontconfig 2.18.3` / `dejavu-fonts 2.37` — フォント
+  `harfbuzz 15.1.0` / `fontconfig 2.18.4` / `dejavu-fonts 2.37` — フォント
 - `libglvnd 1.7.0` + `mesa 26.2.7` — EGL/GLES。Gallium ドライバは
   `VIDEO_CARDS` で選ぶ(`iris` / `crocus` / `i915` / `virgl`、`softpipe` は常に同梱)。
   Mesa 26 の DRI megadriver (`dril`)を作るため `platforms=wayland,x11` でビルドし、
@@ -124,14 +124,14 @@ UDisks2 と KDE アプリを実装。
   `qtsensors` も追加
 - **ECM 6.18.0 + KF6 6.18.0** — KConfig / KCoreAddons / KIO / KCMUtils /
   KRunner / KWallet / KPackage / KDeclarative / KNewStuff / KSvg など
-- **Plasma 6.4.5** — KWin / plasma-workspace / plasma-desktop /
+- **Plasma 6.4.6** — KWin / plasma-workspace / plasma-desktop /
   plasma-integration / breeze / kscreenlocker / kscreen / systemsettings /
   kglobalacceld / kactivitymanagerd / aurorae / qqc2-breeze-style など
-- **Xwayland 24.1.9** / xkbcomp 1.4.7 / libXfont2 2.0.7 / libfontenc 1.1.8 /
+- **Xwayland 24.1.15** / xkbcomp 1.4.7 / libXfont2 2.0.10 / libfontenc 1.1.10 /
   libxshmfence 1.3.3 — ksmserver は Wayland でも xcb を要求するため必須
-- **M45 音声** — `alsa-lib 1.2.16` / `libpulse 17.0` / `libsndfile 1.2.2` /
-  `pipewire 1.6.7` / `wireplumber 0.5.19` / `pulseaudio-qt 1.7.0` /
-  `plasma-pa 6.4.5`。PipeWire は Plasma の XDG autostart から起動する
+- **M45 音声** — `alsa-lib 1.2.16.1` / `libpulse 17.0` / `libsndfile 1.2.2` /
+  `pipewire 1.6.11` / `wireplumber 0.5.19` / `pulseaudio-qt 1.7.0` /
+  `plasma-pa 6.4.6`。PipeWire は Plasma の XDG autostart から起動する
 - **M45 ネットワーク/電源** — `networkmanager` の polkit 化、`plasma-nm`、
   `modemmanager` + `modemmanager-qt`、`upower` + OpenRC サービス、`powerdevil`
 - **M45 アプリ/設定** — `kirigami-addons`、壁紙、`polkit-kde-agent-1`、
@@ -145,7 +145,7 @@ UDisks2 と KDE アプリを実装。
 - **M46 アプリ** — `libarchive 3.8.11` + Ark、Kate、Gwenview(Exiv2 0.28.9 /
   LCMS2 2.16 / kImageAnnotator 0.7.2 / kColorPicker 0.3.1)、Okular
   (Poppler 25.04.0)、KWalletManager
-- **M50 Spectacle** — stable は Spectacle 6.4.5 + OpenCV 4.14.0
+- **M50 Spectacle** — stable は Spectacle 6.4.6 + OpenCV 4.14.0
   (core/imgproc のみ)。testing / unstable は Spectacle 6.8.3 で、
   OpenCV の代わりに KQuickImageEditor 0.7.0.1(Highway 1.4.0 使用)と
   Tesseract 5.5.4 / Leptonica 1.87.0 を要求する。OCR 用に
@@ -158,7 +158,7 @@ UDisks2 と KDE アプリを実装。
   archive / fish / info / man / thumbnail / recent / 検索などの KIO worker を
   追加し、Samba / MTP / AFC / NFS / libproxy は未導入のため無効。
   testing / unstable は libssh があるため SFTP worker もビルドする
-- **M50 録画** — KPipeWire のビルドに FFmpeg 8.0.1(共有ライブラリのみ)と
+- **M50 録画** — KPipeWire のビルドに FFmpeg 8.0.3(共有ライブラリのみ)と
   libva 2.24.1(DRM/Wayland バックエンド)を追加。ソフトウェア VP8/VP9/H.264
   エンコーダ(libvpx / openh264)は未導入のため、録画は VAAPI か
   エンコーダ追加後の利用になる
@@ -200,7 +200,7 @@ UDisks2 と KDE アプリを実装。
   IdleTime / KIO と Qt Quick/Qml を追加。testing / unstable ではさらに
   UnitConversion / Holidays も要求するため `kunitconversion` /
   `kholidays` を追加
-- **Plasma の依存監査** — stable 6.4.5 / testing・unstable 6.8.3 の
+- **Plasma の依存監査** — stable 6.4.6 / testing・unstable 6.8.3 の
   CMakeLists の REQUIRED とレシピを突き合わせ、aurorae / kscreenlocker /
   kwin / libksysguard / libplasma / milou / plasma-workspace /
   systemsettings の不足依存を追加

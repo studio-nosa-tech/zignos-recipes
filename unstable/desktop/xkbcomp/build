@@ -3,7 +3,7 @@
 # the X server aborts and ksmserver never registers on the session bus.
 set -e
 
-cd "$ZPKG_SRC/xkbcomp-1.4.7"
+cd "$ZPKG_SRC/xkbcomp-1.5.0"
 ./configure --prefix=/usr --libdir=/usr/lib --disable-static
 make
 make DESTDIR="$ZPKG_DESTROOT" install

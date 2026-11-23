@@ -2,7 +2,7 @@
 # libevent — event loop library (tmux depends on it).
 set -e
 
-cd "$ZPKG_SRC/libevent-2.1.12-stable"
+cd "$ZPKG_SRC/libevent-2.1.13-stable"
 ./configure --prefix=/usr --disable-static
 make -j"$(nproc)"
 make DESTDIR="$ZPKG_DESTROOT" install

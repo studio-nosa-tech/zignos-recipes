@@ -2,7 +2,7 @@
 # xcb-util-cursor - X11 client library (Qt XCB / KDE X11 build support).
 set -e
 
-cd "$ZPKG_SRC/xcb-util-cursor-0.1.5"
+cd "$ZPKG_SRC/xcb-util-cursor-0.1.6"
 ./configure --prefix=/usr --libdir=/usr/lib --disable-static
 make
 make DESTDIR="$ZPKG_DESTROOT" install

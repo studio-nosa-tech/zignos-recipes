@@ -1,8 +1,8 @@
 #!/bin/sh
-# KDE Plasma 6.4.5 component (stable channel).
+# KDE Plasma 6.4.6 component (stable channel).
 set -e
 
-cd "$ZPKG_SRC/kpipewire-6.4.5"
+cd "$ZPKG_SRC/kpipewire-6.4.6"
 # FFmpeg 8 dropped the FF_PROFILE_* aliases; use the AV_PROFILE_* names.
 sed -i 's/\bFF_PROFILE_/AV_PROFILE_/g' src/*.cpp
 cmake -S . -B build -G Ninja \

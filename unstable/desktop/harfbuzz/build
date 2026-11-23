@@ -1,6 +1,6 @@
 #!/bin/sh
 set -e
-cd "$ZPKG_SRC/harfbuzz-15.1.0"
+cd "$ZPKG_SRC/harfbuzz-15.2.0"
 meson setup build --prefix=/usr --libdir=lib --buildtype=release 	-Dglib=disabled -Dgobject=disabled -Dcairo=disabled -Dchafa=disabled 	-Dicu=disabled -Dfreetype=enabled -Dpng=disabled -Dzlib=disabled 	-Dgraphite=disabled -Dgraphite2=disabled 	-Draster=disabled -Dvector=disabled -Dgpu=disabled 	-Dtests=disabled -Ddocs=disabled -Dintrospection=disabled 	-Dutilities=enabled -Dbenchmark=disabled
 ninja -C build
 DESTDIR="$ZPKG_DESTROOT" meson install -C build

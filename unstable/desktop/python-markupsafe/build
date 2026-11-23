@@ -4,7 +4,7 @@
 # build-time Jinja2.
 set -e
 
-cd "$ZPKG_SRC/markupsafe-3.0.3"
+cd "$ZPKG_SRC/markupsafe-3.0.4"
 purelib=$(python3 -c 'import sysconfig; print(sysconfig.get_path("purelib"))')
 install -d "$ZPKG_DESTROOT$purelib"
 cp -a src/markupsafe "$ZPKG_DESTROOT$purelib/"

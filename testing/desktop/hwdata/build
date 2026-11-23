@@ -2,6 +2,6 @@
 # hwdata - pci.ids/pnp.ids/usb.ids, required by libdisplay-info.
 set -e
 
-cd "$ZPKG_SRC/hwdata-0.394"
+cd "$ZPKG_SRC/hwdata-0.413"
 ./configure --prefix=/usr --datadir=/usr/share
 make install DESTDIR="$ZPKG_DESTROOT"

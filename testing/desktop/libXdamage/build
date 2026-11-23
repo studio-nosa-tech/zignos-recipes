@@ -2,7 +2,7 @@
 # libXdamage - X11 client library (Qt XCB / KDE X11 build support).
 set -e
 
-cd "$ZPKG_SRC/libXdamage-1.1.6"
+cd "$ZPKG_SRC/libXdamage-1.1.7"
 ./configure --prefix=/usr --libdir=/usr/lib --disable-static
 make
 make DESTDIR="$ZPKG_DESTROOT" install

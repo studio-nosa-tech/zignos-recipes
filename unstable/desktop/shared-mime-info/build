@@ -3,7 +3,7 @@
 # file types and service associations through it.
 set -e
 
-cd "$ZPKG_SRC/shared-mime-info-2.4"
+cd "$ZPKG_SRC/shared-mime-info-2.5.1"
 rm -rf build
 meson setup build --prefix=/usr --libdir=lib --buildtype=release 	-Dupdate-mimedb=false 	-Dbuild-tests=false
 ninja -C build

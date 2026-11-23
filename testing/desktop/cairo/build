@@ -3,7 +3,7 @@
 # X11 backend needs the cairo-xlib surface, and XCB is cheap to include.
 set -e
 
-cd "$ZPKG_SRC/cairo-1.18.4"
+cd "$ZPKG_SRC/cairo-1.18.6"
 meson setup build --prefix=/usr --libdir=lib --buildtype=release \
 	-Dxlib=enabled -Dxcb=enabled \
 	-Dglib=enabled -Dpng=enabled -Dfreetype=enabled -Dfontconfig=enabled \

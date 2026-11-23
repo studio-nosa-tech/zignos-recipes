@@ -2,7 +2,7 @@
 # libX11 - X11 client library (Qt XCB / KDE X11 build support).
 set -e
 
-cd "$ZPKG_SRC/libX11-1.8.10"
+cd "$ZPKG_SRC/libX11-1.8.14"
 ./configure --prefix=/usr --libdir=/usr/lib --disable-static
 make
 make DESTDIR="$ZPKG_DESTROOT" install

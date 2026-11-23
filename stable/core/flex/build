@@ -2,10 +2,10 @@
 # flex — lexical analyzer generator (LFS 13.1-systemd 8.16).
 set -e
 
-cd "$ZPKG_SRC/flex-2.6.4"
+cd "$ZPKG_SRC/flex-2.6.17"
 ./configure --prefix=/usr    \
             --disable-static \
-            --docdir=/usr/share/doc/flex-2.6.4
+            --docdir=/usr/share/doc/flex-2.6.17
 make
 make DESTDIR="$ZPKG_DESTROOT" install
 ln -sv flex "$ZPKG_DESTROOT/usr/bin/lex"

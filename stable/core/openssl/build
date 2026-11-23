@@ -3,7 +3,7 @@
 # skipped in v0). Required by openssh.
 set -e
 
-cd "$ZPKG_SRC/openssl-4.0.1"
+cd "$ZPKG_SRC/openssl-4.0.3"
 ./config --prefix=/usr         \
          --openssldir=/etc/ssl \
          --libdir=lib          \

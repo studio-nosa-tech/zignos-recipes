@@ -6,7 +6,7 @@
 # glamor still uses EGL/GBM, which is what Plasma needs.
 set -e
 
-cd "$ZPKG_SRC/xwayland-24.1.9"
+cd "$ZPKG_SRC/xwayland-24.1.15"
 rm -rf build
 meson setup build --prefix=/usr --libdir=lib --buildtype=release \
 	-Dxvfb=false \

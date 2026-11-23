@@ -1,2 +1,2 @@
-# sha256 verified 2026-11-15 (bumped from 1.36.1: tc.c breaks with kernel 6.8+ headers)
-3311dff32e746499f4df0d5df04d7eb396382d7e108bb9250e7b519b837043a4
+# sha256 verified 2026-11-23 (bumped from 1.36.1: tc.c breaks with kernel 6.8+ headers)
+34f9ea6ff8636f2c9241153b9114eefa9e65674a45318ae1ef95bb5f31c53bb2

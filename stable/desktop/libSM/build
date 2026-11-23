@@ -2,7 +2,7 @@
 # libSM - X11 client library (Qt XCB / KDE X11 build support).
 set -e
 
-cd "$ZPKG_SRC/libSM-1.2.4"
+cd "$ZPKG_SRC/libSM-1.2.6"
 ./configure --prefix=/usr --libdir=/usr/lib --disable-static
 make
 make DESTDIR="$ZPKG_DESTROOT" install

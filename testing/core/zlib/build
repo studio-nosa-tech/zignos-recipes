@@ -2,7 +2,7 @@
 # zlib — compression library (LFS 13.1-systemd 8.6).
 set -e
 
-cd "$ZPKG_SRC/zlib-1.3.2"
+cd "$ZPKG_SRC/zlib-1.4"
 ./configure --prefix=/usr
 make
 make DESTDIR="$ZPKG_DESTROOT" install

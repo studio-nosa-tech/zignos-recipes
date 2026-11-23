@@ -3,6 +3,6 @@
 # ccache uses libxxhash; other tools can link it through pkg-config.
 set -e
 
-cd "$ZPKG_SRC/xxHash-0.8.3"
+cd "$ZPKG_SRC/xxHash-0.8.4"
 make -j"$(nproc)"
 make DESTDIR="$ZPKG_DESTROOT" PREFIX=/usr install

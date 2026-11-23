@@ -2,9 +2,9 @@
 # pcre2 — regular expressions (LFS 13.1-systemd 8.13).
 set -e
 
-cd "$ZPKG_SRC/pcre2-10.47"
+cd "$ZPKG_SRC/pcre2-10.49"
 ./configure --prefix=/usr                       \
-            --docdir=/usr/share/doc/pcre2-10.47 \
+            --docdir=/usr/share/doc/pcre2-10.49 \
             --enable-unicode                    \
             --enable-jit                        \
             --enable-pcre2-16                   \

@@ -2,7 +2,7 @@
 # libogg - required by libcanberra/KNotifications.
 set -e
 
-cd "$ZPKG_SRC/libogg-1.3.5"
+cd "$ZPKG_SRC/libogg-1.3.6"
 ./configure --prefix=/usr --libdir=/usr/lib --disable-static
 make
 make DESTDIR="$ZPKG_DESTROOT" install

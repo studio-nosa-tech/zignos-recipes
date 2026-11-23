@@ -4,7 +4,7 @@
 # tests are skipped.
 set -e
 
-cd "$ZPKG_SRC/coreutils-9.11"
+cd "$ZPKG_SRC/coreutils-9.12"
 FORCE_UNSAFE_CONFIGURE=1 ./configure --prefix=/usr
 make
 make DESTDIR="$ZPKG_DESTROOT" install

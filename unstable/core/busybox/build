@@ -3,11 +3,10 @@
 # the initramfs can carry just this one file (no libc/loader).
 set -e
 
-cd "$ZPKG_SRC/busybox-1.37.0"
+cd "$ZPKG_SRC/busybox-1.38.0"
 make defconfig
 # Kernel 6.8+ headers removed the CBQ UAPI structs that the tc applet
-# still references (upstream fix landed only after 1.37.0); tc is not
-# needed in the base system.
+# references; tc is not needed in the base system.
 sed -i 's/^CONFIG_TC=y$/# CONFIG_TC is not set/' .config
 sed -i 's/^# CONFIG_STATIC is not set$/CONFIG_STATIC=y/' .config
 grep -qx 'CONFIG_STATIC=y' .config || {

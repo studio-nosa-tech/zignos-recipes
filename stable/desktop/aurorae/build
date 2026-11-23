@@ -1,8 +1,8 @@
 #!/bin/sh
-# KDE Plasma 6.4.5 component (stable channel).
+# KDE Plasma 6.4.6 component (stable channel).
 set -e
 
-cd "$ZPKG_SRC/aurorae-6.4.5"
+cd "$ZPKG_SRC/aurorae-6.4.6"
 cmake -S . -B build -G Ninja \
 	-DCMAKE_INSTALL_PREFIX=/usr \
 	-DCMAKE_INSTALL_LIBDIR=lib \

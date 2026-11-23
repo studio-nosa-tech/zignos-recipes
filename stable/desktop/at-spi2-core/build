@@ -1,7 +1,7 @@
 #!/bin/sh
 # at-spi2-core — ATK and the accessibility bus (needed by GTK3).
 set -e
-cd "$ZPKG_SRC/at-spi2-core-2.62.1"
+cd "$ZPKG_SRC/at-spi2-core-2.62.2"
 meson setup build --prefix=/usr --libdir=lib --buildtype=release \
 	-Duse_systemd=false -Dx11=enabled \
 	-Dintrospection=disabled -Ddocs=false \

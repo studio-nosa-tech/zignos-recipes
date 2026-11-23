@@ -2,7 +2,7 @@
 # iperf3 — TCP/UDP throughput measurement between two hosts.
 set -e
 
-cd "$ZPKG_SRC/iperf-3.22"
+cd "$ZPKG_SRC/iperf-3.22.1"
 
 ./configure --prefix=/usr --disable-static
 make -j"$(nproc)"

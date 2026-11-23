@@ -1,8 +1,8 @@
 #!/bin/sh
-# KDE Plasma 6.4.5 component (stable channel).
+# KDE Plasma 6.4.6 component (stable channel).
 set -e
 
-cd "$ZPKG_SRC/kscreenlocker-6.4.5"
+cd "$ZPKG_SRC/kscreenlocker-6.4.6"
 # KF6Screen's DPMS target links Qt6::WaylandClient; make the imported target
 # available before including KF6ScreenConfig.cmake.
 python3 - <<'PY'

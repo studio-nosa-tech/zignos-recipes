@@ -6,7 +6,7 @@
 # (this is an OpenRC system).
 set -e
 
-cd "$ZPKG_SRC/shadow-4.20.2"
+cd "$ZPKG_SRC/shadow-4.20.4"
 find man -name Makefile.in -exec sed -i 's/getspnam\.3 / /' {} \;
 find man -name Makefile.in -exec sed -i 's/passwd\.5 / /' {} \;
 sed -e 's:#ENCRYPT_METHOD SHA512:ENCRYPT_METHOD YESCRYPT:' \

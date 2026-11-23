@@ -3,7 +3,7 @@
 # (no GUI/X), normal feature set, multibyte, no NLS.
 set -e
 
-cd "$ZPKG_SRC/vim-9.2.1355/src"
+cd "$ZPKG_SRC/vim-9.2.1393/src"
 ./configure --prefix=/usr             \
             --with-features=normal    \
             --enable-multibyte        \

@@ -1,10 +1,10 @@
 #!/bin/sh
-# KDE Plasma 6.4.5 component (stable channel). Wayland-only: drop the XCB
+# KDE Plasma 6.4.6 component (stable channel). Wayland-only: drop the XCB
 # DPMS helper (it includes Qt's private X11 header, unavailable because Qt
 # is built without the xcb feature). The Wayland DPMS helper stays.
 set -e
 
-cd "$ZPKG_SRC/libkscreen-6.4.5"
+cd "$ZPKG_SRC/libkscreen-6.4.6"
 python3 - <<'PY'
 from pathlib import Path
 p = Path("src/libdpms/CMakeLists.txt")

@@ -4,7 +4,7 @@
 # the book; ninja/meson py deps come from the temp system (bootstrap stage1).
 set -e
 
-cd "$ZPKG_SRC/pkgconf-3.0.5"
+cd "$ZPKG_SRC/pkgconf-3.0.11"
 tar -xf "$ZPKG_CACHE/meson-1.12.0.tar.gz"
 mkdir -v build
 cd build
@@ -12,6 +12,6 @@ python3 ../meson-1.12.0/meson.py setup --prefix=/usr --buildtype=release ..
 ninja
 DESTDIR="$ZPKG_DESTROOT" ninja install
 mkdir -p "$ZPKG_DESTROOT/usr/share/doc"
-mv -v "$ZPKG_DESTROOT/usr/share/doc/pkgconf" "$ZPKG_DESTROOT/usr/share/doc/pkgconf-3.0.5"
+mv -v "$ZPKG_DESTROOT/usr/share/doc/pkgconf" "$ZPKG_DESTROOT/usr/share/doc/pkgconf-3.0.11"
 ln -sv pkgconf "$ZPKG_DESTROOT/usr/bin/pkg-config"
 ln -sv pkgconf.1 "$ZPKG_DESTROOT/usr/share/man/man1/pkg-config.1"
