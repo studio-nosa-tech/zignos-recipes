@@ -13,6 +13,8 @@ kactivitymanagerd
 kirigami-addons
 plasma-nm
 plasma-pa
+pipewire
+wireplumber
 powerdevil
 plasma-workspace-wallpapers
 polkit-kde-agent-1
