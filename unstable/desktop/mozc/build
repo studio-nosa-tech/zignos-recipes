@@ -67,7 +67,7 @@ for size in 128 32; do
 	done
 done
 install -d "$ZPKG_DESTROOT/usr/share/icons/hicolor/48x48/apps"
-for uiimg in scripts/icons/ui-*.png; do
+for uiimg in "$MOZC_SRC"/scripts/icons/ui-*.png; do
 	dimg=${uiimg##*/ui-}
 	dimg=${dimg%.png}
 	for name in "org.fcitx.Fcitx5.fcitx_mozc_$dimg" "fcitx_mozc_$dimg"; do
