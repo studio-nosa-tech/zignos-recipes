@@ -4,8 +4,10 @@ set -e
 
 cd "$ZPKG_SRC"
 rm -rf sans serif
-unzip -q NotoSansCJK.ttc.zip -d sans
-unzip -q NotoSerifCJK.ttc.zip -d serif
+# The release assets carry 00_/01_ prefixes; the archives themselves
+# contain NotoSansCJK.ttc (plus LICENSE) and NotoSerifCJK.ttc.
+unzip -q 00_NotoSansCJK.ttc.zip -d sans
+unzip -q 01_NotoSerifCJK.ttc.zip -d serif
 install -d "$ZPKG_DESTROOT/usr/share/fonts/noto-cjk"
 install -m644 sans/NotoSansCJK.ttc serif/NotoSerifCJK.ttc "$ZPKG_DESTROOT/usr/share/fonts/noto-cjk/"
 install -Dm644 sans/LICENSE "$ZPKG_DESTROOT/usr/share/licenses/fonts-noto-cjk/LICENSE"
