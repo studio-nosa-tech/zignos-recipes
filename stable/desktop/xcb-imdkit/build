@@ -1,0 +1,14 @@
+#!/bin/sh
+# xcb-imdkit — XIM protocol implementation used by fcitx5's XIM server.
+# The bundled uthash is used because ZIGNOS does not package it.
+set -e
+
+cd "$ZPKG_SRC/xcb-imdkit-1.0.9"
+cmake -S . -B build -G Ninja \
+	-DCMAKE_INSTALL_PREFIX=/usr \
+	-DCMAKE_INSTALL_LIBDIR=lib \
+	-DCMAKE_BUILD_TYPE=Release \
+	-DUSE_SYSTEM_UTHASH=OFF \
+	-DENABLE_TEST=OFF
+cmake --build build
+DESTDIR="$ZPKG_DESTROOT" cmake --install build

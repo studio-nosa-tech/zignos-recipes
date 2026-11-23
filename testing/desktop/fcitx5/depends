@@ -4,6 +4,12 @@ glib
 zlib
 expat
 libxkbcommon
+libxcb
+xcb-util
+xcb-util-keysyms
+xcb-util-wm
+xcb-imdkit
+libxkbfile
 wayland
 wayland-protocols
 plasma-wayland-protocols
