@@ -1,8 +1,8 @@
 #!/bin/sh
-# fcitx5-gtk — GLib client library (GTK IM modules disabled without GTK).
+# fcitx5-gtk — GLib client library and GTK 3 input method module.
 set -e
 
 cd "$ZPKG_SRC/fcitx5-gtk-5.1.7"
-cmake -S . -B build -G Ninja 	-DCMAKE_INSTALL_PREFIX=/usr 	-DCMAKE_INSTALL_LIBDIR=lib 	-DCMAKE_BUILD_TYPE=Release 	-DENABLE_GIR=OFF 	-DENABLE_GTK2_IM_MODULE=OFF 	-DENABLE_GTK3_IM_MODULE=OFF 	-DENABLE_GTK4_IM_MODULE=OFF 	-DENABLE_SNOOPER=OFF
+cmake -S . -B build -G Ninja 	-DCMAKE_INSTALL_PREFIX=/usr 	-DCMAKE_INSTALL_LIBDIR=lib 	-DCMAKE_BUILD_TYPE=Release 	-DENABLE_GIR=OFF 	-DENABLE_GTK2_IM_MODULE=OFF 	-DENABLE_GTK3_IM_MODULE=ON 	-DENABLE_GTK4_IM_MODULE=OFF 	-DENABLE_SNOOPER=OFF
 cmake --build build
 DESTDIR="$ZPKG_DESTROOT" cmake --install build
