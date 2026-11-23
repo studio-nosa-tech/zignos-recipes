@@ -1,0 +1,10 @@
+#!/bin/sh
+# GTK reads the immodules cache instead of scanning the module directory, so
+# the newly installed im-fcitx5.so stays invisible until the cache is rebuilt.
+if [ -x "$ZPKG_ROOT/usr/bin/gtk-query-immodules-3.0" ]; then
+	if [ "$ZPKG_ROOT" = "/" ]; then
+		/usr/bin/gtk-query-immodules-3.0 --update-cache >/dev/null 2>&1 || true
+	else
+		chroot "$ZPKG_ROOT" /usr/bin/gtk-query-immodules-3.0 --update-cache >/dev/null 2>&1 || true
+	fi
+fi
