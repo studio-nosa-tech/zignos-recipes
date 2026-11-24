@@ -1,0 +1,21 @@
+#!/bin/sh
+# flatpak — sandboxed application runtime. Uses the system bubblewrap,
+# xdg-dbus-proxy and fusermount3; systemd/dconf/malcontent/GIR/docs are off.
+set -e
+
+cd "$ZPKG_SRC/flatpak-$ZPKG_VERSION"
+rm -rf build
+meson setup build --prefix=/usr --libdir=lib --buildtype=release \
+	-Dsystemd=disabled -Ddconf=disabled -Dmalcontent=disabled \
+	-Dgir=disabled -Dman=disabled -Dtests=false -Dinstalled_tests=false \
+	-Dselinux_module=disabled \
+	-Dsystem_helper=enabled -Dsystem_helper_user=flatpak \
+	-Dprivileged_group=wheel \
+	-Dsystem_bubblewrap=/usr/bin/bwrap \
+	-Dsystem_dbus_proxy=/usr/bin/xdg-dbus-proxy \
+	-Dsystem_fusermount=/usr/bin/fusermount3 \
+	-Dseccomp=enabled -Dlibzstd=enabled -Dxauth=enabled \
+	-Dwayland_security_context=disabled \
+	-Dgdm_env_file=false -Dauto_sideloading=false
+ninja -C build
+DESTDIR="$ZPKG_DESTROOT" meson install -C build --no-rebuild

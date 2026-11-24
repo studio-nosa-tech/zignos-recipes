@@ -1,0 +1,28 @@
+#!/bin/sh
+# appstream — metadata library used by Flatpak.
+set -e
+
+cd "$ZPKG_SRC/AppStream-$ZPKG_VERSION"
+
+# AppStream's own metainfo is normally translated with itstool, which would
+# pull in Python lxml just for package metadata. Install the static file and
+# drop the translated-metainfo test instead.
+python3 - <<'PY'
+from pathlib import Path
+p = Path("data/meson.build")
+s = p.read_text()
+start = s.index("metainfo_i18n = i18n.itstool_join(")
+end = s.index("# install appstream.conf default template", start)
+s = s[:start] + "install_data('org.freedesktop.appstream.cli.metainfo.xml',\n             install_dir: metainfo_dir)\n\n" + s[end:]
+p.write_text(s)
+PY
+
+rm -rf build
+meson setup build --prefix=/usr --libdir=lib --buildtype=release \
+	-Dsystemd=false -Dgir=false -Ddocs=false -Dapidocs=false \
+	-Dinstall-docs=false -Dman=false -Dstemming=false \
+	-Dcompose=false -Dqt=false -Dzstd-support=true \
+	-Dblake3-support=false -Dapt-support=false \
+	-Ddisplay-detection=none -Dbash-completion=false
+ninja -C build
+DESTDIR="$ZPKG_DESTROOT" meson install -C build --no-rebuild

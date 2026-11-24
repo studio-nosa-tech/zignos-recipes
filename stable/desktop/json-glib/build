@@ -1,0 +1,12 @@
+#!/bin/sh
+# json-glib — JSON parser used by Flatpak and xdg-desktop-portal.
+set -e
+
+cd "$ZPKG_SRC/json-glib-$ZPKG_VERSION"
+rm -rf build
+meson setup build --prefix=/usr --libdir=lib --buildtype=release \
+	-Dtests=false -Dinstalled_tests=false \
+	-Dintrospection=disabled -Ddocumentation=disabled \
+	-Dman=false -Dnls=disabled
+ninja -C build
+DESTDIR="$ZPKG_DESTROOT" meson install -C build --no-rebuild

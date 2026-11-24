@@ -1,0 +1,5 @@
+meson
+ninja
+pkgconf
+bison
+python-pyparsing

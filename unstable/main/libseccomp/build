@@ -1,0 +1,8 @@
+#!/bin/sh
+# libseccomp — seccomp filter helper used by Flatpak's sandbox.
+set -e
+
+cd "$ZPKG_SRC/libseccomp-$ZPKG_VERSION"
+./configure --prefix=/usr --disable-static --disable-python
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install

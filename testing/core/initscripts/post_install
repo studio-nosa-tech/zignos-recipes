@@ -32,14 +32,14 @@ merge_entries "$base/passwd" /etc/passwd
 merge_entries "$base/group" /etc/group
 
 # Service accounts need shadow/gshadow entries; the password is locked.
-for u in sddm plasmalogin sshd nobody; do
+for u in sddm plasmalogin sshd nobody flatpak; do
 	grep -q "^${u}:" /etc/passwd || continue
 	if [ -f /etc/shadow ] && ! grep -q "^${u}:" /etc/shadow; then
 		printf '%s:!:::::::
 ' "$u" >> /etc/shadow
 	fi
 done
-for g in sddm plasmalogin shadow video render; do
+for g in sddm plasmalogin shadow video render flatpak; do
 	grep -q "^${g}:" /etc/group || continue
 	if [ -f /etc/gshadow ] && ! grep -q "^${g}:" /etc/gshadow; then
 		printf '%s:!::

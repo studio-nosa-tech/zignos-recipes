@@ -1,0 +1,10 @@
+#!/bin/sh
+# xdg-dbus-proxy — D-Bus filter used by Flatpak.
+set -e
+
+cd "$ZPKG_SRC/xdg-dbus-proxy-$ZPKG_VERSION"
+rm -rf build
+meson setup build --prefix=/usr --libdir=lib --buildtype=release \
+	-Dtests=false -Dman=disabled -Dinstalled_tests=false
+ninja -C build
+DESTDIR="$ZPKG_DESTROOT" meson install -C build --no-rebuild

@@ -1,0 +1,7 @@
+#!/bin/sh
+# The system installation is root-owned; the flatpak user (from initscripts)
+# is only used by the system helper's revokefs backend.
+set -e
+
+install -d -m755 "${ZPKG_ROOT:-/}/var/lib/flatpak"
+install -d -m755 "${ZPKG_ROOT:-/}/var/cache/flatpak"

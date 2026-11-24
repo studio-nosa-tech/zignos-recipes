@@ -25,7 +25,7 @@ cd build
 	-opengl es2 -egl \
 	-feature-glib \
 	-no-feature-icu \
-	-no-feature-cups \
+	-feature-cups \
 	-no-feature-gtk3 \
 	-openssl-runtime \
 	-feature-xkbcommon \

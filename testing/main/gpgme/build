@@ -1,0 +1,10 @@
+#!/bin/sh
+# gpgme — GPGME C library used by OSTree and Flatpak for signatures.
+set -e
+
+cd "$ZPKG_SRC/gpgme-$ZPKG_VERSION"
+./configure --prefix=/usr --disable-static \
+	--enable-languages=cl \
+	--disable-gpg-test --disable-gpgsm-test --disable-g13-test --disable-gpgconf-test
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install

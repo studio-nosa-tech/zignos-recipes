@@ -1,0 +1,8 @@
+#!/bin/sh
+# libfyaml — YAML parser required by AppStream 1.x.
+set -e
+
+cd "$ZPKG_SRC/libfyaml-$ZPKG_VERSION"
+./configure --prefix=/usr --disable-static
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install

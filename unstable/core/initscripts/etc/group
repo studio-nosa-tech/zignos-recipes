@@ -24,3 +24,4 @@ sddm:x:620:
 plasmalogin:x:621:
 polkitd:x:999:
 nogroup:x:65534:
+flatpak:x:622:

@@ -1,0 +1,16 @@
+#!/bin/sh
+# ostree — content-addressed store used by Flatpak. Built without systemd,
+# SELinux, composefs, avahi and the admin-only rofiles-fuse helper; curl is
+# the HTTP fetcher.
+set -e
+
+cd "$ZPKG_SRC/libostree-$ZPKG_VERSION"
+./configure --prefix=/usr --libdir=/usr/lib --disable-static \
+	--without-libsystemd --without-selinux --without-smack \
+	--without-composefs --without-avahi \
+	--without-dracut --without-mkinitcpio --without-modern-grub \
+	--without-libmount --disable-man --disable-rofiles-fuse \
+	--with-curl --without-soup --without-soup3 \
+	--with-gpgme --with-libarchive
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install

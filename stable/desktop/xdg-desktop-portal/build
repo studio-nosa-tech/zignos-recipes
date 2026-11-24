@@ -1,0 +1,19 @@
+#!/bin/sh
+# xdg-desktop-portal — portal frontend used by Flatpak apps. systemd user
+# units are disabled; D-Bus activation is used. The Flatpak interface XML
+# is built from the installed flatpak package.
+set -e
+
+cd "$ZPKG_SRC/xdg-desktop-portal-$ZPKG_VERSION"
+# PipeWire 1.6 returns a typed pw_registry * from pw_core_get_registry;
+# 1.18 only knew the old proxy type. Backport the cast from 1.20.
+sed -i 's/pw_registry_add_listener (remote->registry,/pw_registry_add_listener ((struct pw_registry*)remote->registry,/' src/pipewire.c
+
+rm -rf build
+meson setup build --prefix=/usr --libdir=lib --buildtype=release \
+	-Dsystemd=disabled -Dlibportal=disabled -Dgeoclue=disabled \
+	-Ddocbook-docs=disabled -Dman-pages=disabled -Dpytest=disabled \
+	-Dinstalled-tests=false -Dsandboxed-image-validation=true \
+	-Dflatpak-interfaces=enabled
+ninja -C build
+DESTDIR="$ZPKG_DESTROOT" meson install -C build --no-rebuild

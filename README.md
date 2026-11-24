@@ -16,10 +16,10 @@ zignos-recipes/
 
 | チャンネル | パッケージ数 | 内容 |
 |---|---|---|
-| `stable/` | **389** | 安定版。`zpkg` の既定 |
-| `testing/` | **399** | stable 候補。まずここで検証する |
-| `unstable/` | **399** | 開発中。破壊的変更を含み得る |
-| **合計** | **1187** | stable は LTS 系列、testing/unstable は新しい依存を含む |
+| `stable/` | **441** | 安定版。`zpkg` の既定 |
+| `testing/` | **451** | stable 候補。まずここで検証する |
+| `unstable/` | **451** | 開発中。破壊的変更を含み得る |
+| **合計** | **1343** | stable は LTS 系列、testing/unstable は新しい依存を含む |
 
 `core/` と `main/` はチャンネル間で同じ内容を基本とする。ただし **`core/linux`
 はチャンネルごとに系列が分岐**する: stable は Linux LTS、testing は最新安定版、
@@ -35,9 +35,9 @@ testing は最新安定版、unstable は RC / beta / git snapshot を含む挑�
 | カテゴリ | stable | testing / unstable | 内容 |
 |---|---|---|---|
 | `core/` | **78** | **78** | ベースシステム + ビルドツール一式(base.list の大半) |
-| `main/` | **109** | **111** | CLI・システム管理パッケージ + firmware(好みで追加インストール) |
-| `desktop/` | **241** | **249** | GUI(KDE Plasma 6 / KF6 / Qt6 / Xwayland+GLX / Mesa / PipeWire / plasma-nm / powerdevil / UDisks2 / KDE アプリ / Spectacle / kio-extras) |
-| **合計** | **428** | **438** | うち **37 が `zignos-build/base.list` のトップレベル** |
+| `main/` | **111** | **113** | CLI・システム管理パッケージ + firmware(好みで追加インストール) |
+| `desktop/` | **252** | **260** | GUI(KDE Plasma 6 / KF6 / Qt6 / Xwayland+GLX / Mesa / PipeWire / plasma-nm / powerdevil / UDisks2 / KDE アプリ / Spectacle / kio-extras / Flatpak + xdg-desktop-portal) |
+| **合計** | **441** | **451** | うち **37 が `zignos-build/base.list` のトップレベル** |
 
 `base.list` はトップレベルだけを列挙する(Gentoo の `@system` 相当の最小構成)。
 依存と makedepends は zpkg が解決して自動で入れる。sudo / doas / SSH / エディタは
@@ -53,7 +53,7 @@ man-db man-pages meson mpc mpdecimal mpfr ncurses ninja openrc openssh
 openssl patch pcre2 perl pkgconf procps python3 readline sed shadow tar
 texinfo tzdata util-linux xz zlib zpkg zstd
 
-### main/(stable 109 / testing 111 / unstable 111)
+### main/(stable 111 / testing 113 / unstable 113)
 
 curl expat fastfetch git htop iproute2 less libmnl nano rsync sudo tmux vim wget which
 dmidecode dosfstools efibootmgr efivar iw jq libnl libpcap lshw linux-firmware lsof ncdu pciutils
@@ -78,7 +78,7 @@ libbytesize libnvme lvm2 poppler
 # LLVM toolchain and Mesa CLC helpers (Firefox source build / iris)
 llvm spirv-headers spirv-tools spirv-llvm-translator
 
-### desktop/(stable 241 / testing 249 / unstable 249)
+### desktop/(stable 252 / testing 260 / unstable 260)
 
 M44 で KF6 + KWin + Plasma 最小、M45 で音声・ネットワーク・電源、M46 で
 UDisks2 と KDE アプリを実装。
@@ -273,6 +273,16 @@ UDisks2 と KDE アプリを実装。
   M46 の `kde-applications` は Konsole / Dolphin / KCalc / Filelight / Kate /
   Ark / Gwenview / Okular / KWalletManager。M50 で Spectacle と kio-extras を
   追加。`plasma-meta` は UDisks2、DejaVu / IPAex フォントを含む
+- **Flatpak / xdg-desktop-portal** — `flatpak 1.18.4` と依存の
+  `ostree 2026.7` / `appstream 1.2.3` / `gpgme 2.3.1` / `json-glib` /
+  `libseccomp` / `libfyaml` / `xmlb` / `xdg-dbus-proxy`、および
+  `xdg-desktop-portal 1.18.4` と `xdg-desktop-portal-kde`
+  (stable 6.4.6 / testing・unstable 6.8.3)を追加。systemd を使わないため
+  ポータルは D-Bus アクティベーションで起動する。システムヘルパー用の
+  `flatpak` アカウントは initscripts r30 で追加し、FUSE はカーネル内蔵
+  (`CONFIG_FUSE_FS=y`)に変更して `/dev/fuse` を起動時から用意する。
+  qtbase は KDE ポータルの印刷対応のため CUPS を有効化し、kwin は
+  画面共有 (ScreenCast) のため PipeWire を依存に追加して再ビルドした
 
 `initscripts` は r17 で `elogind` / `polkit` の OpenRC サービスを同梱する
 (どちらも opt-in)。r18 では `/usr/sbin/zignos-fstab`(マウント情報から
@@ -291,6 +301,8 @@ r26 は `/etc/zpkg/sync.conf`(既定の GitHub リポジトリ、git モード)�
 `plasma-login-manager` 6.8.3 を testing / unstable に追加している。
 M49 で zpkg 0.3.1 の git sync と base の git 2.56.1 を追加し、
 M51 で zpkg 0.3.2 の自己更新と新規依存の先行導入を追加した。
+r30 は Flatpak システムヘルパー用の `flatpak` アカウント(UID/GID 622)を
+`/etc/passwd` / `/etc/group` に追加した。
 
 設計メモは `zignos` リポジトリの `docs/desktop-kde.md`、公開サマリは
 サイトの `/docs/desktop/`。
