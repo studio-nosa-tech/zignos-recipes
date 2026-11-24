@@ -210,8 +210,12 @@ UDisks2 と KDE アプリを実装。
   fcitx/mozc フォークを Bazel でビルドし、fcitx5 アドオン・mozc_server・
   mozc_tool を導入する。依存として `libuv` / `fribidi` / `cairo` / `pango` /
   `gdk-pixbuf` / `nlohmann-json` / `iso-codes` も追加。fcitx5 は 5.1.23 で、
-  SVG 描画のため `librsvg` を要求する。fcitx5-gtk は GTK スタックが無いため
-  GClient のみをビルドする
+  SVG 描画のため `librsvg` を要求する。fcitx5-gtk は GTK 3 の IM モジュール
+  (`im-fcitx5.so`) をビルドし、post_install で immodules.cache を再生成する
+- **Discord の Wayland IME** — Electron の Discord は Wayland で入力メソッドを
+  使うため、ランチャーから `--enable-features=UseOzonePlatform
+  --ozone-platform=wayland --enable-wayland-ime` を渡す (discord r1)。
+  X11 セッションでは従来どおり Xwayland で起動する
 - **Rust / librsvg** — `rust` 1.100.0(公式バイナリを bootstrap として導入)、
   `cargo-c` 0.10.26、`librsvg` 2.63.4 を追加。Rust 本体のソースビルドは
   LLVM 込みで非常に重いため、まず公式ツールチェーンをパッケージ化している

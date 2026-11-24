@@ -15,6 +15,14 @@ rm -f "$ZPKG_DESTROOT/opt/discord/postinst.sh"
 
 cat > "$ZPKG_DESTROOT/usr/bin/discord" <<'WRAP'
 #!/bin/sh
+# Discord's Electron build needs these flags to receive IME text through
+# fcitx5 on Wayland. Without them the message box ignores Japanese input.
+if [ "${XDG_SESSION_TYPE:-}" = wayland ]; then
+	exec /opt/discord/discord \
+		--enable-features=UseOzonePlatform \
+		--ozone-platform=wayland \
+		--enable-wayland-ime "$@"
+fi
 exec /opt/discord/discord "$@"
 WRAP
 chmod 755 "$ZPKG_DESTROOT/usr/bin/discord"
