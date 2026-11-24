@@ -5,7 +5,7 @@
 # stock agetty/network services; this package adds:
 #   sysinit: udev (eudev; mdev remains installed as a fallback but is off)
 #   default: console (agetty on ttyS0), console-vga (agetty on tty1)
-#   runtime config: /etc/profile, /etc/securetty, /etc/motd, /etc/os-release
+#   runtime config: /etc/profile, /etc/securetty, /etc/motd, /etc/os-release, /etc/shells
 #   tools: /usr/sbin/zignos-fstab (generate fstab from the live mount table)
 # and /sbin/init -> openrc-init.
 #
@@ -37,6 +37,7 @@ install -vDm644 "$ZPKG_RECIPE_DIR/etc/profile" "$D/etc/profile"
 install -vDm644 "$ZPKG_RECIPE_DIR/etc/securetty" "$D/etc/securetty"
 install -vDm644 "$ZPKG_RECIPE_DIR/etc/os-release" "$D/etc/os-release"
 install -vDm644 "$ZPKG_RECIPE_DIR/etc/motd" "$D/etc/motd"
+install -vDm644 "$ZPKG_RECIPE_DIR/etc/shells" "$D/etc/shells"
 # Base accounts are templates, not /etc files: installing a package must
 # never replace /etc/passwd or /etc/group on an existing system (that would
 # delete the administrator's accounts). post_install merges missing entries.

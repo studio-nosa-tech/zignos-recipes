@@ -306,7 +306,8 @@ r26 は `/etc/zpkg/sync.conf`(既定の GitHub リポジトリ、git モード)�
 M49 で zpkg 0.3.1 の git sync と base の git 2.56.1 を追加し、
 M51 で zpkg 0.3.2 の自己更新と新規依存の先行導入を追加した。
 r30 は Flatpak システムヘルパー用の `flatpak` アカウント(UID/GID 622)を
-`/etc/passwd` / `/etc/group` に追加した。
+`/etc/passwd` / `/etc/group` に追加した。r31 は `/etc/shells` を同梱し、
+SDDM の自動ログインが `pam_shells` で失敗しないようにした。
 
 設計メモは `zignos` リポジトリの `docs/desktop-kde.md`、公開サマリは
 サイトの `/docs/desktop/`。
