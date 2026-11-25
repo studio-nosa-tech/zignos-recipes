@@ -45,6 +45,16 @@ for sym in CONFIG_CFG80211=m CONFIG_MAC80211=m \
 	}
 done
 
+# VM guests: the desktop installer must also work on VMware/VirtualBox VMSVGA
+# (vmwgfx) and VBoxSVGA (vboxvideo), not only virtio-gpu/qxl/bochs.
+for sym in CONFIG_DRM_VMWGFX=m CONFIG_DRM_VBOXVIDEO=m \
+           CONFIG_DRM_CIRRUS_QEMU=m; do
+	grep -qx "$sym" .config || {
+		echo "linux: $sym missing from the merged config" >&2
+		exit 1
+	}
+done
+
 # Audio is modules so the base kernel stays small and PipeWire can be added
 # later. Check the parents too: SOUND/SND gate every SND_* symbol.
 for sym in CONFIG_SOUND=m CONFIG_SND=m CONFIG_SND_HDA_INTEL=m \

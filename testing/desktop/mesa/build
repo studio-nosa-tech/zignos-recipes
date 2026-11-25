@@ -1,12 +1,13 @@
 #!/bin/sh
 # Mesa — Wayland compositor build. The Gallium drivers come from VIDEO_CARDS
 # (ZPKG_VIDEO_CARDS), so each system builds the driver its GPU needs:
-#   iris (Intel Gen8+), crocus (Gen4-7), i915 (Gen3), virgl (QEMU),
-#   softpipe (software fallback, always included).
+#   iris (Intel Gen8+), crocus (Gen4-7), i915 (Gen3), radeonsi/r600 (AMD),
+#   nouveau (NVIDIA), virgl (QEMU virtio-gpu), svga (VMware/VirtualBox
+#   VMSVGA), llvmpipe/softpipe (software fallback, always included).
 # Mesa 26 only builds the DRI megadriver (`dril`, which installs
 # iris_dri.so / virtio_gpu_dri.so and friends) when the X11 platform is
-# enabled, even for a Wayland-only session, so x11 is on. LLVM-dependent
-# drivers (radeonsi, r600, llvmpipe) and Vulkan are not enabled yet.
+# enabled, even for a Wayland-only session, so x11 is on. Vulkan is not
+# enabled yet; Plasma/KWin use the OpenGL/EGL path.
 set -e
 
 cd "$ZPKG_SRC/mesa-$ZPKG_VERSION"
@@ -38,6 +39,7 @@ for card in $cards; do
 			;;
 		i915) add_gallium i915 ;;
 		virgl|virtio|virtio_gpu) add_gallium virgl ;;
+		vmware|svga) add_gallium svga ;;
 		softpipe|swrast) add_gallium softpipe ;;
 		radeonsi|amdgpu|r600|llvmpipe)
 			add_gallium "${card/amdgpu/radeonsi}"
@@ -49,7 +51,7 @@ for card in $cards; do
 			;;
 		*)
 			echo "mesa: unsupported VIDEO_CARDS entry '$card'" >&2
-			echo "mesa: supported: iris crocus i915 virgl nouveau radeonsi r600 llvmpipe softpipe" >&2
+			echo "mesa: supported: iris crocus i915 virgl vmware nouveau radeonsi r600 llvmpipe softpipe" >&2
 			exit 1
 			;;
 	esac
