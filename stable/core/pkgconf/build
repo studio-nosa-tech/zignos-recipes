@@ -1,14 +1,21 @@
 #!/bin/sh
 # pkgconf — pkg-config implementation (LFS 13.1-systemd 8.21).
-# Built with meson from the tarball in the zpkg source cache, exactly like
-# the book; ninja/meson py deps come from the temp system (bootstrap stage1).
+# The bootstrap uses the meson tarball from the zpkg source cache (meson is
+# not installed yet at that point). On an installed system the tarball is
+# not part of the stage3 cache, so fall back to the installed meson; this is
+# what makes a channel upgrade on a stage3 work.
 set -e
 
-cd "$ZPKG_SRC/pkgconf-3.0.11"
-tar -xf "$ZPKG_CACHE/meson-1.12.0.tar.gz"
+cd "$ZPKG_SRC/pkgconf-$ZPKG_VERSION"
+if [ -f "$ZPKG_CACHE/meson-1.12.0.tar.gz" ]; then
+	tar -xf "$ZPKG_CACHE/meson-1.12.0.tar.gz"
+	MESON="python3 ../meson-1.12.0/meson.py"
+else
+	MESON=meson
+fi
 mkdir -v build
 cd build
-python3 ../meson-1.12.0/meson.py setup --prefix=/usr --buildtype=release ..
+$MESON setup --prefix=/usr --buildtype=release ..
 ninja
 DESTDIR="$ZPKG_DESTROOT" ninja install
 mkdir -p "$ZPKG_DESTROOT/usr/share/doc"
