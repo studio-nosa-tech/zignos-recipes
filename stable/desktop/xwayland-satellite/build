@@ -1,0 +1,21 @@
+#!/bin/sh
+# xwayland-satellite — rootless Xwayland integration for wlroots
+# compositors. Rust's bindgen needs libclang from llvm and the GCC
+# builtin headers; ZIGNOS does not ship clang itself.
+set -e
+
+cd "$ZPKG_SRC/xwayland-satellite-$ZPKG_VERSION"
+export CARGO_HOME="$ZPKG_WORKDIR/cargo-home"
+export CARGO_TARGET_DIR="$ZPKG_WORKDIR/cargo-target"
+# llvm-config lives under /usr/lib/llvm-*/bin, not /usr/bin.
+LLVM_CONFIG=$(command -v llvm-config 2>/dev/null || true)
+if [ -z "$LLVM_CONFIG" ]; then
+	LLVM_CONFIG=$(ls -d /usr/lib/llvm-*/bin/llvm-config 2>/dev/null | sort -V | tail -1)
+fi
+export LIBCLANG_PATH="$("$LLVM_CONFIG" --libdir)"
+export BINDGEN_EXTRA_CLANG_ARGS="-I$(gcc -print-file-name=include)"
+cargo build --release --locked
+install -Dm755 "$CARGO_TARGET_DIR/release/xwayland-satellite" \
+	"$ZPKG_DESTROOT/usr/bin/xwayland-satellite"
+
+install -Dm644 LICENSE "$ZPKG_DESTROOT/usr/share/licenses/xwayland-satellite/LICENSE"

@@ -1,0 +1,15 @@
+#!/bin/sh
+# inih — small INI parser used by xdg-desktop-portal-wlr.
+set -e
+
+cd "$ZPKG_SRC/inih-$ZPKG_VERSION"
+meson setup build \
+	--prefix=/usr --libdir=lib --buildtype=release \
+	-Ddefault_library=shared \
+	-Ddistro_install=true \
+	-Dtests=false \
+	-Dwith_INIReader=false
+ninja -C build
+DESTDIR="$ZPKG_DESTROOT" ninja -C build install
+
+install -Dm644 LICENSE.txt "$ZPKG_DESTROOT/usr/share/licenses/inih/LICENSE.txt"

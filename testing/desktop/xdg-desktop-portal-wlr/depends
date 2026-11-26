@@ -1,0 +1,7 @@
+wayland
+pipewire
+mesa
+libdrm
+inih
+elogind
+xdg-desktop-portal

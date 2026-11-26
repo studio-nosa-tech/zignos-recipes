@@ -27,6 +27,9 @@ cat > "$ZPKG_DESTROOT/usr/bin/tessa-session" <<'EOF'
 #!/bin/sh
 # ZIGNOS: use a private D-Bus session bus when the display manager did not
 # provide one, then run the upstream session script.
+# Publish WAYLAND_DISPLAY on the bus so xdg-desktop-portal-wlr, which is
+# D-Bus activated, can connect to Tessa.
+export TESSA_STARTUP="${TESSA_STARTUP:-dbus-update-activation-environment WAYLAND_DISPLAY XDG_SESSION_TYPE XDG_SESSION_DESKTOP XDG_CURRENT_DESKTOP 2>/dev/null || true}"
 if [ -z "${DBUS_SESSION_BUS_ADDRESS:-}" ] && command -v dbus-run-session >/dev/null 2>&1; then
 	exec dbus-run-session -- /usr/bin/tessa-session-real "$@"
 fi
