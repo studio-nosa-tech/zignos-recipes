@@ -1,0 +1,4 @@
+#!/bin/sh
+# kmod ships an empty /usr/lib/modprobe.d. Ensure it exists even on
+# systems whose stage3 was built before the directory was included.
+install -d -m755 "$ZPKG_ROOT/usr/lib/modprobe.d"
