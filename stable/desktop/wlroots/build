@@ -1,0 +1,21 @@
+#!/bin/sh
+# wlroots 0.20 — compositor library for Tessa. Build the DRM + libinput
+# backends and the GLES2 renderer; Xwayland, X11, Vulkan, libliftoff and
+# color management are disabled to keep the dependency set small.
+set -e
+
+cd "$ZPKG_SRC/wlroots-$ZPKG_VERSION"
+meson setup build \
+	--prefix=/usr --libdir=lib --buildtype=release \
+	-Dwerror=false \
+	-Dexamples=false \
+	-Dbackends=drm,libinput \
+	-Drenderers=gles2 \
+	-Dallocators=gbm \
+	-Dsession=enabled \
+	-Dxwayland=disabled \
+	-Dlibliftoff=disabled \
+	-Dcolor-management=disabled \
+	-Dxcb-errors=disabled
+ninja -C build
+DESTDIR="$ZPKG_DESTROOT" ninja -C build install

@@ -1,0 +1,13 @@
+#!/bin/sh
+# xcursor-themes — the standard "default" cursor theme. wlroots-based
+# compositors load it when XCURSOR_THEME is unset.
+set -e
+
+cd "$ZPKG_SRC/xcursor-themes-$ZPKG_VERSION"
+./configure --prefix=/usr
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install
+
+# libXcursor and wlroots look up the "default" theme when XCURSOR_THEME is
+# unset. The tarball ships whiteglass/redglass/handhelds but no default link.
+ln -s whiteglass "$ZPKG_DESTROOT/usr/share/icons/default"

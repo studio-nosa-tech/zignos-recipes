@@ -1,0 +1,11 @@
+wayland
+libdrm
+libxkbcommon
+pixman
+libinput
+libseat
+eudev
+libdisplay-info
+hwdata
+mesa
+libglvnd

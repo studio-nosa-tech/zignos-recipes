@@ -1,0 +1,15 @@
+wayland
+libxkbcommon
+libinput
+pixman
+libdrm
+libglvnd
+mesa
+cairo
+pango
+glib
+gdk-pixbuf
+wlroots
+scenefx
+xcursor-themes
+dbus

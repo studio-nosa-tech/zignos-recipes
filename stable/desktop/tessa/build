@@ -1,0 +1,48 @@
+#!/bin/sh
+# Tessa 0.2.5 — tiled Wayland compositor and shell written in Zig.
+# Build with scenefx effects; install the session entry, panel, config
+# examples and docs like the upstream Arch package.
+set -e
+
+cd "$ZPKG_SRC/Tessa-$ZPKG_VERSION"
+./scripts/build.sh -Doptimize=ReleaseSafe -Dscenefx=true \
+	--prefix "$ZPKG_DESTROOT/usr"
+
+install -Dm755 tools/tessa-panel-compat.py \
+	"$ZPKG_DESTROOT/usr/bin/tessa-panel-compat"
+install -Dm755 scripts/tessa-session \
+	"$ZPKG_DESTROOT/usr/bin/tessa-session-real"
+install -Dm644 session/tessa.desktop \
+	"$ZPKG_DESTROOT/usr/share/wayland-sessions/tessa.desktop"
+install -Dm644 config/config.example \
+	"$ZPKG_DESTROOT/usr/share/tessa/config.example"
+install -Dm644 config/panel.example \
+	"$ZPKG_DESTROOT/usr/share/tessa/panel.example"
+install -Dm644 packaging/portal/tessa.portal \
+	"$ZPKG_DESTROOT/usr/share/xdg-desktop-portal/portals/tessa.portal"
+
+# ZIGNOS has no systemd user manager. Start a private session bus so the
+# panel, notifications and portals have somewhere to connect.
+cat > "$ZPKG_DESTROOT/usr/bin/tessa-session" <<'EOF'
+#!/bin/sh
+# ZIGNOS: use a private D-Bus session bus when the display manager did not
+# provide one, then run the upstream session script.
+if [ -z "${DBUS_SESSION_BUS_ADDRESS:-}" ] && command -v dbus-run-session >/dev/null 2>&1; then
+	exec dbus-run-session -- /usr/bin/tessa-session-real "$@"
+fi
+exec /usr/bin/tessa-session-real "$@"
+EOF
+chmod 755 "$ZPKG_DESTROOT/usr/bin/tessa-session"
+
+install -d "$ZPKG_DESTROOT/usr/share/doc/tessa"
+install -m644 README.md README.ja.md \
+	docs/ARCHITECTURE.md docs/ARCHITECTURE.ja.md \
+	docs/CUSTOMIZATION.md docs/CUSTOMIZATION.ja.md \
+	docs/EXTENDING.md docs/EXTENDING.ja.md \
+	docs/GUIDE.md docs/GUIDE.ja.md \
+	docs/ROADMAP.md docs/ROADMAP.ja.md \
+	"$ZPKG_DESTROOT/usr/share/doc/tessa/"
+
+install -d "$ZPKG_DESTROOT/usr/share/man/man1"
+install -m644 debian/man/*.1 "$ZPKG_DESTROOT/usr/share/man/man1/"
+install -Dm644 LICENSE "$ZPKG_DESTROOT/usr/share/licenses/tessa/LICENSE"

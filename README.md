@@ -16,10 +16,10 @@ zignos-recipes/
 
 | チャンネル | パッケージ数 | 内容 |
 |---|---|---|
-| `stable/` | **441** | 安定版。`zpkg` の既定 |
-| `testing/` | **451** | stable 候補。まずここで検証する |
-| `unstable/` | **451** | 開発中。破壊的変更を含み得る |
-| **合計** | **1343** | stable は LTS 系列、testing/unstable は新しい依存を含む |
+| `stable/` | **448** | 安定版。`zpkg` の既定 |
+| `testing/` | **458** | stable 候補。まずここで検証する |
+| `unstable/` | **458** | 開発中。破壊的変更を含み得る |
+| **合計** | **1364** | stable は LTS 系列、testing/unstable は新しい依存を含む |
 
 `core/` と `main/` はチャンネル間で同じ内容を基本とする。ただし **`core/linux`
 はチャンネルごとに系列が分岐**する: stable は Linux LTS、testing は最新安定版、
@@ -35,9 +35,9 @@ testing は最新安定版、unstable は RC / beta / git snapshot を含む挑�
 | カテゴリ | stable | testing / unstable | 内容 |
 |---|---|---|---|
 | `core/` | **78** | **78** | ベースシステム + ビルドツール一式(base.list の大半) |
-| `main/` | **111** | **113** | CLI・システム管理パッケージ + firmware(好みで追加インストール) |
-| `desktop/` | **252** | **260** | GUI(KDE Plasma 6 / KF6 / Qt6 / Xwayland+GLX / Mesa / PipeWire / plasma-nm / powerdevil / UDisks2 / KDE アプリ / Spectacle / kio-extras / Flatpak + xdg-desktop-portal) |
-| **合計** | **441** | **451** | うち **37 が `zignos-build/base.list` のトップレベル** |
+| `main/` | **112** | **114** | CLI・システム管理パッケージ + firmware(好みで追加インストール) |
+| `desktop/` | **258** | **266** | GUI(KDE Plasma 6 / KF6 / Qt6 / Xwayland+GLX / Mesa / PipeWire / plasma-nm / powerdevil / UDisks2 / KDE アプリ / Spectacle / kio-extras / Flatpak + xdg-desktop-portal / Tessa) |
+| **合計** | **448** | **458** | うち **37 が `zignos-build/base.list` のトップレベル** |
 
 `base.list` はトップレベルだけを列挙する(Gentoo の `@system` 相当の最小構成)。
 依存と makedepends は zpkg が解決して自動で入れる。sudo / doas / SSH / エディタは
@@ -287,6 +287,13 @@ UDisks2 と KDE アプリを実装。
   (`CONFIG_FUSE_FS=y`)に変更して `/dev/fuse` を起動時から用意する。
   qtbase は KDE ポータルの印刷対応のため CUPS を有効化し、kwin は
   画面共有 (ScreenCast) のため PipeWire を依存に追加して再ビルドした
+- **Tessa 0.2.5** — Zig 製のタイル型 Wayland コンポジタ。ビルドに
+  `zig 0.17.1`、`wlroots 0.20.2`(DRM + libinput、GLES2)、
+  `scenefx 0.5`(ブラー/角丸/影)、`libseat 0.9.3`(elogind バックエンド)を
+  追加。セッション用に `xcursorgen 1.0.9` / `xcursor-themes 1.0.7` も同梱し、
+  `/usr/share/wayland-sessions/tessa.desktop` と `tessa-session` を導入する。
+  ZIGNOS には systemd user manager が無いため、セッションラッパーが
+  D-Bus セッションバスを起動する
 
 `initscripts` は r17 で `elogind` / `polkit` の OpenRC サービスを同梱する
 (どちらも opt-in)。r18 では `/usr/sbin/zignos-fstab`(マウント情報から

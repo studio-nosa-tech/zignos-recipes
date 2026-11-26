@@ -1,0 +1,7 @@
+wlroots
+wayland
+libdrm
+libxkbcommon
+pixman
+mesa
+libglvnd

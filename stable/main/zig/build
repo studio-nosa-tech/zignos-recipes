@@ -1,0 +1,10 @@
+#!/bin/sh
+# Zig 0.17 — prebuilt x86_64 toolchain. The release tarball is
+# self-contained; install it under /usr/lib/zig and expose the driver as
+# /usr/bin/zig.
+set -e
+
+cd "$ZPKG_SRC/zig-x86_64-linux-$ZPKG_VERSION"
+install -d "$ZPKG_DESTROOT/usr/lib/zig" "$ZPKG_DESTROOT/usr/bin"
+cp -a . "$ZPKG_DESTROOT/usr/lib/zig/"
+ln -s /usr/lib/zig/zig "$ZPKG_DESTROOT/usr/bin/zig"

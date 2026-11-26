@@ -1,0 +1,17 @@
+#!/bin/sh
+# libseat — seat management library used by wlroots' DRM/libinput backends.
+# ZIGNOS has no systemd, so use the elogind backend and skip the seatd
+# daemon and man pages.
+set -e
+
+cd "$ZPKG_SRC/seatd-$ZPKG_VERSION"
+meson setup build \
+	--prefix=/usr --libdir=lib --buildtype=release \
+	-Dlibseat-logind=elogind \
+	-Dlibseat-seatd=disabled \
+	-Dlibseat-builtin=disabled \
+	-Dserver=disabled \
+	-Dman-pages=disabled \
+	-Dexamples=disabled
+ninja -C build
+DESTDIR="$ZPKG_DESTROOT" ninja -C build install

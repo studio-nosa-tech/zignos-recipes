@@ -1,0 +1,8 @@
+#!/bin/sh
+# xcursorgen — builds the cursor files for xcursor-themes.
+set -e
+
+cd "$ZPKG_SRC/xcursorgen-$ZPKG_VERSION"
+./configure --prefix=/usr
+make -j"$(nproc)"
+make DESTDIR="$ZPKG_DESTROOT" install
