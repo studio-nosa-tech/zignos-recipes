@@ -2,3 +2,4 @@ expat
 zlib
 libffi
 mpdecimal
+sqlite
