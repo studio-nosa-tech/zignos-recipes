@@ -356,11 +356,26 @@ SDDM の自動ログインが `pam_shells` で失敗しないようにした。
 | `build_network` | 任意 | `1` / `0` でビルド時ネットワークをグローバル設定より優先 |
 | `upgrade_warning` | 任意 | `zpkg upgrade` が実行前に表示する注意メッセージ(複数行可) |
 | `revision` | 任意 | レシピ改訂番号(`-rN`)。**内容を変えたら上げる**(binpkg キーが変わり upgrade で配信される) |
-| `slot` / `provides` / `conflicts` | 任意 | スロット / virtual 提供 / 競合(依存解決で使用) |
+| `slot` / `provides` / `conflicts` | 任意 | 共存スロット / virtual 提供 / 競合。slot は `<name>@<slot>/` ディレクトリ名でも指定できる |
 | `iuse` | 任意 | このレシピが理解する USE フラグ(タイポ検出に使われる) |
 | `video_cards` | 任意 | このレシピが `VIDEO_CARDS` を使うことを示すマーカー。内容は対応カードの一覧 |
 | `post_install` / `post_remove` | 任意 | インストール/削除直後に実行されるフック |
 | 資産ファイル | 任意 | `x86_64-generic.config`・`logo.txt`・`config.jsonc`・`sudoers`・パッチなど(build から `$ZPKG_RECIPE_DIR` で参照) |
+
+### 複数バージョン・スロット
+
+```
+<repo>/<name>/...                         # slot 0(従来)。slot ファイルで変更可
+<repo>/<name>@<slot>/...                  # ディレクトリ名で slot を固定
+<repo>/<name>/versions/<variant>/...      # 同一 slot の複数バージョン
+<repo>/<name>@<slot>/versions/<variant>/...
+```
+
+各 variant は `version` / `revision` / `build` を持つ通常のレシピ。`versions/` は
+直下に `version` が無い場合だけ使う。1 slot にインストールできるのは 1 バージョン
+なので、複数バージョンを同時に使う場合は slot を分ける(`openssl@1.1` /
+`openssl@3` など)。`@` はパッケージ名で予約。依存は `foo@14`、
+`>=foo@14-2.0` のように slot を指定できる。
 
 詳細は zignos リポジトリの [docs/design-pkg.md](https://github.com/studio-nosa-tech/zignos/blob/main/docs/design-pkg.md)。
 
