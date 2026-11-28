@@ -247,6 +247,19 @@ UDisks2 と KDE アプリを実装。
   `virgl softpipe`。`video_cards` ファイルを持つレシピだけが binpkg キーと
   `zpkg upgrade --newuse` の比較対象になる。`video_cards_iris?pkg` の
   条件付き依存にも対応
+- **zpkg 0.4.0 / SAT 依存解決** — 決定的バックトラックを CDCL SAT に置き換え、
+  複数バージョン・スロットを同時に解決する。`foo@14` / `>=foo@14-1.2` の
+  アトム、`name@slot/` と `versions/` のレシピ配置、インストール済み
+  conflict の置換、unsat core 診断、slot 単位の remove / prune に対応。
+  ソースアーカイブを `zignos-zpkg-0.4.0.tar.xz` に更新した
+- **zpkg 0.5.0 / ZIGNOS MENU** — Gentoo overlay 相当の追加レシピリポジトリに
+  対応した。`zpkg overlay add/list/sync/remove` が git・tarball・ディレクトリを
+  取得し、有効なオーバーレイを公式ツリーより先に検索する。公式オーバーレイは
+  `zignos-menu`(ZIGNOS MENU、apps / games / tools)で、
+  `zpkg overlay add zignos-menu` だけで登録できる。`overlay.conf` の
+  CATEGORIES / CHANNELS、PRIORITY、署名検証と generation ロールバック対策、
+  インストール済みメタデータと provenance への由来記録に対応。
+  ソースアーカイブを `zignos-zpkg-0.5.0.tar.xz` に更新した
 - **Plasma Login の greeter** — PLM は greeter に `XDG_RUNTIME_DIR` を渡さず、
   ラッパーが `/run/user/621` を作ろうとするが `/run/user` は root 所有で
   作成できない。initd の `start_pre` と post_install で
