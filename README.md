@@ -260,6 +260,14 @@ UDisks2 と KDE アプリを実装。
   CATEGORIES / CHANNELS、PRIORITY、署名検証と generation ロールバック対策、
   インストール済みメタデータと provenance への由来記録に対応。
   ソースアーカイブを `zignos-zpkg-0.5.0.tar.xz` に更新した
+- **eMMC / NVMe インストール対応** — Live DVD のインストーラーで
+  `/dev/mmcblk*`(eMMC/SD)と `/dev/nvme*` を選択できるようにした。カーネルに
+  MMC / MMC_BLOCK / SDHCI(SDHCI_PCI・SDHCI_ACPI・CQHCI)を組み込み、NVMe と
+  同様に initramfs なしで起動できる。Live の initramfs は `/sys/block` を
+  走査して起動メディアを探すため、SATA/USB/virtio/NVMe/eMMC のどこに
+  書き込んだ ISO からでも起動する。インストーラーは eMMC の boot0/rpmb
+  パーティションを対象から除外し、パーティション名の `p`
+  (`mmcblk0p1` / `nvme0n1p1`)を扱う
 - **Plasma Login の greeter** — PLM は greeter に `XDG_RUNTIME_DIR` を渡さず、
   ラッパーが `/run/user/621` を作ろうとするが `/run/user` は root 所有で
   作成できない。initd の `start_pre` と post_install で
@@ -480,8 +488,9 @@ zpkg build --repro-check <pkg>   # 2 回ビルドして manifest を比較
 - OpenSSL 4.0 互換パッチを `python3` / `wget` がレシピ同梱している(OpenSSL 4 で削除された
   fixed-version TLS method のガード。`makedepends: patch` で自家パッチを当てる)
 - **カーネルは `x86_64_defconfig` + `stable/core/linux/x86_64-generic.config`**。起動系
-  (ACPI/APIC、SATA AHCI、NVMe、USB、VT/VGA/simpledrm、ext4、virtio、主要 NIC)は組み込み、
-  GPU/WiFi/追加 NIC はモジュール。`make modules_install` + `kmod depmod` までレシピが行う
+  (ACPI/APIC、SATA AHCI、NVMe、MMC/SDHCI(eMMC)、USB、VT/VGA/simpledrm、ext4、virtio、
+  主要 NIC)は組み込み、GPU/WiFi/追加 NIC はモジュール。`make modules_install` +
+  `kmod depmod` までレシピが行う
 - **initramfs は busybox ベース**(`stable/core/initramfs`)。`busybox` は initramfs 用に
   **静的リンク**(`CONFIG_STATIC=y`)、`zignos-mkinitramfs` が `/boot/initramfs.img` を生成し、
   `/init` が `root=UUID=` を解決して `switch_root` する
